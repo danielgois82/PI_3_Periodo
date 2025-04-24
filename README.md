@@ -21,4 +21,9 @@
 
 #### Todos os integrantes do grupo contribuíram em todas as fases do projeto, desde o refinamento dos requisitos, modelagem do banco de dados, prototípos, design, codificação e documentação.
 
-## Links para demais artefatos entregues: (a definir).
+## Links para demais artefatos entregues:
+
+#### Paleta de cores: 
+https://senacpernambuco-my.sharepoint.com/:w:/g/personal/daniel_gois_edu_pe_senac_br/EXtOKUD6LpFDhzOprnIil0IBuWPKkljHlRiuCDuaW_J3xg?e=lRGvPy
+#### Documento de requisitos, história do usuário, Diagrama de classes, backlog do produto, quadro Kanban e protoípo de baixa fidalidade:
+https://senacpernambuco-my.sharepoint.com/:w:/g/personal/daniel_gois_edu_pe_senac_br/EZRCW2Ujn61DiW8Vy_oPE78BeREZH2MF4HFtOeMmTZz5wg
