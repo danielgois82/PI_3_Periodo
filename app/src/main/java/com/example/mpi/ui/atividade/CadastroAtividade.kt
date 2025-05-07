@@ -1,4 +1,4 @@
-package com.example.mpi.ui
+package com.example.mpi.ui.atividade
 
 import android.os.Bundle
 import android.widget.Button
@@ -14,7 +14,7 @@ class cadastroAtividade : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_cadastro_atividade)
 
-        val cancelarCadastro: Button = findViewById(R.id.cancelarCadastro)
+        val cancelarCadastro: Button = findViewById(R.id.btnVoltarAtividade)
         cancelarCadastro.setOnClickListener {
             finish()
         }

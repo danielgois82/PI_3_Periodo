@@ -9,7 +9,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.cadastroAcao">
+        tools:context=".ui.acao.cadastroAcao">
 
         <TextView
             android:id="@+id/textViewTitulo"
@@ -107,6 +107,36 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewDescricaoAcao" />
 
         <TextView
+            android:id="@+id/textViewDataInicio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:fontFamily="@font/inria_sans_regular"
+            android:text="Data de Início:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descricaoAcao" />
+
+        <EditText
+            android:id="@+id/dataInicio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/border"
+            android:hint="dd/mm/yyyy"
+            android:inputType="date"
+            android:padding="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDataInicio" />
+
+        <TextView
             android:id="@+id/textViewCodigoPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -119,7 +149,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descricaoAcao" />
+            app:layout_constraintTop_toBottomOf="@+id/dataInicio" />
 
         <EditText
             android:id="@+id/codigoPilar"

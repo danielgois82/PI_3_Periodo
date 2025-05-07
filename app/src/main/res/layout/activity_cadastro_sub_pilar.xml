@@ -9,10 +9,10 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".cadastroSubpilar">
+        tools:context=".ui.subpilar.CadastroSubPilarActivity">
 
         <TextView
-            android:id="@+id/textViewTitulo"
+            android:id="@+id/textViewTituloSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -26,22 +26,22 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textViewInstrucao"
+            android:id="@+id/textViewInstrucaoSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/inria_sans_regular"
-            android:text="*Preencha os campos com os dados do subpilar a ser cadastrado"
+            android:text="*Preencha os campos com os dados do subpilar"
             android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTitulo" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewTituloSubPilar" />
 
         <TextView
-            android:id="@+id/textViewNomeSubpilar"
+            android:id="@+id/textViewNomeSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -53,10 +53,10 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewInstrucao" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewInstrucaoSubPilar" />
 
         <EditText
-            android:id="@+id/nomeSubpilar"
+            android:id="@+id/etnomeSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -70,10 +70,10 @@
             android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewNomeSubpilar" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewNomeSubPilar" />
 
         <TextView
-            android:id="@+id/textViewDescricaoSubpilar"
+            android:id="@+id/textViewDescricaoSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -85,10 +85,10 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nomeSubpilar" />
+            app:layout_constraintTop_toBottomOf="@+id/etnomeSubPilar" />
 
         <EditText
-            android:id="@+id/descricaoSubpilar"
+            android:id="@+id/etdescricaoSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -104,43 +104,40 @@
             android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewDescricaoSubpilar" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewDescricaoSubPilar" />
 
         <TextView
-            android:id="@+id/textViewCodigoPilar"
+            android:id="@+id/textViewDataInicioSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:fontFamily="@font/inria_sans_regular"
-            android:text="Código do Pilar associado:"
+            android:text="Data de Início:"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descricaoSubpilar" />
+            app:layout_constraintTop_toBottomOf="@+id/etdescricaoSubPilar" />
 
         <EditText
-            android:id="@+id/codigoPilar"
+            android:id="@+id/etdataInicioSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/border"
-            android:ems="10"
-            android:fontFamily="@font/inria_sans_regular"
-            android:gravity="top"
-            android:hint="Insira aqui"
-            android:inputType="text"
+            android:hint="dd/mm/yyyy"
+            android:inputType="date"
             android:padding="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineSubPilar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewCodigoPilar" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewDataInicioSubPilar" />
 
         <TextView
-            android:id="@+id/textViewResponsavel"
+            android:id="@+id/textViewResponsavelSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -152,10 +149,10 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/codigoPilar" />
+            app:layout_constraintTop_toBottomOf="@+id/etdataInicioSubPilar" />
 
         <EditText
-            android:id="@+id/codigoResponsavel"
+            android:id="@+id/etcodigoResponsavelSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -170,10 +167,10 @@
             android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewResponsavel" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewResponsavelSubPilar" />
 
         <TextView
-            android:id="@+id/textViewPrazo"
+            android:id="@+id/textViewPrazoSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -185,10 +182,10 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/codigoResponsavel" />
+            app:layout_constraintTop_toBottomOf="@+id/etcodigoResponsavelSubPilar" />
 
         <EditText
-            android:id="@+id/dataTermino"
+            android:id="@+id/etdataTerminoSubPilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -198,12 +195,42 @@
             android:hint="dd/mm/yyyy"
             android:inputType="date"
             android:padding="10dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineSubPilar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewPrazo" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewPrazoSubPilar" />
+
+        <TextView
+            android:id="@+id/textViewPilarAssociadoId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:fontFamily="@font/inria_sans_regular"
+            android:text="ID do Pilar Associado:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etdataTerminoSubPilar" />
+
+        <EditText
+            android:id="@+id/etPilarAssociadoId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/border"
+            android:hint="Insira o ID do pilar"
+            android:inputType="numberSigned"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPilarAssociadoId" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
+            android:id="@+id/guidelineSubPilar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -216,21 +243,23 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dataTermino"
-            app:layout_constraintBottom_toBottomOf="parent"> <Button
-            android:id="@+id/cancelarCadastro"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:backgroundTint="#FE9A22"
-            android:hint="Cancelar"
-            android:textColorHint="#FFFFFF" />
+            app:layout_constraintTop_toBottomOf="@+id/etPilarAssociadoId">
 
             <Button
-                android:id="@+id/confirmarCadastro"
+                android:id="@+id/btnVoltarSubPilar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="#FE9A22"
+                android:hint="Voltar"
+                android:textColorHint="#FFFFFF" />
+
+            <Button
+                android:id="@+id/btnConfirmarCadastroSubPilar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

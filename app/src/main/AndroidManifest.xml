@@ -13,19 +13,34 @@
         android:theme="@style/Theme.MPI"
         tools:targetApi="31">
         <activity
-            android:name=".ui.cadastroAtividade"
+            android:name=".ui.atividade.AtividadeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.cadastroAcao"
+            android:name=".ui.acao.AcaoActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.cadastroSubPilar"
+            android:name=".ui.subpilar.SubpilarActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.cadastroPilar"
+            android:name=".ui.pilar.EditarPilarActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.pilar.PilarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.atividade.cadastroAtividade"
+            android:exported="false" />
+        <activity
+            android:name=".ui.acao.cadastroAcao"
+            android:exported="false" />
+        <activity
+            android:name=".ui.subpilar.cadastroSubPilar"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pilar.cadastroPilar"
+            android:exported="false" />
+        <activity
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

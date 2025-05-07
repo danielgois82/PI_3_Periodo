@@ -20,9 +20,8 @@ class PilarDbHelper(context: Context)
               ${PilarContract.UserEntry.COL_RESPONSAVEL} INTEGER NOT NULL,
               ${PilarContract.UserEntry.COL_DATAI} TEXT NOT NULL,
               ${PilarContract.UserEntry.COL_DATAT} TEXT NOT NULL,
-              ${PilarContract.UserEntry.COL_APROVADO} INTEGER,
-              ${PilarContract.UserEntry.COL_FINALIZADO} INTEGER,
-              ${PilarContract.UserEntry.COL_PERCENTUAL} REAL 
+              ${PilarContract.UserEntry.COL_APROVADO} INTEGER DEFAULT 0,
+              ${PilarContract.UserEntry.COL_PERCENTUAL} REAL DEFAULT 0.0
               
             )
         """.trimIndent()

@@ -9,7 +9,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.cadastroPilar">
+        tools:context=".ui.pilar.cadastroPilar">
 
         <TextView
             android:id="@+id/textViewTitulo"
@@ -219,17 +219,17 @@
             app:layout_constraintTop_toBottomOf="@+id/etdataTermino">
 
             <Button
-                android:id="@+id/cancelarCadastro"
+                android:id="@+id/btnVoltar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="#FE9A22"
-                android:hint="Cancelar"
+                android:hint="Voltar"
                 android:textColorHint="#FFFFFF" />
 
             <Button
-                android:id="@+id/confirmarCadastro"
+                android:id="@+id/btnconfirmarCadastro"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

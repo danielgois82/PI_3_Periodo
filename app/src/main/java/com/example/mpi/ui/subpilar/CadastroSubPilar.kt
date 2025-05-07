@@ -1,4 +1,4 @@
-package com.example.mpi.ui
+package com.example.mpi.ui.subpilar
 
 import android.os.Bundle
 import android.widget.Button
@@ -8,13 +8,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mpi.R
 
-class cadastroAcao : AppCompatActivity() {
+class cadastroSubPilar : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_cadastro_acao)
+        setContentView(R.layout.activity_cadastro_sub_pilar)
 
-        val cancelarCadastro: Button = findViewById(R.id.cancelarCadastro)
+        val cancelarCadastro: Button = findViewById(R.id.btnVoltarSubPilar)
         cancelarCadastro.setOnClickListener {
             finish()
         }

@@ -1,34 +1,19 @@
-package com.example.mpi.ui
+package com.example.mpi.ui.acao
 
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.mpi.databinding.ActivityCadastroPilarBinding
-import com.example.mpi.data.PilarDbHelper
-import com.example.mpi.data.PilarContract
 import com.example.mpi.R
 
-class cadastroPilar : AppCompatActivity() {
-
-    private lateinit var binding: ActivityCadastroPilarBinding
-    private lateinit var binding: PilarDbHelper
-
-
+class cadastroAcao : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_cadastro_pilar)
+        setContentView(R.layout.activity_cadastro_acao)
 
-        // Botão confirmar
-        val confirmarCadastro: Button = findViewById(R.id.confirmarCadastro)
-        confirmarCadastro.setOnClickListener{
-
-        }
-        // Botão cancelar
         val cancelarCadastro: Button = findViewById(R.id.cancelarCadastro)
         cancelarCadastro.setOnClickListener {
             finish()

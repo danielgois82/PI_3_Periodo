@@ -10,7 +10,6 @@ object PilarContract {
         const val COL_DATAI   = "dataInicio"
         const val COL_DATAT   = "dataTermino"
         const val COL_APROVADO   = "isAprovado"
-        const val COL_FINALIZADO   = "isFinalizado"
         const val COL_PERCENTUAL = "percentual"
     }
 }

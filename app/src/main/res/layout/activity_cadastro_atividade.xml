@@ -9,10 +9,10 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.cadastroAtividade">
+        tools:context=".ui.atividade.cadastroAtividade">
 
         <TextView
-            android:id="@+id/textViewTitulo"
+            android:id="@+id/textViewTituloAtividade"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -26,19 +26,19 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textViewInstrucao"
+            android:id="@+id/textViewInstrucaoAtividade"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/inria_sans_regular"
-            android:text="*Preencha os campos com os dados da atividade a ser cadastrada"
+            android:text="*Preencha os campos com os dados da atividade"
             android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTitulo" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewTituloAtividade" />
 
         <TextView
             android:id="@+id/textViewNomeAtividade"
@@ -53,10 +53,10 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewInstrucao" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewInstrucaoAtividade" />
 
         <EditText
-            android:id="@+id/nomeAtividade"
+            android:id="@+id/etNomeAtividade"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -85,10 +85,10 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nomeAtividade" />
+            app:layout_constraintTop_toBottomOf="@+id/etNomeAtividade" />
 
         <EditText
-            android:id="@+id/descricaoAtividade"
+            android:id="@+id/etDescricaoAtividade"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -107,73 +107,37 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewDescricaoAtividade" />
 
         <TextView
-            android:id="@+id/textViewCodigoAcao"
+            android:id="@+id/textViewDataInicioAtividade"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:fontFamily="@font/inria_sans_regular"
-            android:text="Código da Ação associada:"
+            android:text="Data de Início:"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descricaoAtividade" />
+            app:layout_constraintTop_toBottomOf="@+id/etDescricaoAtividade" />
 
         <EditText
-            android:id="@+id/codigoAcao"
+            android:id="@+id/etDataInicioAtividade"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/border"
-            android:ems="10"
-            android:fontFamily="@font/inria_sans_regular"
-            android:gravity="top"
-            android:hint="Insira aqui"
-            android:inputType="text"
+            android:hint="dd/mm/yyyy"
+            android:inputType="date"
             android:padding="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineAtividade"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewCodigoAcao" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewDataInicioAtividade" />
 
         <TextView
-            android:id="@+id/textViewResponsavel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:fontFamily="@font/inria_sans_regular"
-            android:text="Código do responsável:"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/codigoAcao" />
-
-        <EditText
-            android:id="@+id/codigoResponsavel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:background="@drawable/border"
-            android:ems="10"
-            android:fontFamily="@font/inria_sans_regular"
-            android:gravity="top"
-            android:hint="Insira aqui"
-            android:inputType="text"
-            android:padding="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewResponsavel" />
-
-        <TextView
-            android:id="@+id/textViewPrazo"
+            android:id="@+id/textViewPrazoAtividade"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -185,10 +149,10 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/codigoResponsavel" />
+            app:layout_constraintTop_toBottomOf="@+id/etDataInicioAtividade" />
 
         <EditText
-            android:id="@+id/dataTermino"
+            android:id="@+id/etDataTerminoAtividade"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -198,12 +162,75 @@
             android:hint="dd/mm/yyyy"
             android:inputType="date"
             android:padding="10dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineAtividade"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewPrazo" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewPrazoAtividade" />
+
+        <TextView
+            android:id="@+id/textViewResponsavelAtividade"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:fontFamily="@font/inria_sans_regular"
+            android:text="Código do responsável:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etDataTerminoAtividade" />
+
+        <EditText
+            android:id="@+id/etCodigoResponsavelAtividade"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/border"
+            android:ems="10"
+            android:fontFamily="@font/inria_sans_regular"
+            android:gravity="top"
+            android:hint="Insira aqui"
+            android:inputType="text"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewResponsavelAtividade" />
+
+        <TextView
+            android:id="@+id/textViewAcaoAssociadaId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:fontFamily="@font/inria_sans_regular"
+            android:text="ID da Ação Associada:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etCodigoResponsavelAtividade" />
+
+        <EditText
+            android:id="@+id/etAcaoAssociadaId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/border"
+            android:hint="Insira o ID da ação"
+            android:inputType="numberSigned"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewAcaoAssociadaId" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
+            android:id="@+id/guidelineAtividade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -219,20 +246,20 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dataTermino">
+            app:layout_constraintTop_toBottomOf="@+id/etAcaoAssociadaId">
 
             <Button
-                android:id="@+id/cancelarCadastro"
+                android:id="@+id/btnVoltarAtividade"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="#FE9A22"
-                android:hint="Cancelar"
+                android:hint="Voltar"
                 android:textColorHint="#FFFFFF" />
 
             <Button
-                android:id="@+id/confirmarCadastro"
+                android:id="@+id/btnConfirmarCadastroAtividade"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
