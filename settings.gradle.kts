@@ -19,5 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MPI"
+rootProject.name = "Dashboardv"
 include(":app")
+ 
