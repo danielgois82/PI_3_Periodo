@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">MPI</string>
-    <string name="daniel">Daniel</string>
+    <string name="integrador_respondeu_nfulano_gerenciador_de_boletos_nfaltam_7_dias" />
+    <string name="integrador_respondeu_nfulano_gerenciador_de_boletos_nfalta_1_dia" />
+    <string name="integrador_respondeu_nfulano_gerenciador_de_boletos_nfaltam_3_dias" />
+    <string name="integrador_respondeu_nfulano_gerenciador_de_boletos_nfaltam_10_dias" />
+    <string name="integrador_respondeu_nfulano_gerenciador_de_boletos_nfaltam_14_dias" />
+    <string name="integrador_respondeu_nfulano_gerenciador_de_boletos_nfaltam_20_dias" />
+    <string name="integrador_respondeu_nfulano_gerenciador_de_boletos_nfaltam_25_dias" />
+    <string name="integrador_respondeu_nfulano_gerenciador_de_boletos_nfaltam_27_dias" />
+    <string name="integrador_respondeu_nfulano_gerenciador_de_boletos_nfaltam_30_dias" />
 </resources>
