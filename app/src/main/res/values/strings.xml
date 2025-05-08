@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">MPI</string>
+    <string name="app_name">SeuApp</string>
+    <string name="logo_description">Logo do Senac</string>
 </resources>
