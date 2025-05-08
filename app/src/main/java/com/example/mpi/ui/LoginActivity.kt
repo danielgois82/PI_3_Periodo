@@ -29,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString()
 
             if (validateUser(username, password)) {
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, MenuActivity::class.java))
             } else {
                 Toast.makeText(this, "Credenciais inválidas", Toast.LENGTH_SHORT).show()
             }

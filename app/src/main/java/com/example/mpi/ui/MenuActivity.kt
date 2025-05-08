@@ -3,6 +3,7 @@ package com.example.mpi.ui
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,14 +18,13 @@ class MenuActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setContentView(R.layout.activity_menu)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val openPilar: Button = findViewById(R.id.btnPilarActivity)
+/*        val openPilar: Button = findViewById(R.id.btnPilarActivity)
         openPilar.setOnClickListener {
             startActivity(Intent(this, PilarActivity::class.java))
         }
@@ -53,15 +53,20 @@ class MenuActivity : AppCompatActivity() {
         openFinalizacao.setOnClickListener {
             startActivity(Intent(this, FinalizacaoActivity::class.java))
         }
-
+*/
         val openPercentual: Button = findViewById(R.id.btnPercentualActivity)
         openPercentual.setOnClickListener {
             startActivity(Intent(this, PercentualActivity::class.java))
         }
-
+/*
         val openDashboard: Button = findViewById(R.id.btnDashboard)
         openDashboard.setOnClickListener {
             startActivity(Intent(this, DashboardActivity::class.java))
         }
+
+        val openNotificacao: ImageView = findViewById(R.id.btnNotificacaoActivity)
+        openNotificacao.setOnClickListener {
+            startActivity(Intent(this, NotificacaoActivity::class.java))
+        } */
     }
 }
