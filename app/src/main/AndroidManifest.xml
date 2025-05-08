@@ -13,8 +13,9 @@
         android:theme="@style/Theme.MPI"
         tools:targetApi="31">
 
+        <!-- LoginActivity como tela inicial -->
         <activity
-            android:name=".ui.MenuActivity"
+            android:name=".ui.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +23,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".MenuActivity"
             android:exported="false"/>
     </application>
 </manifest>
+
