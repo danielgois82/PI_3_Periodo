@@ -14,6 +14,33 @@
         tools:targetApi="34">
 
         <activity
+            android:name=".ui.atividade.AtividadeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.acao.AcaoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.subpilar.SubpilarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pilar.EditarPilarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pilar.PilarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.atividade.cadastroAtividade"
+            android:exported="false" />
+        <activity
+            android:name=".ui.acao.cadastroAcao"
+            android:exported="false" />
+        <activity
+            android:name=".ui.subpilar.cadastroSubPilar"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pilar.cadastroPilar"
+            android:exported="false" />
+        <activity
             android:name=".ui.LoginActivity"
             android:exported="true">
             <intent-filter>
@@ -26,7 +53,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.PercentualActivity"
-            android:exported="false" />
     </application>
 </manifest>
 
