@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MPI"
         tools:targetApi="34">
-
+        <activity
+            android:name=".ui.NotificacaoActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.atividade.AtividadeActivity"
             android:exported="false" />
@@ -45,6 +47,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -53,5 +56,5 @@
             android:exported="false" />
         <activity android:name=".ui.PercentualActivity" />
     </application>
-</manifest>
 
+</manifest>

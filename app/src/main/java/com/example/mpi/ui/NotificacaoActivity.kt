@@ -8,17 +8,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mpi.R
+import com.example.mpi.databinding.ActivityNotificacaoBinding
 import com.example.mpi.databinding.ActivityPercentualBinding
 
-class PercentualActivity : AppCompatActivity() {
+class NotificacaoActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityPercentualBinding
+    private lateinit var binding: ActivityNotificacaoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        binding = ActivityPercentualBinding.inflate(layoutInflater)
+        binding = ActivityNotificacaoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

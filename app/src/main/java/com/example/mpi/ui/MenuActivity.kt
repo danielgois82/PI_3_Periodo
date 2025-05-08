@@ -66,11 +66,11 @@ class MenuActivity : AppCompatActivity() {
         val openDashboard: Button = findViewById(R.id.btnDashboard)
         openDashboard.setOnClickListener {
             startActivity(Intent(this, DashboardActivity::class.java))
-        }
+        } */
 
         val openNotificacao: ImageView = findViewById(R.id.btnNotificacaoActivity)
         openNotificacao.setOnClickListener {
             startActivity(Intent(this, NotificacaoActivity::class.java))
-        } */
+        }
     }
 }
