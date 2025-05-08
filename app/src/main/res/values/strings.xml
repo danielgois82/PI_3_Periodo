@@ -35,4 +35,6 @@
         <item>Atividade da Ouvidoria e monitoramento</item>
     </string-array>
 
+    <string name="app_name">SeuApp</string>
+    <string name="logo_description">Logo do Senac</string>
 </resources>
