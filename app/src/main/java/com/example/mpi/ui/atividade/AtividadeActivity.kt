@@ -19,7 +19,7 @@ class AtividadeActivity : AppCompatActivity() {
 
         val cadAtividade: Button = findViewById(R.id.btnCadastrarAtividade)
         cadAtividade.setOnClickListener {
-            val intent = Intent(this, cadastroAtividade::class.java)
+            val intent = Intent(this, CadastroAtividade::class.java)
             startActivity(intent)
         }
         val voltar: ImageView = findViewById(R.id.btnVoltar)

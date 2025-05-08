@@ -9,7 +9,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.atividade.cadastroAtividade">
+        tools:context=".ui.atividade.CadastroAtividade">
 
         <TextView
             android:id="@+id/textViewTituloAtividade"

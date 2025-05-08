@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.mpi.MainActivity
 import com.example.mpi.R
 import com.example.mpi.databinding.ActivityPercentualBinding
 
@@ -31,7 +30,7 @@ class PercentualActivity : AppCompatActivity() {
 
         val openMenuPrincipal: ImageView = findViewById(R.id.viewVoltarMenuPrincipal)
         openMenuPrincipal.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, MenuActivity::class.java))
         }
 
     }

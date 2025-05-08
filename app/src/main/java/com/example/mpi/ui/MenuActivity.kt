@@ -10,6 +10,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mpi.R
 import com.example.mpi.databinding.ActivityMenuBinding
+import com.example.mpi.ui.acao.AcaoActivity
+import com.example.mpi.ui.atividade.AtividadeActivity
+import com.example.mpi.ui.pilar.PilarActivity
+import com.example.mpi.ui.subpilar.SubpilarActivity
 
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
@@ -24,7 +28,7 @@ class MenuActivity : AppCompatActivity() {
             insets
         }
 
-/*        val openPilar: Button = findViewById(R.id.btnPilarActivity)
+        val openPilar: Button = findViewById(R.id.btnPilarActivity)
         openPilar.setOnClickListener {
             startActivity(Intent(this, PilarActivity::class.java))
         }
@@ -44,7 +48,7 @@ class MenuActivity : AppCompatActivity() {
             startActivity(Intent(this, AtividadeActivity::class.java))
         }
 
-        val openAprovacao: Button = findViewById(R.id.btnAprovacaoActivity)
+/*        val openAprovacao: Button = findViewById(R.id.btnAprovacaoActivity)
         openAprovacao.setOnClickListener {
             startActivity(Intent(this, AprovacaoActivity::class.java))
         }
@@ -52,8 +56,8 @@ class MenuActivity : AppCompatActivity() {
         val openFinalizacao: Button = findViewById(R.id.btnFinalizacaoActivity)
         openFinalizacao.setOnClickListener {
             startActivity(Intent(this, FinalizacaoActivity::class.java))
-        }
-*/
+        } */
+
         val openPercentual: Button = findViewById(R.id.btnPercentualActivity)
         openPercentual.setOnClickListener {
             startActivity(Intent(this, PercentualActivity::class.java))
