@@ -25,6 +25,11 @@
 
         <!-- MainActivity será usada depois, sem tela de início -->
         <activity android:name=".MainActivity" android:exported="true" />
+
+        <!-- AprovacaoActivity registrada -->
+        <activity android:name=".AprovacaoActivity" android:exported="true" />
+        <activity android:name=".FinalizacaoActivity" />
+
     </application>
 
 </manifest>
