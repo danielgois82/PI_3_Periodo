@@ -12,6 +12,7 @@ import com.example.mpi.R
 import com.example.mpi.databinding.ActivityMenuBinding
 import com.example.mpi.ui.acao.AcaoActivity
 import com.example.mpi.ui.atividade.AtividadeActivity
+import com.example.mpi.ui.dashboard.DashboardActivity
 import com.example.mpi.ui.pilar.PilarActivity
 import com.example.mpi.ui.subpilar.SubpilarActivity
 
@@ -62,11 +63,11 @@ class MenuActivity : AppCompatActivity() {
         openPercentual.setOnClickListener {
             startActivity(Intent(this, PercentualActivity::class.java))
         }
-/*
-        val openDashboard: Button = findViewById(R.id.btnDashboard)
+
+        val openDashboard: Button = findViewById(R.id.btnDashboardActivity)
         openDashboard.setOnClickListener {
             startActivity(Intent(this, DashboardActivity::class.java))
-        } */
+        }
 
         val openNotificacao: ImageView = findViewById(R.id.btnNotificacaoActivity)
         openNotificacao.setOnClickListener {
