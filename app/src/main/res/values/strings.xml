@@ -38,4 +38,6 @@
     </string-array>
 
     <string name="logo_description">Logo do Senac</string>
+    <string name="voltar">Voltar</string>
+    <string name="pesquisar">Pesquisar</string>
 </resources>
