@@ -49,7 +49,7 @@ class MenuActivity : AppCompatActivity() {
             startActivity(Intent(this, AtividadeActivity::class.java))
         }
 
-/*        val openAprovacao: Button = findViewById(R.id.btnAprovacaoActivity)
+        val openAprovacao: Button = findViewById(R.id.btnAprovacaoActivity)
         openAprovacao.setOnClickListener {
             startActivity(Intent(this, AprovacaoActivity::class.java))
         }
@@ -57,7 +57,7 @@ class MenuActivity : AppCompatActivity() {
         val openFinalizacao: Button = findViewById(R.id.btnFinalizacaoActivity)
         openFinalizacao.setOnClickListener {
             startActivity(Intent(this, FinalizacaoActivity::class.java))
-        } */
+        }
 
         val openPercentual: Button = findViewById(R.id.btnPercentualActivity)
         openPercentual.setOnClickListener {

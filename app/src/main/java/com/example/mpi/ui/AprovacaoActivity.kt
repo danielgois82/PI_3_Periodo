@@ -1,10 +1,12 @@
-package com.example.mpi
+package com.example.mpi.ui
+
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import com.example.mpi.R
 
 class AprovacaoActivity : AppCompatActivity() {
 
