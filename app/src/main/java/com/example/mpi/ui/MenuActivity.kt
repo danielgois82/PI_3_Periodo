@@ -2,8 +2,10 @@ package com.example.mpi.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -28,6 +30,12 @@ class MenuActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val intent = getIntent()
+        val tipo = intent.getStringExtra("tipo") ?: "valor padrão"
+        Log.d("danielgois_project", tipo)
+
+        Toast.makeText(this, tipo, Toast.LENGTH_LONG)
 
         val openPilar: Button = findViewById(R.id.btnPilarActivity)
         openPilar.setOnClickListener {
