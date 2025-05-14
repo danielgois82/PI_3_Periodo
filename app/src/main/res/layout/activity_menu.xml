@@ -61,6 +61,7 @@
 
         <!-- Botões -->
         <TextView
+            android:id="@+id/textviewNomeUsuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pessoa 1 "

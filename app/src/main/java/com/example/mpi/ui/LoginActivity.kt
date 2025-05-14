@@ -13,6 +13,10 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
+    var idUsuario = 0
+    var nomeUsuario = ""
+    var tipoUsuario = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,11 +32,11 @@ class LoginActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString()
 
             if (validateUser(username, password)) {
-                //startActivity(Intent(this, MenuActivity::class.java))
-                val x = Intent(this, MenuActivity::class.java)
-                //x.putExtra(Intent.EXTRA_TEXT, username)
-                x.putExtra("tipo", username)
-                startActivity(x)
+                val extra = Intent(this, MenuActivity::class.java)
+                extra.putExtra("idUsuario", idUsuario)
+                extra.putExtra("nomeUsuario", nomeUsuario)
+                extra.putExtra("tipoUsuario", tipoUsuario)
+                startActivity(extra)
             } else {
                 Toast.makeText(this, "Credenciais inválidas", Toast.LENGTH_SHORT).show()
             }
@@ -40,6 +44,31 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun validateUser(username: String, password: String): Boolean {
+
+        // Fazer a lógica de acessar as tabelas de usuário e tipo de usuario aqui
+        // Se o email e senha for válidos
+        // preencher as 3 variáveis (idUsuario, nomeUsuario e tipoUsuario) e retornar "True"
+        // Senão retornar "False"
+
+        if (username == "analista@gmail.com") { // Remover esse "if" quando acessar o banco
+            idUsuario = 1 // Pegar o id do usuário e por aqui
+            nomeUsuario = "Analista 1" // Pegar o nome do usuário e por aqui
+            tipoUsuario = "ANALISTA" // Pegar o tipo de usuário e por aqui
+        }
+
+        if (username == "coordenador@gmail.com") { // Remover esse "if" completo
+            idUsuario = 2
+            nomeUsuario = "Coordenador 1"
+            tipoUsuario = "COORDENADOR"
+        }
+
+        if (username == "gestor@gmail.com") { // Remover esse "if" completo também
+            idUsuario = 3
+            nomeUsuario = "Gestor 1"
+            tipoUsuario = "GESTOR"
+        }
+
+        // Aqui é parte de retornar "True" ou "False"
         return (username == "analista@gmail.com" && password == "1234") ||
                 (username == "gestor@gmail.com" && password == "5678") ||
                 (username == "coordenador@gmail.com" && password == "abcd")
