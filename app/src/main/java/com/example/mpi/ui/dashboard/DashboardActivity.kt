@@ -14,6 +14,11 @@ import com.example.mpi.ui.MenuActivity
 
 class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
+
+    val USUARIO_ANALISTA = "ANALISTA"
+    val USUARIO_COORDENADOR = "COORDENADOR"
+    val USUARIO_GESTOR = "GESTOR"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,14 +30,27 @@ class DashboardActivity : AppCompatActivity() {
             insets
         }
 
+        val intentExtra = intent
+        val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
+        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
+        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
+
         val openMenuPrincipal: ImageView = findViewById(R.id.viewVoltarMenuPrincipal)
         openMenuPrincipal.setOnClickListener {
-            startActivity(Intent(this, MenuActivity::class.java))
+            val extra = Intent(this, MenuActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
         }
 
         val openOpcao1: Button = findViewById(R.id.btnOption1)
         openOpcao1.setOnClickListener {
-            startActivity(Intent(this, Opcao1Activity::class.java))
+            val extra = Intent(this, Opcao1Activity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
         }
     }
 }

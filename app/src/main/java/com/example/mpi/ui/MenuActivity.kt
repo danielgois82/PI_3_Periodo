@@ -2,10 +2,10 @@ package com.example.mpi.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,6 +20,11 @@ import com.example.mpi.ui.subpilar.SubpilarActivity
 
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
+
+    val USUARIO_ANALISTA = "ANALISTA"
+    val USUARIO_COORDENADOR = "COORDENADOR"
+    val USUARIO_GESTOR = "GESTOR"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,55 +36,113 @@ class MenuActivity : AppCompatActivity() {
             insets
         }
 
-        val intent = getIntent()
-        val tipo = intent.getStringExtra("tipo") ?: "valor padrão"
-        Log.d("danielgois_project", tipo)
-
-        Toast.makeText(this, tipo, Toast.LENGTH_LONG)
+        val intentExtra = intent
+        val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
+        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
+        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
 
         val openPilar: Button = findViewById(R.id.btnPilarActivity)
-        openPilar.setOnClickListener {
-            startActivity(Intent(this, PilarActivity::class.java))
-        }
-
         val openSubpilar: Button = findViewById(R.id.btnSubpilarActivity)
-        openSubpilar.setOnClickListener {
-            startActivity(Intent(this, SubpilarActivity::class.java))
-        }
-
         val openAcao: Button = findViewById(R.id.btnAcaoActivity)
-        openAcao.setOnClickListener {
-            startActivity(Intent(this, AcaoActivity::class.java))
-        }
-
         val openAtividade: Button = findViewById(R.id.btnAtividadeActivity)
-        openAtividade.setOnClickListener {
-            startActivity(Intent(this, AtividadeActivity::class.java))
-        }
-
         val openAprovacao: Button = findViewById(R.id.btnAprovacaoActivity)
-        openAprovacao.setOnClickListener {
-            startActivity(Intent(this, AprovacaoActivity::class.java))
-        }
-
         val openFinalizacao: Button = findViewById(R.id.btnFinalizacaoActivity)
-        openFinalizacao.setOnClickListener {
-            startActivity(Intent(this, FinalizacaoActivity::class.java))
-        }
-
         val openPercentual: Button = findViewById(R.id.btnPercentualActivity)
-        openPercentual.setOnClickListener {
-            startActivity(Intent(this, PercentualActivity::class.java))
-        }
-
         val openDashboard: Button = findViewById(R.id.btnDashboardActivity)
-        openDashboard.setOnClickListener {
-            startActivity(Intent(this, DashboardActivity::class.java))
+        val openNotificacao: ImageView = findViewById(R.id.btnNotificacaoActivity)
+
+        val textViewNomeUsuario = findViewById<TextView>(R.id.textviewNomeUsuario)
+        textViewNomeUsuario.text = nomeUsuario
+
+        if (tipoUsuario.uppercase() == USUARIO_ANALISTA) {
+            openAprovacao.visibility = View.GONE
+            openFinalizacao.visibility = View.GONE
+            openDashboard.visibility = View.GONE
         }
 
-        val openNotificacao: ImageView = findViewById(R.id.btnNotificacaoActivity)
+        if (tipoUsuario.uppercase() == USUARIO_COORDENADOR) {
+            openDashboard.visibility = View.GONE
+        }
+
+        if (tipoUsuario.uppercase() == USUARIO_GESTOR) {
+            openPilar.visibility = View.GONE
+            openSubpilar.visibility = View.GONE
+            openAprovacao.visibility = View.GONE
+            openFinalizacao.visibility = View.GONE
+            openPercentual.visibility = View.GONE
+            openNotificacao.visibility = View.INVISIBLE
+        }
+
+        openPilar.setOnClickListener {
+            val extra = Intent(this, PilarActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
+        }
+
+        openSubpilar.setOnClickListener {
+            val extra = Intent(this, SubpilarActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
+        }
+
+        openAcao.setOnClickListener {
+            val extra = Intent(this, AcaoActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
+        }
+
+        openAtividade.setOnClickListener {
+            val extra = Intent(this, AtividadeActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
+        }
+
+        openAprovacao.setOnClickListener {
+            val extra = Intent(this, AprovacaoActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
+        }
+
+        openFinalizacao.setOnClickListener {
+            val extra = Intent(this, FinalizacaoActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
+        }
+
+        openPercentual.setOnClickListener {
+            val extra = Intent(this, PercentualActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
+        }
+
+        openDashboard.setOnClickListener {
+            val extra = Intent(this, DashboardActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
+        }
+
         openNotificacao.setOnClickListener {
-            startActivity(Intent(this, NotificacaoActivity::class.java))
+            val extra = Intent(this, NotificacaoActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
         }
     }
 }
