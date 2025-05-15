@@ -35,7 +35,7 @@ class AtividadeActivity : AppCompatActivity() {
         val cadAtividade: Button = findViewById(R.id.btnCadastrarAtividade)
         val voltar: ImageView = findViewById(R.id.btnVoltar)
 
-        if (tipoUsuario == USUARIO_GESTOR) {
+        if (tipoUsuario.uppercase() == USUARIO_GESTOR) {
             cadAtividade.visibility = View.GONE
         }
 

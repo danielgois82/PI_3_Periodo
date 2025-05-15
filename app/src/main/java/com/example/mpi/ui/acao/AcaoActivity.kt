@@ -35,7 +35,7 @@ class AcaoActivity : AppCompatActivity() {
         val cadAcao: Button = findViewById(R.id.btnCadastrarAcao)
         val voltar: ImageView = findViewById(R.id.btnVoltar)
 
-        if (tipoUsuario == USUARIO_GESTOR) {
+        if (tipoUsuario.uppercase() == USUARIO_GESTOR) {
             cadAcao.visibility = View.GONE
         }
 
