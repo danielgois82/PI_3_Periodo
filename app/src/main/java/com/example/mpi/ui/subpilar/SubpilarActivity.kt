@@ -2,39 +2,137 @@ package com.example.mpi.ui.subpilar
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.mpi.R
-import com.example.mpi.ui.subpilar.cadastroSubPilar
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mpi.data.DatabaseHelper
+import com.example.mpi.databinding.ActivitySubpilarBinding
+import com.example.mpi.ui.subpilar.EditarSubpilarActivity
 
+data class Subpilar(
+    val id: Long,
+    val nome: String,
+    val descricao: String,
+    val dataInicio: String,
+    val dataTermino: String,
+    val aprovado: Boolean,
+    val idPilar: Long,
+    val idUsuario: Long
+)
 
 class SubpilarActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySubpilarBinding
+    private lateinit var dbHelper: DatabaseHelper
+    private lateinit var subpilarAdapter: SubpilarAdapter
+    private val listaSubpilares = mutableListOf<Subpilar>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_subpilar)
+        binding = ActivitySubpilarBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        dbHelper = DatabaseHelper(this)
 
-        val cadSubPilar: Button = findViewById(R.id.btnAdicionarSubPilar)
-        cadSubPilar.setOnClickListener {
-            val intent = Intent(this, cadastroSubPilar::class.java)
+        binding.recyclerViewSubpilares.layoutManager = LinearLayoutManager(this)
+        subpilarAdapter = SubpilarAdapter(
+            listaSubpilares,
+            { subpilar -> editarSubpilar(subpilar) },
+            { subpilar -> excluirSubpilar(subpilar) })
+        binding.recyclerViewSubpilares.adapter = subpilarAdapter
+
+        carregarSubpilares()
+
+        binding.btnAdicionarSubpilar.setOnClickListener {
+            val intent = Intent(this, cadastroSubpilar::class.java)
             startActivity(intent)
         }
-        val voltar: ImageView = findViewById(R.id.btnVoltar)
-        voltar.setOnClickListener {
+        binding.btnVoltar.setOnClickListener {
             finish()
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        carregarSubpilares()
+    }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+    private fun carregarSubpilares() {
+        listaSubpilares.clear()
+        val db = dbHelper.readableDatabase
+        val projection = arrayOf(
+            DatabaseHelper.COLUMN_SUBPILAR_ID,
+            DatabaseHelper.COLUMN_SUBPILAR_NOME,
+            DatabaseHelper.COLUMN_SUBPILAR_DESCRICAO,
+            DatabaseHelper.COLUMN_SUBPILAR_DATA_INICIO,
+            DatabaseHelper.COLUMN_SUBPILAR_DATA_TERMINO,
+            DatabaseHelper.COLUMN_SUBPILAR_IS_APROVADO,
+            DatabaseHelper.COLUMN_SUBPILAR_ID_PILAR,
+            DatabaseHelper.COLUMN_SUBPILAR_ID_USUARIO
+        )
+
+        val cursor = db.query(
+            DatabaseHelper.TABLE_SUBPILAR,
+            projection,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        with(cursor) {
+            while (moveToNext()) {
+                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID))
+                val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_NOME))
+                val descricao = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DESCRICAO))
+                val dataInicio = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DATA_INICIO))
+                val dataTermino = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DATA_TERMINO))
+                val aprovado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_IS_APROVADO)) > 0
+                val idPilar = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_PILAR))
+                val idUsuario = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_USUARIO))
+
+                listaSubpilares.add(
+                    Subpilar(
+                        id,
+                        nome,
+                        descricao,
+                        dataInicio,
+                        dataTermino,
+                        aprovado,
+                        idPilar,
+                        idUsuario
+                    )
+                )
+            }
+        }
+        cursor.close()
+        db.close()
+        subpilarAdapter.notifyDataSetChanged()
+    }
+
+    private fun editarSubpilar(subpilar: Subpilar) {
+        val intent = Intent(this, EditarSubpilarActivity::class.java)
+        intent.putExtra("subpilar_id", subpilar.id)
+        intent.putExtra("subpilar_nome", subpilar.nome)
+        intent.putExtra("subpilar_descricao", subpilar.descricao)
+        intent.putExtra("subpilar_data_inicio", subpilar.dataInicio)
+        intent.putExtra("subpilar_data_termino", subpilar.dataTermino)
+        intent.putExtra("subpilar_aprovado", subpilar.aprovado)
+        intent.putExtra("subpilar_id_pilar", subpilar.idPilar)
+        intent.putExtra("subpilar_id_usuario", subpilar.idUsuario)
+        startActivity(intent)
+    }
+
+    private fun excluirSubpilar(subpilar: Subpilar) {
+        val db = dbHelper.writableDatabase
+        val whereClause = "${DatabaseHelper.COLUMN_SUBPILAR_ID} = ?"
+        val whereArgs = arrayOf(subpilar.id.toString())
+        val deletedRows = db.delete(DatabaseHelper.TABLE_SUBPILAR, whereClause, whereArgs)
+        if (deletedRows > 0) {
+            listaSubpilares.remove(subpilar)
+            subpilarAdapter.notifyDataSetChanged()
+            android.widget.Toast.makeText(this, "Subpilar '${subpilar.nome}' excluído com sucesso!", android.widget.Toast.LENGTH_SHORT).show()
+        } else {
+            android.widget.Toast.makeText(this, "Erro ao excluir o subpilar.", android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 }

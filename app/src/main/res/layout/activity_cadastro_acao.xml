@@ -9,7 +9,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.acao.cadastroAcao">
+        tools:context=".ui.acao.CadastroAcaoActivity">
 
         <TextView
             android:id="@+id/textViewTitulo"
@@ -137,72 +137,6 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewDataInicio" />
 
         <TextView
-            android:id="@+id/textViewCodigoPilar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:fontFamily="@font/inria_sans_regular"
-            android:text="Código do Pilar associado:"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dataInicio" />
-
-        <EditText
-            android:id="@+id/codigoPilar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:background="@drawable/border"
-            android:ems="10"
-            android:fontFamily="@font/inria_sans_regular"
-            android:gravity="top"
-            android:hint="Insira aqui"
-            android:inputType="text"
-            android:padding="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewCodigoPilar" />
-
-        <TextView
-            android:id="@+id/textViewCodigoSubPilar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:fontFamily="@font/inria_sans_regular"
-            android:text="Código do SubPilar associado (opcional):"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/codigoPilar" />
-
-        <EditText
-            android:id="@+id/codigoSubPilar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:background="@drawable/border"
-            android:ems="10"
-            android:fontFamily="@font/inria_sans_regular"
-            android:gravity="top"
-            android:hint="Insira aqui"
-            android:inputType="text"
-            android:padding="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewCodigoSubPilar" />
-
-        <TextView
             android:id="@+id/textViewResponsavel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -215,7 +149,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/codigoSubPilar" />
+            app:layout_constraintTop_toBottomOf="@+id/dataInicio" />
 
         <EditText
             android:id="@+id/codigoResponsavel"
@@ -265,6 +199,61 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewPrazo" />
 
+        <TextView
+            android:id="@+id/textViewVinculo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:fontFamily="@font/inria_sans_regular"
+            android:text="Vincular a:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dataTermino" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupVinculo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewVinculo">
+
+            <RadioButton
+                android:id="@+id/radioPilar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pilar"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/radioSubpilar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subpilar"
+                android:textSize="18sp" />
+        </RadioGroup>
+
+        <Spinner
+            android:id="@+id/spinnerVinculo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/border"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroupVinculo" />
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
@@ -282,7 +271,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dataTermino">
+            app:layout_constraintTop_toBottomOf="@+id/spinnerVinculo">
 
             <Button
                 android:id="@+id/cancelarCadastro"
@@ -291,8 +280,8 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="#FE9A22"
-                android:hint="Cancelar"
-                android:textColorHint="#FFFFFF" />
+                android:text="Cancelar"
+                android:textColor="@color/white" />
 
             <Button
                 android:id="@+id/confirmarCadastro"
@@ -301,8 +290,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="#03324A"
-                android:hint="Confirmar"
-                android:textColorHint="#FFFFFF" />
+                android:text="Confirmar"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 

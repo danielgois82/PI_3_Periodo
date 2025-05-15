@@ -3,23 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/main"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="56dp"
+    tools:context=".ui.acao.AcaoActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/statusBarGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="24dp" />
 
     <ImageView
         android:id="@+id/btnVoltar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="52dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         android:clickable="true"
         android:focusable="true"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        android:src="@drawable/arrow"
+        android:src="@drawable/arrow_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/statusBarGuideline" />
 
     <TextView
         android:id="@+id/textViewListaAcoesTitulo"
@@ -37,16 +42,13 @@
         app:layout_constraintTop_toBottomOf="@+id/btnVoltar" />
 
     <Button
-        android:id="@+id/btnCadastrarAcao"
+        android:id="@+id/btnAdicionarAcao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="#03324A"
-        android:fontFamily="@font/inria_sans_regular"
         android:text="Cadastrar Ação"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewListaAcoesTitulo" />
 
@@ -58,6 +60,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCadastrarAcao" />
+        app:layout_constraintTop_toBottomOf="@+id/btnAdicionarAcao"
+        tools:listitem="@layout/acao_item_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,34 +2,153 @@ package com.example.mpi.ui.acao
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.mpi.R
-import com.example.mpi.ui.subpilar.cadastroSubPilar
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mpi.databinding.ActivityAcaoBinding
+import com.example.mpi.data.DatabaseHelper
+
+data class Acao(
+    val id: Long,
+    val nome: String,
+    val descricao: String,
+    val dataInicio: String,
+    val dataTermino: String,
+    val responsavel: Int,
+    val aprovado: Boolean,
+    val finalizado: Boolean,
+    val id_pilar: Long?,
+    val id_subpilar: Long?,
+    val id_usuario: Long?
+)
 
 class AcaoActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityAcaoBinding
+    private lateinit var dbHelper: DatabaseHelper
+    private lateinit var acaoAdapter: AcaoAdapter
+    private val listaAcoes = mutableListOf<Acao>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_acao)
+        binding = ActivityAcaoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val cadAcao: Button = findViewById(R.id.btnCadastrarAcao)
-        cadAcao.setOnClickListener {
-            val intent = Intent(this, cadastroAcao::class.java)
+        dbHelper = DatabaseHelper(this)
+
+        binding.recyclerViewAcoes.layoutManager = LinearLayoutManager(this)
+        acaoAdapter = AcaoAdapter(listaAcoes,
+            onEditarClicked = { acao -> editarAcao(acao) },
+            onExcluirClicked = { acao -> excluirAcao(acao) })
+        binding.recyclerViewAcoes.adapter = acaoAdapter
+
+        carregarAcoes()
+
+        binding.btnAdicionarAcao.setOnClickListener {
+            val intent = Intent(this, CadastroAcaoActivity::class.java)
             startActivity(intent)
         }
-        val voltar: ImageView = findViewById(R.id.btnVoltar)
-        voltar.setOnClickListener {
+        binding.btnVoltar.setOnClickListener {
             finish()
         }
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+    }
+
+    override fun onResume() {
+        super.onResume()
+        carregarAcoes()
+    }
+
+    private fun carregarAcoes() {
+        listaAcoes.clear()
+        val db = dbHelper.readableDatabase
+        val projection = arrayOf(
+            DatabaseHelper.COLUMN_ACAO_ID,
+            DatabaseHelper.COLUMN_ACAO_NOME,
+            DatabaseHelper.COLUMN_ACAO_DESCRICAO,
+            DatabaseHelper.COLUMN_ACAO_DATA_INICIO,
+            DatabaseHelper.COLUMN_ACAO_DATA_TERMINO,
+            DatabaseHelper.COLUMN_ACAO_RESPONSAVEL,
+            DatabaseHelper.COLUMN_ACAO_IS_APROVADO,
+            DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO,
+            DatabaseHelper.COLUMN_ACAO_ID_PILAR,
+            DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR,
+            DatabaseHelper.COLUMN_ACAO_ID_USUARIO
+        )
+
+        val cursor = db.query(
+            DatabaseHelper.TABLE_ACAO,
+            projection,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        with(cursor) {
+            while (moveToNext()) {
+                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
+                val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_NOME))
+                val descricao = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DESCRICAO))
+                val dataInicio = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_INICIO))
+                val dataTermino = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_TERMINO))
+                val responsavel = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_RESPONSAVEL))
+                val aprovado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_APROVADO)) > 0
+                val finalizado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO)) > 0
+                val id_pilar = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
+                val id_subpilar = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
+                val id_usuario = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_USUARIO))
+
+
+                listaAcoes.add(
+                    Acao(
+                        id,
+                        nome,
+                        descricao,
+                        dataInicio,
+                        dataTermino,
+                        responsavel,
+                        aprovado,
+                        finalizado,
+                        id_pilar,
+                        id_subpilar,
+                        id_usuario
+                    )
+                )
+            }
+        }
+        cursor.close()
+        db.close()
+        acaoAdapter.notifyDataSetChanged()
+    }
+
+    private fun editarAcao(acao: Acao) {
+        val intent = Intent(this, EditarAcaoActivity::class.java)
+        intent.putExtra("acao_id", acao.id)
+        intent.putExtra("acao_nome", acao.nome)
+        intent.putExtra("acao_descricao", acao.descricao)
+        intent.putExtra("acao_data_inicio", acao.dataInicio)
+        intent.putExtra("acao_data_termino", acao.dataTermino)
+        intent.putExtra("acao_codigo_responsavel", acao.responsavel)
+        intent.putExtra("acao_aprovado", acao.aprovado)
+        intent.putExtra("acao_finalizada", acao.finalizado)
+        intent.putExtra("acao_id_pilar", acao.id_pilar)
+        intent.putExtra("acao_id_subpilar", acao.id_subpilar)
+        intent.putExtra("acao_id_usuario", acao.id_usuario)
+        startActivity(intent)
+    }
+
+    private fun excluirAcao(acao: Acao) {
+        val db = dbHelper.writableDatabase
+        val whereClause = "${DatabaseHelper.COLUMN_ACAO_ID} = ?"
+        val whereArgs = arrayOf(acao.id.toString())
+        val deletedRows = db.delete(DatabaseHelper.TABLE_ACAO, whereClause, whereArgs)
+        db.close()
+        if (deletedRows > 0) {
+            listaAcoes.remove(acao)
+            acaoAdapter.notifyDataSetChanged()
+            Toast.makeText(this, "Ação '${acao.nome}' excluída com sucesso!", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Erro ao excluir a ação.", Toast.LENGTH_SHORT).show()
         }
     }
 }
