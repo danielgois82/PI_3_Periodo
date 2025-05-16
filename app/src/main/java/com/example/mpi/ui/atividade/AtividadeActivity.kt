@@ -2,6 +2,7 @@ package com.example.mpi.ui.atividade
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,11 @@ data class Atividade(
 )
 
 class AtividadeActivity : AppCompatActivity() {
+
+    val USUARIO_ANALISTA = "ANALISTA"
+    val USUARIO_COORDENADOR = "COORDENADOR"
+    val USUARIO_GESTOR = "GESTOR"
+
     private lateinit var binding: ActivityAtividadeBinding
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var atividadeAdapter: AtividadeAdapter
@@ -32,6 +38,11 @@ class AtividadeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAtividadeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val intentExtra = intent
+        val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
+        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
+        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
 
         dbHelper = DatabaseHelper(this)
 
@@ -43,7 +54,8 @@ class AtividadeActivity : AppCompatActivity() {
         binding.recyclerViewAtividades.adapter = atividadeAdapter
 
         if (tipoUsuario.uppercase() == USUARIO_GESTOR) {
-            cadAtividade.visibility = View.GONE
+            binding.btnCadastrarAtividade.visibility = View.GONE
+        }
 
         carregarAtividades()
 

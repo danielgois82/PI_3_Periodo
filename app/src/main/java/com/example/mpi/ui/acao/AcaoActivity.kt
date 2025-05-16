@@ -2,6 +2,7 @@ package com.example.mpi.ui.acao
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,11 @@ data class Acao(
 )
 
 class AcaoActivity : AppCompatActivity() {
+
+    val USUARIO_ANALISTA = "ANALISTA"
+    val USUARIO_COORDENADOR = "COORDENADOR"
+    val USUARIO_GESTOR = "GESTOR"
+
     private lateinit var binding: ActivityAcaoBinding
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var acaoAdapter: AcaoAdapter
@@ -33,6 +39,11 @@ class AcaoActivity : AppCompatActivity() {
         binding = ActivityAcaoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val intentExtra = intent
+        val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
+        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
+        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
+
         dbHelper = DatabaseHelper(this)
 
         binding.recyclerViewAcoes.layoutManager = LinearLayoutManager(this)
@@ -42,7 +53,8 @@ class AcaoActivity : AppCompatActivity() {
         binding.recyclerViewAcoes.adapter = acaoAdapter
 
         if (tipoUsuario.uppercase() == USUARIO_GESTOR) {
-            cadAcao.visibility = View.GONE
+            binding.btnAdicionarAcao.visibility = View.GONE
+        }
 
         carregarAcoes()
 
