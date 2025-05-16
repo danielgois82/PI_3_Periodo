@@ -4,15 +4,27 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mpi.data.Pilar
-import com.example.mpi.data.PilarDbHelper
 import com.example.mpi.databinding.ActivityPilarBinding
+import com.example.mpi.ui.pilar.cadastroPilar
 import com.example.mpi.ui.pilar.EditarPilarActivity
+import com.example.mpi.data.DatabaseHelper
+
+data class Pilar(
+    val id: Long,
+    val nome: String,
+    val descricao: String,
+    val dataInicio: String,
+    val dataTermino: String,
+    val aprovado: Boolean,
+    val percentual: Double,
+    val idCalendario: Int,
+    val idUsuario: Int
+)
 
 class PilarActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPilarBinding
-    private lateinit var dbHelper: PilarDbHelper
+    private lateinit var dbHelper: DatabaseHelper // Use o DatabaseHelper que criamos
     private lateinit var pilarAdapter: PilarAdapter
     private val listaPilares = mutableListOf<Pilar>()
 
@@ -21,8 +33,7 @@ class PilarActivity : AppCompatActivity() {
         binding = ActivityPilarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dbHelper = PilarDbHelper(this)
-
+        dbHelper = DatabaseHelper(this)
 
         binding.recyclerViewPilares.layoutManager = LinearLayoutManager(this)
         pilarAdapter = PilarAdapter(listaPilares, { pilar -> editarPilar(pilar) }, { pilar -> excluirPilar(pilar) })
@@ -31,8 +42,7 @@ class PilarActivity : AppCompatActivity() {
         carregarPilares()
 
         binding.btnAdicionarPilar.setOnClickListener {
-            android.widget.Toast.makeText(this, "Adicionar novo pilar", android.widget.Toast.LENGTH_SHORT).show()
-            val intent = android.content.Intent(this, cadastroPilar::class.java)
+            val intent = Intent(this, cadastroPilar::class.java)
             startActivity(intent)
         }
         binding.btnVoltar.setOnClickListener {
@@ -49,18 +59,19 @@ class PilarActivity : AppCompatActivity() {
         listaPilares.clear()
         val db = dbHelper.readableDatabase
         val projection = arrayOf(
-            android.provider.BaseColumns._ID,
-            com.example.mpi.data.PilarContract.UserEntry.COL_NOME,
-            com.example.mpi.data.PilarContract.UserEntry.COL_DESCRICAO,
-            com.example.mpi.data.PilarContract.UserEntry.COL_RESPONSAVEL,
-            com.example.mpi.data.PilarContract.UserEntry.COL_DATAI,
-            com.example.mpi.data.PilarContract.UserEntry.COL_DATAT,
-            com.example.mpi.data.PilarContract.UserEntry.COL_APROVADO,
-            com.example.mpi.data.PilarContract.UserEntry.COL_PERCENTUAL
+            DatabaseHelper.COLUMN_PILAR_ID,
+            DatabaseHelper.COLUMN_PILAR_NOME,
+            DatabaseHelper.COLUMN_PILAR_DESCRICAO,
+            DatabaseHelper.COLUMN_PILAR_DATA_INICIO,
+            DatabaseHelper.COLUMN_PILAR_DATA_TERMINO,
+            DatabaseHelper.COLUMN_PILAR_IS_APROVADO,
+            DatabaseHelper.COLUMN_PILAR_PERCENTUAL,
+            DatabaseHelper.COLUMN_PILAR_ID_CALENDARIO,
+            DatabaseHelper.COLUMN_PILAR_ID_USUARIO
         )
 
         val cursor = db.query(
-            com.example.mpi.data.PilarContract.UserEntry.TABLE_NAME,
+            DatabaseHelper.TABLE_PILAR,
             projection,
             null,
             null,
@@ -69,28 +80,29 @@ class PilarActivity : AppCompatActivity() {
             null
         )
 
-
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(android.provider.BaseColumns._ID))
-                val nome = getString(getColumnIndexOrThrow(com.example.mpi.data.PilarContract.UserEntry.COL_NOME))
-                val descricao = getString(getColumnIndexOrThrow(com.example.mpi.data.PilarContract.UserEntry.COL_DESCRICAO))
-                val responsavel = getInt(getColumnIndexOrThrow(com.example.mpi.data.PilarContract.UserEntry.COL_RESPONSAVEL))
-                val dataInicio = getString(getColumnIndexOrThrow(com.example.mpi.data.PilarContract.UserEntry.COL_DATAI))
-                val dataTermino = getString(getColumnIndexOrThrow(com.example.mpi.data.PilarContract.UserEntry.COL_DATAT))
-                val aprovado = getInt(getColumnIndexOrThrow(com.example.mpi.data.PilarContract.UserEntry.COL_APROVADO)) > 0
-                val percentual = getDouble(getColumnIndexOrThrow(com.example.mpi.data.PilarContract.UserEntry.COL_PERCENTUAL))
+                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
+                val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
+                val descricao = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DESCRICAO))
+                val dataInicio = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_INICIO))
+                val dataTermino = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_TERMINO))
+                val aprovado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_IS_APROVADO)) > 0
+                val percentual = getDouble(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_PERCENTUAL))
+                val idCalendario = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_CALENDARIO))
+                val idUsuario = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_USUARIO))
 
                 listaPilares.add(
                     Pilar(
                         id,
                         nome,
                         descricao,
-                        responsavel,
                         dataInicio,
                         dataTermino,
                         aprovado,
-                        percentual
+                        percentual,
+                        idCalendario,
+                        idUsuario
                     )
                 )
             }
@@ -101,26 +113,25 @@ class PilarActivity : AppCompatActivity() {
     }
 
     private fun editarPilar(pilar: Pilar) {
-        // Aqui está a Intent corrigida:
-        val intent = Intent(this, EditarPilarActivity::class.java) // Substitua se o pacote for diferente
+        val intent = Intent(this, EditarPilarActivity::class.java)
         intent.putExtra("pilar_id", pilar.id)
         intent.putExtra("pilar_nome", pilar.nome)
         intent.putExtra("pilar_descricao", pilar.descricao)
-        intent.putExtra("pilar_responsavel", pilar.responsavel)
         intent.putExtra("pilar_data_inicio", pilar.dataInicio)
         intent.putExtra("pilar_data_termino", pilar.dataTermino)
         intent.putExtra("pilar_aprovado", pilar.aprovado)
         intent.putExtra("pilar_percentual", pilar.percentual)
+        intent.putExtra("pilar_id_calendario", pilar.idCalendario)
+        intent.putExtra("pilar_id_usuario", pilar.idUsuario)
         startActivity(intent)
         android.widget.Toast.makeText(this, "Editar: ${pilar.nome}", android.widget.Toast.LENGTH_SHORT).show()
     }
 
     private fun excluirPilar(pilar: Pilar) {
-        // Aqui você implementará a lógica para excluir o pilar
         val db = dbHelper.writableDatabase
-        val whereClause = "${android.provider.BaseColumns._ID} = ?"
+        val whereClause = "${DatabaseHelper.COLUMN_PILAR_ID} = ?"
         val whereArgs = arrayOf(pilar.id.toString())
-        val deletedRows = db.delete(com.example.mpi.data.PilarContract.UserEntry.TABLE_NAME, whereClause, whereArgs)
+        val deletedRows = db.delete(DatabaseHelper.TABLE_PILAR, whereClause, whereArgs)
         if (deletedRows > 0) {
             listaPilares.remove(pilar)
             pilarAdapter.notifyDataSetChanged()
@@ -128,5 +139,6 @@ class PilarActivity : AppCompatActivity() {
         } else {
             android.widget.Toast.makeText(this, "Erro ao excluir o pilar.", android.widget.Toast.LENGTH_SHORT).show()
         }
+        db.close()
     }
 }

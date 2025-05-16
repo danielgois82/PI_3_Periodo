@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/main"
     android:layout_height="match_parent"
     android:paddingBottom="56dp"
-    tools:context=".ui.pilar.PilarActivity">
+    tools:context=".ui.subpilar.SubpilarActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/statusBarGuideline"
@@ -23,12 +22,12 @@
         android:layout_marginTop="4dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/arrow"
+        android:src="@drawable/arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/statusBarGuideline" />
 
     <TextView
-        android:id="@+id/textViewListaPilaresTitulo"
+        android:id="@+id/textViewListaSubpilaresTitulo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -36,32 +35,32 @@
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/inter18pt_extra_bold"
         android:gravity="center"
-        android:text="Lista de SubPilares"
+        android:text="Lista de Subpilares"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnVoltar" />
 
     <Button
-        android:id="@+id/btnAdicionarSubPilar"
+        android:id="@+id/btnAdicionarSubpilar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="#03324A"
-        android:text="Cadastrar SubPilar"
+        android:text="Cadastrar Subpilar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewListaPilaresTitulo" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewListaSubpilaresTitulo" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewPilares"
+        android:id="@+id/recyclerViewSubpilares"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAdicionarSubPilar"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/btnAdicionarSubpilar"
+        tools:listitem="@layout/subpilar_item_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

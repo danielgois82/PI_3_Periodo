@@ -3,7 +3,6 @@ package com.example.mpi.ui.pilar
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mpi.data.Pilar
 import com.example.mpi.databinding.FragmentPilarItemBinding
 
 class PilarAdapter(
@@ -17,7 +16,6 @@ class PilarAdapter(
         val tvDescricao = binding.tvDescricaoPilarItem
         val tvDataInicio = binding.tvDataInicioPilarItem
         val tvDataTermino = binding.tvDataTerminoPilarItem
-        val tvResponsavel = binding.tvResponsavelPilarItem
         val tvPercentual = binding.tvPercentualPilarItem
         val tvAprovado = binding.tvAprovadoPilarItem
         val btnEditar = binding.btnEditarPilar
@@ -35,7 +33,6 @@ class PilarAdapter(
         holder.tvDescricao.text = pilar.descricao
         holder.tvDataInicio.text = "Início: ${pilar.dataInicio}"
         holder.tvDataTermino.text = "Término: ${pilar.dataTermino}"
-        holder.tvResponsavel.text = "Responsável: ${pilar.responsavel}"
         holder.tvPercentual.text = String.format("%.2f%%", pilar.percentual * 100)
         holder.tvAprovado.text = if (pilar.aprovado) "Aprovado" else "Pendente"
 
