@@ -6,11 +6,11 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/mainEditarPilar"
+        android:id="@+id/mainEditarAcao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="56dp"
-        tools:context=".ui.EditarPilarActivity">
+        tools:context=".ui.acao.EditarAcaoActivity">
 
         <TextView
             android:id="@+id/textViewTituloEditar"
@@ -20,7 +20,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:fontFamily="@font/inter18pt_extra_bold"
-            android:text="Editar Pilar"
+            android:text="Editar Ação"
             android:textSize="40sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/inria_sans_regular"
-            android:text="*Modifique os campos com os dados do pilar"
+            android:text="*Modifique os campos com os dados da ação"
             android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -49,7 +49,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:fontFamily="@font/inria_sans_regular"
-            android:text="Nome do pilar:"
+            android:text="Nome da ação:"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +57,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewInstrucaoEditar" />
 
         <EditText
-            android:id="@+id/etEditarNomePilar"
+            android:id="@+id/etEditarNomeAcao"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -81,15 +81,15 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:fontFamily="@font/inria_sans_regular"
-            android:text="Descrição do pilar:"
+            android:text="Descrição da ação:"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etEditarNomePilar" />
+            app:layout_constraintTop_toBottomOf="@+id/etEditarNomeAcao" />
 
         <EditText
-            android:id="@+id/etEditarDescricaoPilar"
+            android:id="@+id/etEditarDescricaoAcao"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -120,7 +120,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etEditarDescricaoPilar" />
+            app:layout_constraintTop_toBottomOf="@+id/etEditarDescricaoAcao" />
 
         <EditText
             android:id="@+id/etEditarDataInicio"
@@ -138,6 +138,39 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewDataInicioEditar" />
 
         <TextView
+            android:id="@+id/textViewResponsavelEditar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:fontFamily="@font/inria_sans_regular"
+            android:text="Código do responsável:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etEditarDataInicio" />
+
+        <EditText
+            android:id="@+id/etEditarCodigoResponsavel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/border"
+            android:ems="10"
+            android:fontFamily="@font/inria_sans_regular"
+            android:gravity="top"
+            android:hint="Insira aqui"
+            android:inputType="text"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewResponsavelEditar" />
+
+        <TextView
             android:id="@+id/textViewPrazoEditar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -150,7 +183,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etEditarDataInicio" />
+            app:layout_constraintTop_toBottomOf="@+id/etEditarCodigoResponsavel" />
 
         <EditText
             android:id="@+id/etEditarDataTermino"
@@ -168,62 +201,59 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewPrazoEditar" />
 
         <TextView
-            android:id="@+id/textViewIdCalendarioEditar"
+            android:id="@+id/textViewVinculoEditar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:fontFamily="@font/inria_sans_regular"
-            android:text="ID do Calendário:"
+            android:text="Vincular a:"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etEditarDataTermino" />
 
-        <EditText
-            android:id="@+id/etEditarIdCalendario"
+        <RadioGroup
+            android:id="@+id/radioGroupVinculoEditar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewVinculoEditar">
+
+            <RadioButton
+                android:id="@+id/radioPilarEditar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pilar"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/radioSubpilarEditar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subpilar"
+                android:textSize="18sp" />
+        </RadioGroup>
+
+        <Spinner
+            android:id="@+id/spinnerVinculoEditar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/border"
-            android:hint="Insira o ID do Calendário"
-            android:inputType="number"
             android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewIdCalendarioEditar" />
-
-        <TextView
-            android:id="@+id/textViewPercentualEditar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:fontFamily="@font/inria_sans_regular"
-            android:text="Percentual de Conclusão:"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etEditarIdCalendario" />
-
-        <TextView
-            android:id="@+id/tvExibirPercentual"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:fontFamily="@font/inria_sans_regular"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewPercentualEditar" />
+            app:layout_constraintTop_toBottomOf="@+id/radioGroupVinculoEditar" />
 
         <TextView
             android:id="@+id/textViewAprovadoEditar"
@@ -238,7 +268,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvExibirPercentual" />
+            app:layout_constraintTop_toBottomOf="@+id/spinnerVinculoEditar" />
 
         <TextView
             android:id="@+id/tvExibirAprovado"
@@ -250,7 +280,36 @@
             android:fontFamily="@font/inria_sans_regular"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewAprovadoEditar" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewAprovadoEditar"
+            tools:text="Sim" />
+
+        <TextView
+            android:id="@+id/textViewFinalizadaEditar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:fontFamily="@font/inria_sans_regular"
+            android:text="Finalizada:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvExibirAprovado" />
+
+        <TextView
+            android:id="@+id/tvExibirFinalizada"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:fontFamily="@font/inria_sans_regular"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewFinalizadaEditar"
+            tools:text="Sim" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineEditar"
@@ -269,7 +328,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvExibirAprovado">
+            app:layout_constraintTop_toBottomOf="@+id/tvExibirFinalizada">
 
             <Button
                 android:id="@+id/btnVoltarEditar"

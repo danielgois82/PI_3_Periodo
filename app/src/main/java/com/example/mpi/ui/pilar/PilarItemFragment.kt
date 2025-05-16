@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.mpi.data.Pilar
 import com.example.mpi.databinding.FragmentPilarItemBinding
 
 class PilarItemFragment(
@@ -20,7 +19,7 @@ class PilarItemFragment(
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentPilarItemBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -31,9 +30,9 @@ class PilarItemFragment(
         binding.tvDescricaoPilarItem.text = pilar.descricao
         binding.tvDataInicioPilarItem.text = "Início: ${pilar.dataInicio}"
         binding.tvDataTerminoPilarItem.text = "Término: ${pilar.dataTermino}"
-        binding.tvResponsavelPilarItem.text = "Responsável: ${pilar.responsavel}"
         binding.tvPercentualPilarItem.text = "Percentual: ${String.format("%.2f%%", pilar.percentual * 100)}"
         binding.tvAprovadoPilarItem.text = if (pilar.aprovado) "Aprovado" else "Pendente"
+        binding.tvIdUsuarioPilarItem.text = "ID Usuário: ${pilar.idUsuario}"
 
         binding.btnEditarPilar.setOnClickListener {
             onEditarClicked(pilar)
