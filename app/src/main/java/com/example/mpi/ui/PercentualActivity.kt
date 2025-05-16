@@ -11,8 +11,11 @@ import com.example.mpi.R
 import com.example.mpi.databinding.ActivityPercentualBinding
 
 class PercentualActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityPercentualBinding
+
+    val USUARIO_ANALISTA = "ANALISTA"
+    val USUARIO_COORDENADOR = "COORDENADOR"
+    val USUARIO_GESTOR = "GESTOR"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,9 +30,18 @@ class PercentualActivity : AppCompatActivity() {
             insets
         }
 
+        val intentExtra = intent
+        val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
+        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
+        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
+
         val openMenuPrincipal: ImageView = findViewById(R.id.viewVoltarMenuPrincipal)
         openMenuPrincipal.setOnClickListener {
-            startActivity(Intent(this, MenuActivity::class.java))
+            val extra = Intent(this, MenuActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
         }
 
     }

@@ -10,6 +10,10 @@ import com.example.mpi.R
 
 class AprovacaoActivity : AppCompatActivity() {
 
+    val USUARIO_ANALISTA = "ANALISTA"
+    val USUARIO_COORDENADOR = "COORDENADOR"
+    val USUARIO_GESTOR = "GESTOR"
+
     private lateinit var btnAprovar: Button
     private lateinit var card1: CardView
     private lateinit var card2: CardView
@@ -20,6 +24,11 @@ class AprovacaoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_aprovacao)
+
+        val intentExtra = intent
+        val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
+        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
+        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
 
         btnAprovar = findViewById(R.id.btnAprovar)
         card1 = findViewById(R.id.card1)
@@ -39,8 +48,11 @@ class AprovacaoActivity : AppCompatActivity() {
         }
 
         btnAprovar.setOnClickListener {
-            val intent = Intent(this, FinalizacaoActivity::class.java)
-            startActivity(intent)
+            val extra = Intent(this, FinalizacaoActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
         }
     }
 
