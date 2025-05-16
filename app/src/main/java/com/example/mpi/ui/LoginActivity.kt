@@ -4,11 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+// <<<<<<< daniel_gois
+import com.example.mpi.R
+import com.example.mpi.data.TipoUsuario
+import com.example.mpi.data.Usuario
+// =======
 import com.example.mpi.data.PilarDbHelper
+// >>>>>>> main
 import com.example.mpi.databinding.ActivityLoginBinding
+import com.example.mpi.repository.TipoUsuarioRepository
+import com.example.mpi.repository.UsuarioRepository
 
 class LoginActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityLoginBinding
 
     var idUsuario = 0
@@ -38,6 +45,24 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun validateUser(username: String, password: String): Boolean {
+// <<<<<<< daniel_gois
+        val usuarioRepository = UsuarioRepository(this)
+        val usuario: Usuario? = usuarioRepository.obterUsuarioPorEmailESenha(username, password)
+
+        if (usuario != null) {
+            idUsuario = usuario.id
+            nomeUsuario = usuario.nome
+
+            val tipoUsuarioRepository = TipoUsuarioRepository(this)
+            val tipo: TipoUsuario? = tipoUsuarioRepository.obterTipoUsuarioPorId(usuario.idTipoUsuario)
+
+            if (tipo != null) {
+                tipoUsuario = tipo.cargo
+            }
+            return true
+        } else {
+            return false
+// =======
         val dbHelper = PilarDbHelper(this)
         val usuario = dbHelper.validarLogin(username, password)
 
@@ -48,6 +73,7 @@ class LoginActivity : AppCompatActivity() {
             true
         } else {
             false
+// >>>>>>> main
         }
     }
 }

@@ -41,6 +41,9 @@ class AcaoActivity : AppCompatActivity() {
             onExcluirClicked = { acao -> excluirAcao(acao) })
         binding.recyclerViewAcoes.adapter = acaoAdapter
 
+        if (tipoUsuario.uppercase() == USUARIO_GESTOR) {
+            cadAcao.visibility = View.GONE
+
         carregarAcoes()
 
         binding.btnAdicionarAcao.setOnClickListener {

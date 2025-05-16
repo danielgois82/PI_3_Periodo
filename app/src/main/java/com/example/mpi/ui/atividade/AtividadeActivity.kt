@@ -42,6 +42,9 @@ class AtividadeActivity : AppCompatActivity() {
             { atividade -> excluirAtividade(atividade) })
         binding.recyclerViewAtividades.adapter = atividadeAdapter
 
+        if (tipoUsuario.uppercase() == USUARIO_GESTOR) {
+            cadAtividade.visibility = View.GONE
+
         carregarAtividades()
 
         binding.btnCadastrarAtividade.setOnClickListener {
