@@ -45,7 +45,7 @@ class DatabaseHelper(context: Context) :
             );
         """.trimIndent()
 
-                val createPilarTable = """
+        val createPilarTable = """
             CREATE TABLE $TABLE_PILAR (
                 $COLUMN_PILAR_ID INTEGER PRIMARY KEY,
                 $COLUMN_PILAR_NOME TEXT NOT NULL,
@@ -132,7 +132,7 @@ class DatabaseHelper(context: Context) :
                 FOREIGN KEY ($COLUMN_PERCENTUAL_ATIVIDADE_ID_ATIVIDADE) REFERENCES Atividade (id)
             );
         """.trimIndent()
-        
+
         db.execSQL(createCalendarioTable)
         db.execSQL(createTipoUsuarioTable)
         db.execSQL(createUsuarioTable)
@@ -188,7 +188,7 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_NOTIFICACAO_TITULO = "titulo"
         const val COLUMN_NOTIFICACAO_MENSAGEM = "mensagem"
         const val COLUMN_NOTIFICACAO_ID_USUARIO = "id_usuario"
-      
+
         const val TABLE_PILAR = "pilar"
         const val COLUMN_PILAR_ID = "id"
         const val COLUMN_PILAR_NOME = "nome"
@@ -248,7 +248,7 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_PERCENTUAL_ATIVIDADE_PERCENTUAL = "percentual"
         const val COLUMN_PERCENTUAL_ATIVIDADE_ID_ATIVIDADE = "id_atividade"
     }
-    
+
     private fun inserirTipoUsuario(db: SQLiteDatabase, tipoUsuario: List<TipoUsuario>) {
         for (tipo in tipoUsuario) {
             val values = ContentValues().apply {
@@ -288,3 +288,4 @@ class DatabaseHelper(context: Context) :
             Usuario(6, "Gestora Goreti", "goreti@goreti.com", "goreti123", 3)
         )
     }
+}
