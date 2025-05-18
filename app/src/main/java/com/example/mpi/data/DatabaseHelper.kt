@@ -55,7 +55,7 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_PILAR_DESCRICAO TEXT NOT NULL,
                 $COLUMN_PILAR_PERCENTUAL REAL DEFAULT 0,
                 $COLUMN_PILAR_ID_CALENDARIO INTEGER NOT NULL,
-                $COLUMN_PILAR_ID_USUARIO INTEGER,
+                $COLUMN_PILAR_ID_USUARIO INTEGER NOT NULL,
                 FOREIGN KEY ($COLUMN_PILAR_ID_CALENDARIO) REFERENCES Calendario (id),
                 FOREIGN KEY ($COLUMN_PILAR_ID_USUARIO) REFERENCES Usuario (id)
             );
@@ -70,7 +70,7 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_SUBPILAR_IS_APROVADO INTEGER DEFAULT 0,
                 $COLUMN_SUBPILAR_DESCRICAO TEXT NOT NULL,
                 $COLUMN_SUBPILAR_ID_PILAR INTEGER NOT NULL,
-                $COLUMN_SUBPILAR_ID_USUARIO INTEGER,
+                $COLUMN_SUBPILAR_ID_USUARIO INTEGER NOT NULL,
                 FOREIGN KEY ($COLUMN_SUBPILAR_ID_PILAR) REFERENCES Pilar (id),
                 FOREIGN KEY ($COLUMN_SUBPILAR_ID_USUARIO) REFERENCES Usuario (id)
             );
@@ -88,7 +88,7 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_ACAO_DESCRICAO TEXT NOT NULL,
                 $COLUMN_ACAO_ID_PILAR INTEGER,
                 $COLUMN_ACAO_ID_SUBPILAR INTEGER,
-                $COLUMN_ACAO_ID_USUARIO INTEGER,
+                $COLUMN_ACAO_ID_USUARIO INTEGER NOT NULL,
                 FOREIGN KEY ($COLUMN_ACAO_ID_PILAR) REFERENCES Pilar (id),
                 FOREIGN KEY ($COLUMN_ACAO_ID_SUBPILAR) REFERENCES Subpilar (id),
                 FOREIGN KEY ($COLUMN_ACAO_ID_USUARIO) REFERENCES Usuario (id)
@@ -117,7 +117,7 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_ATIVIDADE_DESCRICAO TEXT NOT NULL,
                 $COLUMN_ATIVIDADE_ORCAMENTO REAL DEFAULT 0,
                 $COLUMN_ATIVIDADE_ID_ACAO INTEGER NOT NULL,
-                $COLUMN_ATIVIDADE_ID_USUARIO INTEGER,
+                $COLUMN_ATIVIDADE_ID_USUARIO INTEGER NOT NULL,
                 FOREIGN KEY ($COLUMN_ATIVIDADE_ID_ACAO) REFERENCES Acao (id),
                 FOREIGN KEY ($COLUMN_ATIVIDADE_ID_USUARIO) REFERENCES Usuario (id)
             );

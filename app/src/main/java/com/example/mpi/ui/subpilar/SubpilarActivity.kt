@@ -2,6 +2,7 @@ package com.example.mpi.ui.subpilar
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpi.data.DatabaseHelper
@@ -32,6 +33,16 @@ class SubpilarActivity : AppCompatActivity() {
 
         dbHelper = DatabaseHelper(this)
 
+        ////////////////////// Carregando informações do usuário////////////////////////////////
+        val intentExtra = intent
+        val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
+        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
+        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
+        val tag = "PilarActivityLog"
+        val mensagemLog = "PilarActivity iniciada - ID Usuário: $idUsuario, Nome: $nomeUsuario"
+        Log.d(tag, mensagemLog)
+        ////////////////////////////////////////////////////////////////////////////////
+
         binding.recyclerViewSubpilares.layoutManager = LinearLayoutManager(this)
         subpilarAdapter = SubpilarAdapter(
             listaSubpilares,
@@ -43,6 +54,9 @@ class SubpilarActivity : AppCompatActivity() {
 
         binding.btnAdicionarSubpilar.setOnClickListener {
             val intent = Intent(this, cadastroSubpilar::class.java)
+            intent.putExtra("idUsuario", idUsuario)
+            intent.putExtra("nomeUsuario", nomeUsuario)
+            intent.putExtra("tipoUsuario", tipoUsuario)
             startActivity(intent)
         }
         binding.btnVoltar.setOnClickListener {

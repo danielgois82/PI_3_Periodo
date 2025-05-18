@@ -2,6 +2,7 @@ package com.example.mpi.ui.atividade
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -39,12 +40,18 @@ class AtividadeActivity : AppCompatActivity() {
         binding = ActivityAtividadeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        dbHelper = DatabaseHelper(this)
+
+        ////////////////////// Carregando informações do usuário////////////////////////////////
         val intentExtra = intent
         val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
         val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
         val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
-
-        dbHelper = DatabaseHelper(this)
+        val tag = "PilarActivityLog"
+        val mensagemLog = "PilarActivity iniciada - ID Usuário: $idUsuario, Nome: $nomeUsuario"
+        Log.d(tag, mensagemLog)
+        ////////////////////////////////////////////////////////////////////////////////
 
         binding.recyclerViewAtividades.layoutManager = LinearLayoutManager(this)
         atividadeAdapter = AtividadeAdapter(
@@ -61,6 +68,9 @@ class AtividadeActivity : AppCompatActivity() {
 
         binding.btnCadastrarAtividade.setOnClickListener {
             val intent = Intent(this, CadastroAtividadeActivity::class.java)
+            intent.putExtra("idUsuario", idUsuario)
+            intent.putExtra("nomeUsuario", nomeUsuario)
+            intent.putExtra("tipoUsuario", tipoUsuario)
             startActivity(intent)
         }
         binding.btnVoltar.setOnClickListener {

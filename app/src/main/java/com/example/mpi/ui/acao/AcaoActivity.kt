@@ -2,6 +2,7 @@ package com.example.mpi.ui.acao
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -39,10 +40,15 @@ class AcaoActivity : AppCompatActivity() {
         binding = ActivityAcaoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        ////////////////////// Carregando informações do usuário////////////////////////////////
         val intentExtra = intent
         val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
         val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
         val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
+        val tag = "PilarActivityLog"
+        val mensagemLog = "PilarActivity iniciada - ID Usuário: $idUsuario, Nome: $nomeUsuario"
+        Log.d(tag, mensagemLog)
+        ////////////////////////////////////////////////////////////////////////////////
 
         dbHelper = DatabaseHelper(this)
 
@@ -60,6 +66,9 @@ class AcaoActivity : AppCompatActivity() {
 
         binding.btnAdicionarAcao.setOnClickListener {
             val intent = Intent(this, CadastroAcaoActivity::class.java)
+            intent.putExtra("idUsuario", idUsuario)
+            intent.putExtra("nomeUsuario", nomeUsuario)
+            intent.putExtra("tipoUsuario", tipoUsuario)
             startActivity(intent)
         }
         binding.btnVoltar.setOnClickListener {
