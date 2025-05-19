@@ -14,8 +14,15 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.mpi.R
 import com.example.mpi.data.Calendario
 import com.example.mpi.databinding.ActivityPercentualBinding
+import com.example.mpi.repository.AcaoRepository
+import com.example.mpi.repository.AtividadeRepository
+import com.example.mpi.repository.CalendarioRepository
 import com.example.mpi.repository.PilarRepository
+import com.example.mpi.repository.SubpilarRepository
+import com.example.mpi.ui.acao.Acao
+import com.example.mpi.ui.atividade.Atividade
 import com.example.mpi.ui.pilar.Pilar
+import com.example.mpi.ui.subpilar.Subpilar
 
 class PercentualActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPercentualBinding
@@ -109,14 +116,39 @@ class PercentualActivity : AppCompatActivity() {
 
     }
 
+    val calendarioRepository = CalendarioRepository(this)
+    val pilarRepository = PilarRepository(this)
+    val subpilarRepository = SubpilarRepository(this)
+    val acaoRepository = AcaoRepository(this)
+    val atividadeRepository = AtividadeRepository(this)
+
+    private fun carregarSpinnerTodosAnos(): List<Calendario> {
+        return calendarioRepository .obterTodosCalendarios()
+    }
+
+    private fun carregarSpinnerTodosPilares(calendario: Calendario): List<Pilar> {
+        return pilarRepository.obterTodosPilares(calendario)
+    }
+
+    private fun carregarSpinnerTodosSubpilares(pilar: Pilar): List<Subpilar> {
+        return subpilarRepository.obterTodosSubpilares(pilar)
+    }
+
+    private fun carregarSpinnerTodasAcoesDoSubpilar(subpilar: Subpilar): List<Acao> {
+        return acaoRepository.obterTodasAcoes(subpilar)
+    }
+
+    private fun carregarSpinnerTodasAcoesDoPilar(pilar: Pilar): List<Acao> {
+        return acaoRepository.obterTodasAcoes(pilar)
+    }
+
+    private fun carregarSpinnerTodasAtividades(acao: Acao): List<Atividade> {
+        return atividadeRepository.obterTodasAtividades(acao)
+    }
+
     private fun carregarDados() {
 
-        val cal = Calendario(1, 2025)
-
-        val pilarRepository = PilarRepository(this)
-        val pilar: Pilar? = pilarRepository.obterPilar(cal, 1)
-
-        binding.textviewNomePilar.text = pilar?.nome
+        binding.textviewNomePilar.text = "nome pilar"
 
         binding.textviewNomeSubpilar.text = "aaa"
 
