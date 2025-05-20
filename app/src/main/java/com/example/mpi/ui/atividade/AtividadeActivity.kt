@@ -9,20 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpi.databinding.ActivityAtividadeBinding
 import com.example.mpi.data.DatabaseHelper
-
-data class Atividade(
-    val id: Long,
-    val nome: String,
-    val descricao: String,
-    val dataInicio: String,
-    val dataTermino: String,
-    val responsavel: Int,
-    val aprovado: Boolean,
-    val finalizado: Boolean,
-    val orcamento: Double,
-    val idAcao: Long,
-    val idUsuario: Long
-)
+import com.example.mpi.data.Atividade
 
 class AtividadeActivity : AppCompatActivity() {
 
@@ -112,7 +99,7 @@ class AtividadeActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_NOME))
                 val descricao = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DESCRICAO))
                 val dataInicio = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DATA_INICIO))
@@ -121,8 +108,8 @@ class AtividadeActivity : AppCompatActivity() {
                 val aprovado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_IS_APROVADO)) > 0
                 val finalizado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_IS_FINALIZADO)) > 0
                 val orcamento = getDouble(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ORCAMENTO))
-                val idAcao = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_ACAO))
-                val idUsuario = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_USUARIO))
+                val idAcao = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_ACAO))
+                val idUsuario = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_USUARIO))
 
                 listaAtividades.add(
                     Atividade(

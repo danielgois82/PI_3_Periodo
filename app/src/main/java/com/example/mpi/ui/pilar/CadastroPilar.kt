@@ -22,7 +22,7 @@ class cadastroPilar : AppCompatActivity() {
     private lateinit var binding: ActivityCadastroPilarBinding
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var calendarioRepository: CalendarioRepository
-    private var idUsuarioRecebido: Long = -1
+    private var idUsuarioRecebido: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,7 @@ class cadastroPilar : AppCompatActivity() {
         // Recebendo os dados de usuário
         val extras = intent.extras
         if (extras != null) {
-            idUsuarioRecebido = extras.getLong("idUsuario", 999999)
+            idUsuarioRecebido = extras.getInt("idUsuario", 999999)
             val nomeUsuario = extras.getString("nomeUsuario") ?: "Nome de usuário desconhecido"
             val tipoUsuario = extras.getString("tipoUsuario") ?: "Tipo de usuário desconhecido"
         }
@@ -80,14 +80,14 @@ class cadastroPilar : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            var idCalendario: Long
+            var idCalendario: Int
 
             if (calendarioRepository.contarPilares() == 0) {
                 // Não existe nenhum pilar, então criamos um registro de calendário para o ano da data de início
                 val calendarioIdExistente = calendarioRepository.obterIdCalendarioPorAno(anoCalendario)
-                if (calendarioIdExistente == -1L) {
+                if (calendarioIdExistente == (-1L).toInt()) {
                     idCalendario = calendarioRepository.inserirCalendario(anoCalendario)
-                    if (idCalendario == -1L) {
+                    if (idCalendario == (-1L).toInt()) {
                         Toast.makeText(this, "Erro ao criar registro de calendário inicial", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
@@ -99,7 +99,7 @@ class cadastroPilar : AppCompatActivity() {
                 val db = dbHelper.readableDatabase
                 val cursor = db.rawQuery("SELECT ${DatabaseHelper.COLUMN_PILAR_ID_CALENDARIO} FROM ${DatabaseHelper.TABLE_PILAR} LIMIT 1", null)
                 if (cursor != null && cursor.moveToFirst()) {
-                    idCalendario = cursor.getLong(0)
+                    idCalendario = cursor.getInt(0)
                     cursor.close()
                 } else {
                     Toast.makeText(this, "Erro ao obter ID do calendário existente", Toast.LENGTH_SHORT).show()

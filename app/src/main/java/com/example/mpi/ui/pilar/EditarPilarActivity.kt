@@ -18,7 +18,7 @@ class EditarPilarActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditarPilarBinding
     private lateinit var dbHelper: DatabaseHelper
-    private var pilarId: Long = -1
+    private var pilarId: Int = -1
     private lateinit var calendarioRepository: CalendarioRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +32,7 @@ class EditarPilarActivity : AppCompatActivity() {
 
         val extras = intent.extras
         if (extras != null) {
-            pilarId = extras.getLong("pilar_id", -1)
+            pilarId = extras.getInt("pilar_id", -1)
             val nome = extras.getString("pilar_nome")
             val descricao = extras.getString("pilar_descricao")
             val dataInicio = extras.getString("pilar_data_inicio")
@@ -110,14 +110,14 @@ class EditarPilarActivity : AppCompatActivity() {
             return
         }
 
-        var idCalendario: Long
+        var idCalendario: Int
 
         if (calendarioRepository.contarPilares() == 0) {
             // Não existe nenhum pilar, então criamos um registro de calendário para o ano da data de início
             val calendarioIdExistente = calendarioRepository.obterIdCalendarioPorAno(anoCalendario)
-            if (calendarioIdExistente == -1L) {
+            if (calendarioIdExistente == (-1L).toInt()) {
                 idCalendario = calendarioRepository.inserirCalendario(anoCalendario)
-                if (idCalendario == -1L) {
+                if (idCalendario == -1L.toInt()) {
                     Toast.makeText(
                         this,
                         "Erro ao criar registro de calendário inicial",
@@ -136,7 +136,7 @@ class EditarPilarActivity : AppCompatActivity() {
                 null
             )
             if (cursor != null && cursor.moveToFirst()) {
-                idCalendario = cursor.getLong(0)
+                idCalendario = cursor.getInt(0)
                 // Validando se o ano inserido para editar é igual ao do calendário
                 val idCalendarioPrimeiroPilar = cursor.getLong(0)
                 cursor.close()
@@ -184,7 +184,7 @@ class EditarPilarActivity : AppCompatActivity() {
         }
 
 
-        if (pilarId != -1L) {
+        if (pilarId != -1L.toInt()) {
             val db = dbHelper.writableDatabase
             val values = android.content.ContentValues().apply {
                 put(DatabaseHelper.COLUMN_PILAR_NOME, nome)

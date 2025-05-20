@@ -9,18 +9,8 @@ import com.example.mpi.ui.pilar.cadastroPilar
 import com.example.mpi.ui.pilar.EditarPilarActivity
 import com.example.mpi.data.DatabaseHelper
 import android.util.Log
+import com.example.mpi.data.Pilar
 
-data class Pilar(
-    val id: Long,
-    val nome: String,
-    val descricao: String,
-    val dataInicio: String,
-    val dataTermino: String,
-    val aprovado: Boolean,
-    val percentual: Double,
-    val idCalendario: Int,
-    val idUsuario: Int
-)
 
 class PilarActivity : AppCompatActivity() {
 
@@ -42,7 +32,7 @@ class PilarActivity : AppCompatActivity() {
         val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
         val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
         val tag = "PilarActivityLog"
-        val mensagemLog = "PilarActivity iniciada - ID Usuário: $idUsuario, Nome: $nomeUsuario" 
+        val mensagemLog = "PilarActivity iniciada - ID Usuário: $idUsuario, Nome: $nomeUsuario"
         Log.d(tag, mensagemLog)
         ////////////////////////////////////////////////////////////////////////////////
 
@@ -72,6 +62,8 @@ class PilarActivity : AppCompatActivity() {
     private fun carregarPilares() {
         listaPilares.clear()
         val db = dbHelper.readableDatabase
+
+
         val projection = arrayOf(
             DatabaseHelper.COLUMN_PILAR_ID,
             DatabaseHelper.COLUMN_PILAR_NOME,
@@ -96,7 +88,7 @@ class PilarActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
                 val descricao = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DESCRICAO))
                 val dataInicio = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_INICIO))

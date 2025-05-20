@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.data.Usuario
 import com.example.mpi.databinding.ActivityCadastroAtividadeBinding
-import com.example.mpi.ui.acao.Acao
+import com.example.mpi.data.Acao
 import java.lang.NumberFormatException
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -25,9 +25,9 @@ class CadastroAtividadeActivity : AppCompatActivity() {
     private var listaResponsaveisObjetos = mutableListOf<Usuario>()
     private var listaAcoesNomes = mutableListOf<String>()
     private var listaAcoesObjetos = mutableListOf<Acao>()
-    private var idResponsavelSelecionado: Long = -1
-    private var idAcaoSelecionada: Long = -1
-    private var idUsuarioRecebido: Long = -1
+    private var idResponsavelSelecionado: Int = -1
+    private var idAcaoSelecionada: Int = -1
+    private var idUsuarioRecebido: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         // Recebendo os dados de usuário
         val extras = intent.extras
         if (extras != null) {
-            idUsuarioRecebido = extras.getLong("idUsuario", 999999)
+            idUsuarioRecebido = extras.getInt("idUsuario", 999999)
             val nomeUsuario = extras.getString("nomeUsuario") ?: "Nome de usuário desconhecido"
             val tipoUsuario = extras.getString("tipoUsuario") ?: "Tipo de usuário desconhecido"
         }
@@ -52,7 +52,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         binding.spinnerResponsaveis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (position > 0) {
-                    idResponsavelSelecionado = listaResponsaveisObjetos[position - 1].id.toLong()
+                    idResponsavelSelecionado = listaResponsaveisObjetos[position - 1].id
                 } else {
                     idResponsavelSelecionado = -1
                 }
@@ -121,7 +121,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_NOME))
                 listaAcoesObjetos.add(Acao(id, nome, "", "", "", -1, false, false, -1, 0, 0))
                 listaAcoesNomes.add(nome)
@@ -142,7 +142,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         val orcamentoStr = binding.etOrcamentoAtividade.text.toString().trim()
         val orcamentoTratado = if (orcamentoStr.isNotEmpty()) orcamentoStr.replace(",", ".").toDouble() else 0.0
 
-        if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || orcamentoStr.isEmpty() || idResponsavelSelecionado == -1L || idAcaoSelecionada == -1L) {
+        if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || orcamentoStr.isEmpty() || idResponsavelSelecionado == -1L.toInt() || idAcaoSelecionada == -1L.toInt()) {
             Toast.makeText(this, "Preencha todos os campos e selecione um Responsável e uma Ação", Toast.LENGTH_SHORT).show()
             return
         }
@@ -185,7 +185,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         }
     }
 
-    private fun validarEFormatarDataInicio(dataAtividadeStr: String, idAcaoSelecionada: Long): String? {
+    private fun validarEFormatarDataInicio(dataAtividadeStr: String, idAcaoSelecionada: Int): String? {
         if (dataAtividadeStr.isNullOrEmpty()) {
             return null
         }
@@ -206,7 +206,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         sdf.isLenient = false
 
-        if (idAcaoSelecionada != -1L) {
+        if (idAcaoSelecionada != -1L.toInt()) {
             val db = dbHelper.readableDatabase
             try {
                 val cursorAcao = db.query(
@@ -270,7 +270,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         }
     }
 
-    private fun validarEFormatarDataTermino(dataTerminoAtividadeStr: String, dataInicioAtividadeStr: String, idAcaoSelecionada: Long): String? {
+    private fun validarEFormatarDataTermino(dataTerminoAtividadeStr: String, dataInicioAtividadeStr: String, idAcaoSelecionada: Int): String? {
         if (dataTerminoAtividadeStr.isNullOrEmpty()) {
             return null
         }
@@ -302,7 +302,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         sdf.isLenient = false
 
-        if (idAcaoSelecionada != -1L) {
+        if (idAcaoSelecionada != -1L.toInt()) {
             val db = dbHelper.readableDatabase
             try {
                 val cursorAcao = db.query(

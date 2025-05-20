@@ -12,7 +12,7 @@ import android.view.View
 import android.widget.AdapterView
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.databinding.ActivityCadastroSubpilarBinding
-import com.example.mpi.ui.pilar.Pilar
+import com.example.mpi.data.Pilar
 import java.lang.NumberFormatException
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -21,11 +21,11 @@ import java.util.Locale
 
 class cadastroSubpilar : AppCompatActivity() {
     private lateinit var binding: ActivityCadastroSubpilarBinding
-    private lateinit var dbHelper: DatabaseHelper // Use o DatabaseHelper correto
+    private lateinit var dbHelper: DatabaseHelper
     private var listaPilaresNomes = mutableListOf<String>()
     private var listaPilaresObjetos = mutableListOf<Pilar>()
-    private var idPilarSelecionado: Long = -1
-    private var idUsuarioRecebido: Long = -1
+    private var idPilarSelecionado: Int = -1
+    private var idUsuarioRecebido: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class cadastroSubpilar : AppCompatActivity() {
         // Recebendo os dados de usuário
         val extras = intent.extras
         if (extras != null) {
-            idUsuarioRecebido = extras.getLong("idUsuario", 999999)
+            idUsuarioRecebido = extras.getInt("idUsuario", 999999)
             val nomeUsuario = extras.getString("nomeUsuario") ?: "Nome de usuário desconhecido"
             val tipoUsuario = extras.getString("tipoUsuario") ?: "Tipo de usuário desconhecido"
         }
@@ -66,7 +66,7 @@ class cadastroSubpilar : AppCompatActivity() {
             val dataInicio = binding.etdataInicio.text.toString().trim()
             val dataTermino = binding.etdataTermino.text.toString().trim()
 
-            if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || idPilarSelecionado == -1L) {
+            if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || idPilarSelecionado == -1L.toInt()) {
                 Toast.makeText(this, "Preencha todos os campos e selecione um Pilar Pai", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -141,9 +141,9 @@ class cadastroSubpilar : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
-                listaPilaresObjetos.add(Pilar(id, nome, "", "", "", false, 0.0, 0, 0)) // Cria objetos Pilar (outros campos não são necessários aqui)
+                listaPilaresObjetos.add(Pilar(id, nome, "", "", "", false, 0.0, 0, 0)) // Cria objetos Pilar
                 listaPilaresNomes.add(nome)
             }
         }
@@ -173,7 +173,7 @@ class cadastroSubpilar : AppCompatActivity() {
             return null
         }
 
-        if (idPilarSelecionado != -1L) {
+        if (idPilarSelecionado != -1L.toInt()) {
             val db = dbHelper.readableDatabase
             val cursorPilar = db.query(
                 DatabaseHelper.TABLE_PILAR,
@@ -294,7 +294,7 @@ class cadastroSubpilar : AppCompatActivity() {
         }
 
 
-        if (idPilarSelecionado != -1L) {
+        if (idPilarSelecionado != -1L.toInt()) {
             val db = dbHelper.readableDatabase
             val cursorPilar = db.query(
                 DatabaseHelper.TABLE_PILAR,

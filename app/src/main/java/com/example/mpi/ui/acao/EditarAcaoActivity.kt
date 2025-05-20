@@ -10,8 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.databinding.ActivityEditarAcaoBinding
-import com.example.mpi.ui.pilar.Pilar
-import com.example.mpi.ui.subpilar.Subpilar
+import com.example.mpi.data.Pilar
+import com.example.mpi.data.Subpilar
 import com.example.mpi.data.Usuario
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -27,11 +27,11 @@ class EditarAcaoActivity : AppCompatActivity() {
     private var listaPilaresObjetos = mutableListOf<Pilar>()
     private var listaSubpilaresNomes = mutableListOf<String>()
     private var listaSubpilaresObjetos = mutableListOf<Subpilar>()
-    private var idVinculoSelecionado: Long = -1
+    private var idVinculoSelecionado: Int = -1
     private var tipoVinculo: String = ""
     private lateinit var listaUsuariosNomes: MutableList<String>
     private lateinit var listaUsuariosObjetos: MutableList<Usuario>
-    private var idResponsavelSelecionado: Long = -1
+    private var idResponsavelSelecionado: Int = -1
     private var acaoAprovada: Int = 0
     private var acaoFinalizada: Int = 0
 
@@ -134,15 +134,15 @@ class EditarAcaoActivity : AppCompatActivity() {
                 binding.etEditarDataTermino.setText(getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_TERMINO)))
                 acaoAprovada = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_APROVADO))
                 acaoFinalizada = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO))
-                val id_pilar = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
-                val id_subpilar = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
+                val id_pilar = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
+                val id_subpilar = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
 
-                if (id_pilar != 0L) {
+                if (id_pilar != 0L.toInt()) {
                     tipoVinculo = "pilar"
                     idVinculoSelecionado = id_pilar
                     binding.radioPilarEditar.isChecked = true
                     carregarPilaresNoSpinner()
-                } else if (id_subpilar != 0L) {
+                } else if (id_subpilar != 0L.toInt()) {
                     tipoVinculo = "subpilar"
                     idVinculoSelecionado = id_subpilar
                     binding.radioSubpilarEditar.isChecked = true
@@ -171,7 +171,7 @@ class EditarAcaoActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
                 listaPilaresObjetos.add(Pilar(id, nome, "", "", "", false, 0.0, 0, 0))
                 listaPilaresNomes.add(nome)
@@ -183,8 +183,8 @@ class EditarAcaoActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaPilaresNomes)
         binding.spinnerVinculoEditar.adapter = adapter
 
-        if (idVinculoSelecionado != -1L && tipoVinculo == "pilar") {
-            val index = listaPilaresObjetos.indexOfFirst { it.id == idVinculoSelecionado } + 1
+        if (idVinculoSelecionado != -1L.toInt() && tipoVinculo == "pilar") {
+            val index = listaPilaresObjetos.indexOfFirst { it.id == idVinculoSelecionado.toInt() } + 1
             binding.spinnerVinculoEditar.setSelection(index)
         }
 
@@ -223,7 +223,7 @@ class EditarAcaoActivity : AppCompatActivity() {
         binding.spinnerResponsavelEditar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (position > 0) {
-                    idResponsavelSelecionado = listaUsuariosObjetos[position - 1].id.toLong()
+                    idResponsavelSelecionado = listaUsuariosObjetos[position - 1].id
                 } else {
                     idResponsavelSelecionado = -1
                 }
@@ -245,7 +245,7 @@ class EditarAcaoActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_NOME))
                 listaSubpilaresObjetos.add(Subpilar(id, nome, "", "", "", false, 0, 0))
                 listaSubpilaresNomes.add(nome)
@@ -258,8 +258,8 @@ class EditarAcaoActivity : AppCompatActivity() {
         binding.spinnerVinculoEditar.adapter = adapter
 
 
-        if (idVinculoSelecionado != -1L && tipoVinculo == "subpilar") {
-            val index = listaSubpilaresObjetos.indexOfFirst { it.id == idVinculoSelecionado } + 1
+        if (idVinculoSelecionado != -1L.toInt() && tipoVinculo == "subpilar") {
+            val index = listaSubpilaresObjetos.indexOfFirst { it.id == idVinculoSelecionado.toInt() } + 1
             binding.spinnerVinculoEditar.setSelection(index)
         }
     }
@@ -270,7 +270,7 @@ class EditarAcaoActivity : AppCompatActivity() {
         val dataInicio = binding.etEditarDataInicio.text.toString().trim()
         val dataTermino = binding.etEditarDataTermino.text.toString().trim()
 
-        if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || idVinculoSelecionado == -1L) {
+        if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || idVinculoSelecionado == -1L.toInt()) {
             Toast.makeText(this, "Preencha todos os campos e selecione um Pilar ou Subpilar", Toast.LENGTH_SHORT).show()
             return
         }
@@ -320,7 +320,7 @@ class EditarAcaoActivity : AppCompatActivity() {
             Toast.makeText(this, "Erro ao atualizar ação", Toast.LENGTH_SHORT).show()
         }
     }
-    private fun validarEFormatarDataInicial(dataAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Long): String? {
+    private fun validarEFormatarDataInicial(dataAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Int): String? {
         if (dataAcaoStr.isNullOrEmpty()) {
             return null
         }
@@ -338,7 +338,7 @@ class EditarAcaoActivity : AppCompatActivity() {
             return null
         }
 
-        if (idVinculoSelecionado != -1L && tipoVinculo.isNotEmpty()) {
+        if (idVinculoSelecionado != -1L.toInt() && tipoVinculo.isNotEmpty()) {
             val db = dbHelper.readableDatabase
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             sdf.isLenient = false
@@ -448,7 +448,7 @@ class EditarAcaoActivity : AppCompatActivity() {
     }
 
 
-    private fun validarEFormatarDataFinal(dataTerminoAcaoStr: String, dataInicioAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Long): String? {
+    private fun validarEFormatarDataFinal(dataTerminoAcaoStr: String, dataInicioAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Int): String? {
         if (dataTerminoAcaoStr.isNullOrEmpty()) {
             return null
         }
@@ -479,7 +479,7 @@ class EditarAcaoActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         sdf.isLenient = false
 
-        if (idVinculoSelecionado != -1L && tipoVinculo.isNotEmpty()) {
+        if (idVinculoSelecionado != -1L.toInt() && tipoVinculo.isNotEmpty()) {
             val db = dbHelper.readableDatabase
 
 

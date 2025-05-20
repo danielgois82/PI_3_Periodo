@@ -20,9 +20,9 @@ class CalendarioRepository private constructor(context: Context) {
         }
     }
 
-    fun obterIdCalendarioPorAno(ano: Int): Long {
+    fun obterIdCalendarioPorAno(ano: Int): Int {
         val db = dataBase.readableDatabase
-        var calendarioId: Long = -1
+        var calendarioId: Int = -1
         val cursor = db.query(
             DatabaseHelper.TABLE_CALENDARIO,
             arrayOf(DatabaseHelper.COLUMN_CALENDARIO_ID),
@@ -34,7 +34,7 @@ class CalendarioRepository private constructor(context: Context) {
         )
         cursor?.use {
             if (it.moveToFirst()) {
-                calendarioId = it.getLong(0)
+                calendarioId = it.getInt(0)
             }
         }
         cursor.close()
@@ -43,14 +43,14 @@ class CalendarioRepository private constructor(context: Context) {
     }
 
 
-    fun inserirCalendario(ano: Int): Long {
+    fun inserirCalendario(ano: Int): Int {
         val db = dataBase.writableDatabase
         val values = ContentValues().apply {
             put(DatabaseHelper.COLUMN_CALENDARIO_ANO, ano)
         }
         val newRowId = db.insert(DatabaseHelper.TABLE_CALENDARIO, null, values)
         db.close()
-        return newRowId
+        return newRowId.toInt()
     }
 
     fun contarPilares(): Int {

@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.databinding.ActivityEditarSubpilarBinding
-import com.example.mpi.ui.pilar.Pilar
+import com.example.mpi.data.Pilar
 import java.lang.NumberFormatException
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -20,11 +20,11 @@ class EditarSubpilarActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditarSubpilarBinding
     private lateinit var dbHelper: DatabaseHelper
-    private var subpilarId: Long = -1
-    private var idPilarAtual: Long = -1
+    private var subpilarId: Int = -1
+    private var idPilarAtual: Int = -1
     private var listaPilaresNomesEditar = mutableListOf<String>()
     private var listaPilaresObjetosEditar = mutableListOf<Pilar>()
-    private var novoIdPilarSelecionado: Long = -1
+    private var novoIdPilarSelecionado: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,13 +36,13 @@ class EditarSubpilarActivity : AppCompatActivity() {
 
         val extras = intent.extras
         if (extras != null) {
-            subpilarId = extras.getLong("subpilar_id", -1)
+            subpilarId = extras.getInt("subpilar_id", -1)
             val nome = extras.getString("subpilar_nome")
             val descricao = extras.getString("subpilar_descricao")
             val dataInicio = extras.getString("subpilar_data_inicio")
             val dataTermino = extras.getString("subpilar_data_termino")
             val aprovado = extras.getBoolean("subpilar_aprovado")
-            idPilarAtual = extras.getLong("subpilar_id_pilar", -1)
+            idPilarAtual = extras.getInt("subpilar_id_pilar", -1)
 
 
             binding.etEditarNomeSubpilar.setText(nome)
@@ -84,7 +84,7 @@ class EditarSubpilarActivity : AppCompatActivity() {
         }
     }
 
-    private fun carregarPilaresNoSpinnerEditar(idPilarSelecionado: Long) {
+    private fun carregarPilaresNoSpinnerEditar(idPilarSelecionado: Int) {
         val db = dbHelper.readableDatabase
         val projection = arrayOf(DatabaseHelper.COLUMN_PILAR_ID, DatabaseHelper.COLUMN_PILAR_NOME)
         val cursor = db.query(
@@ -105,7 +105,7 @@ class EditarSubpilarActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
                 listaPilaresObjetosEditar.add(Pilar(id, nome, "", "", "", false, 0.0, 0, 0))
                 listaPilaresNomesEditar.add(nome)
@@ -133,7 +133,7 @@ class EditarSubpilarActivity : AppCompatActivity() {
         val dataInicio = binding.etEditarDataInicio.text.toString()
         val dataTermino = binding.etEditarDataTermino.text.toString()
 
-        if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || novoIdPilarSelecionado == -1L) {
+        if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || novoIdPilarSelecionado == -1L.toInt()) {
             Toast.makeText(
                 this,
                 "Preencha todos os campos e selecione um Pilar Pai",
@@ -165,7 +165,7 @@ class EditarSubpilarActivity : AppCompatActivity() {
         }
 
 
-        if (subpilarId != -1L) {
+        if (subpilarId != -1L.toInt()) {
             val db = dbHelper.writableDatabase
             val values = ContentValues().apply {
                 put(DatabaseHelper.COLUMN_SUBPILAR_NOME, nome)
@@ -218,7 +218,7 @@ class EditarSubpilarActivity : AppCompatActivity() {
             return null
         }
 
-        if (novoIdPilarSelecionado != -1L) {
+        if (novoIdPilarSelecionado != -1L.toInt()) {
             val db = dbHelper.readableDatabase
             val cursorPilar = db.query(
                 DatabaseHelper.TABLE_PILAR,
@@ -342,7 +342,7 @@ class EditarSubpilarActivity : AppCompatActivity() {
         }
 
 
-        if (novoIdPilarSelecionado != -1L) {
+        if (novoIdPilarSelecionado != -1L.toInt()) {
             val db = dbHelper.readableDatabase
             val cursorPilar = db.query(
                 DatabaseHelper.TABLE_PILAR,

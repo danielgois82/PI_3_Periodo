@@ -9,20 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpi.databinding.ActivityAcaoBinding
 import com.example.mpi.data.DatabaseHelper
-
-data class Acao(
-    val id: Long,
-    val nome: String,
-    val descricao: String,
-    val dataInicio: String,
-    val dataTermino: String,
-    val responsavel: Int,
-    val aprovado: Boolean,
-    val finalizado: Boolean,
-    val id_pilar: Long?,
-    val id_subpilar: Long?,
-    val id_usuario: Long?
-)
+import com.example.mpi.data.Pilar
+import com.example.mpi.data.Subpilar
+import com.example.mpi.data.Acao
 
 class AcaoActivity : AppCompatActivity() {
 
@@ -110,7 +99,7 @@ class AcaoActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_NOME))
                 val descricao = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DESCRICAO))
                 val dataInicio = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_INICIO))
@@ -118,9 +107,9 @@ class AcaoActivity : AppCompatActivity() {
                 val responsavel = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_RESPONSAVEL))
                 val aprovado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_APROVADO)) > 0
                 val finalizado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO)) > 0
-                val id_pilar = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
-                val id_subpilar = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
-                val id_usuario = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_USUARIO))
+                val id_pilar = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
+                val id_subpilar = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
+                val id_usuario = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_USUARIO))
 
 
                 listaAcoes.add(

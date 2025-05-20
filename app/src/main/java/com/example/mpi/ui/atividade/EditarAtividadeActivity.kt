@@ -9,28 +9,27 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mpi.databinding.ActivityEditarAtividadeBinding
 import com.example.mpi.data.DatabaseHelper
-import com.example.mpi.ui.acao.Acao
+import com.example.mpi.data.Acao
 import com.example.mpi.data.Usuario
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import android.database.sqlite.SQLiteDatabase
 
 class EditarAtividadeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditarAtividadeBinding
     private lateinit var dbHelper: DatabaseHelper
-    private var atividadeId: Long = -1
+    private var atividadeId: Int = -1
     private var listaAcoesNomes = mutableListOf<String>()
     private var listaAcoesObjetos = mutableListOf<Acao>()
     private var acaoAdapter: ArrayAdapter<String>? = null
-    private var idAcaoSelecionada: Long = -1
+    private var idAcaoSelecionada: Int = -1
     private var atividadeAprovada: Int = 0
     private var atividadeFinalizada: Int = 0
     private var listaResponsaveisNomes = mutableListOf<String>()
     private var listaResponsaveisObjetos = mutableListOf<Usuario>()
     private var responsavelAdapter: ArrayAdapter<String>? = null
-    private var idResponsavelSelecionado: Long = -1
+    private var idResponsavelSelecionado: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,16 +51,16 @@ class EditarAtividadeActivity : AppCompatActivity() {
 
         val extras = intent.extras
         if (extras != null) {
-            atividadeId = extras.getLong("atividade_id", -1)
+            atividadeId = extras.getInt("atividade_id", -1)
             val nome = extras.getString("atividade_nome")
             val descricao = extras.getString("atividade_descricao")
             val dataInicio = extras.getString("atividade_data_inicio")
             val dataTermino = extras.getString("atividade_data_termino")
-            val idResponsavel = extras.getLong("atividade_id_responsavel")
+            val idResponsavel = extras.getInt("atividade_id_responsavel")
             val aprovado = extras.getBoolean("atividade_aprovado")
             val finalizada = extras.getBoolean("atividade_finalizada")
             val orcamento = extras.getDouble("atividade_orcamento", 0.0)
-            val idAcao = extras.getLong("atividade_id_acao")
+            val idAcao = extras.getInt("atividade_id_acao")
 
             binding.etEditarNomeAtividade.setText(nome)
             binding.etEditarDescricaoAtividade.setText(descricao)
@@ -74,7 +73,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
             binding.tvExibirFinalizada.text = if (finalizada) "Sim" else "Não"
             binding.etEditarOrcamentoAtividade.setText(if (orcamento != 0.0) String.format("%.2f", orcamento) else "")
 
-            if (idAcao != -1L) {
+            if (idAcao != -1L.toInt()) {
                 idAcaoSelecionada = idAcao
                 val posicaoAcao = listaAcoesObjetos.indexOfFirst { it.id == idAcao }
                 if (posicaoAcao != -1) {
@@ -82,9 +81,9 @@ class EditarAtividadeActivity : AppCompatActivity() {
                 }
             }
 
-            if (idResponsavel != -1L) {
+            if (idResponsavel != -1L.toInt()) {
                 idResponsavelSelecionado = idResponsavel
-                val posicaoResponsavel = listaResponsaveisObjetos.indexOfFirst { it.id.toLong() == idResponsavel }
+                val posicaoResponsavel = listaResponsaveisObjetos.indexOfFirst { it.id == idResponsavel }
                 if (posicaoResponsavel != -1) {
                     binding.spinnerResponsavelEditarAtividade.setSelection(posicaoResponsavel + 1)
                 }
@@ -103,7 +102,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
 
         binding.spinnerResponsavelEditarAtividade.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                idResponsavelSelecionado = if (position > 0) listaResponsaveisObjetos[position - 1].id.toLong() else -1
+                idResponsavelSelecionado = if (position > 0) listaResponsaveisObjetos[position - 1].id else -1
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -142,7 +141,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
         listaAcoesNomes.add("Selecione a Ação")
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_NOME))
                 listaAcoesObjetos.add(Acao(id, nome, "", "", "", -1, false, false, -1, 0, 0))
                 listaAcoesNomes.add(nome)
@@ -155,7 +154,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
         acaoAdapter?.addAll(listaAcoesNomes)
         acaoAdapter?.notifyDataSetChanged()
 
-        if (idAcaoSelecionada != -1L) {
+        if (idAcaoSelecionada != -1L.toInt()) {
             val posicao = listaAcoesObjetos.indexOfFirst { it.id == idAcaoSelecionada } + 1
             if (posicao > 0 && posicao < listaAcoesNomes.size) {
                 binding.spinnerAcaoEditarAtividade.setSelection(posicao)
@@ -198,8 +197,8 @@ class EditarAtividadeActivity : AppCompatActivity() {
         responsavelAdapter?.addAll(listaResponsaveisNomes)
         responsavelAdapter?.notifyDataSetChanged()
 
-        if (idResponsavelSelecionado != -1L) {
-            val posicao = listaResponsaveisObjetos.indexOfFirst { it.id.toLong() == idResponsavelSelecionado } + 1
+        if (idResponsavelSelecionado != -1L.toInt()) {
+            val posicao = listaResponsaveisObjetos.indexOfFirst { it.id == idResponsavelSelecionado } + 1
             if (posicao > 0 && posicao < listaResponsaveisNomes.size) {
                 binding.spinnerResponsavelEditarAtividade.setSelection(posicao)
             }
@@ -216,7 +215,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
         val aprovado = if (binding.tvExibirAprovado.text.toString() == "Sim") 1 else 0
         val finalizada = if (binding.tvExibirFinalizada.text.toString() == "Sim") 1 else 0
 
-        if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || idResponsavelSelecionado == -1L) {
+        if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || idResponsavelSelecionado == -1L.toInt()) {
             Toast.makeText(this, "Preencha todos os campos obrigatórios e selecione um responsável!", Toast.LENGTH_SHORT).show()
             return
         }
@@ -226,7 +225,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
             return
         }
 
-        if (idAcaoSelecionada == -1L) {
+        if (idAcaoSelecionada == -1L.toInt()) {
             Toast.makeText(this, "Selecione uma Ação!", Toast.LENGTH_SHORT).show()
             return
         }
@@ -264,7 +263,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
         }
     }
 
-    private fun validarEFormatarDataInicio(dataAtividadeStr: String, idAcaoSelecionada: Long): String? {
+    private fun validarEFormatarDataInicio(dataAtividadeStr: String, idAcaoSelecionada: Int): String? {
         if (dataAtividadeStr.isNullOrEmpty()) {
             return null
         }
@@ -285,7 +284,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         sdf.isLenient = false
 
-        if (idAcaoSelecionada != -1L) {
+        if (idAcaoSelecionada != -1L.toInt()) {
             val db = dbHelper.readableDatabase
             try {
                 val cursorAcao = db.query(
@@ -349,7 +348,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
         }
     }
 
-    private fun validarEFormatarDataTermino(dataTerminoAtividadeStr: String, dataInicioAtividadeStr: String, idAcaoSelecionada: Long): String? {
+    private fun validarEFormatarDataTermino(dataTerminoAtividadeStr: String, dataInicioAtividadeStr: String, idAcaoSelecionada: Int): String? {
         if (dataTerminoAtividadeStr.isNullOrEmpty()) {
             return null
         }
@@ -385,7 +384,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         sdf.isLenient = false
 
-        if (idAcaoSelecionada != -1L) {
+        if (idAcaoSelecionada != -1L.toInt()) {
             val db = dbHelper.readableDatabase
             try {
                 val cursorAcao = db.query(

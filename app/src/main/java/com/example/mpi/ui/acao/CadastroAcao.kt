@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.databinding.ActivityCadastroAcaoBinding
-import com.example.mpi.ui.pilar.Pilar
-import com.example.mpi.ui.subpilar.Subpilar
+import com.example.mpi.data.Pilar
+import com.example.mpi.data.Subpilar
 import com.example.mpi.data.Usuario
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -24,12 +24,12 @@ class CadastroAcaoActivity : AppCompatActivity() {
     private var listaPilaresObjetos = mutableListOf<Pilar>()
     private var listaSubpilaresNomes = mutableListOf<String>()
     private var listaSubpilaresObjetos = mutableListOf<Subpilar>()
-    private var idVinculoSelecionado: Long = -1
+    private var idVinculoSelecionado: Int = -1
     private var tipoVinculo: String = ""
     private lateinit var listaUsuariosNomes: MutableList<String>
     private lateinit var listaUsuariosObjetos: MutableList<Usuario>
-    private var idResponsavelSelecionado: Long = -1
-    private var idUsuarioRecebido: Long = -1
+    private var idResponsavelSelecionado: Int = -1
+    private var idUsuarioRecebido: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
         // Recebendo os dados de usuário
         val extras = intent.extras
         if (extras != null) {
-            idUsuarioRecebido = extras.getLong("idUsuario", 999999)
+            idUsuarioRecebido = extras.getInt("idUsuario", 999999)
             val nomeUsuario = extras.getString("nomeUsuario") ?: "Nome de usuário desconhecido"
             val tipoUsuario = extras.getString("tipoUsuario") ?: "Tipo de usuário desconhecido"
         }
@@ -90,7 +90,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
             val dataInicio = binding.dataInicio.text.toString().trim()
             val dataTermino = binding.dataTermino.text.toString().trim()
 
-            if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || idVinculoSelecionado == -1L) {
+            if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || idVinculoSelecionado == -1L.toInt()) {
                 Toast.makeText(this, "Preencha todos os campos e selecione um Pilar ou Subpilar", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -157,7 +157,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
                 listaPilaresObjetos.add(Pilar(id, nome, "", "", "", false, 0.0, 0, 0))
                 listaPilaresNomes.add(nome)
@@ -204,7 +204,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
         binding.spinnerResponsavel.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (position > 0) {
-                    idResponsavelSelecionado = listaUsuariosObjetos[position - 1].id.toLong()
+                    idResponsavelSelecionado = listaUsuariosObjetos[position - 1].id
                 } else {
                     idResponsavelSelecionado = -1
                 }
@@ -226,7 +226,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_NOME))
                 listaSubpilaresObjetos.add(Subpilar(id, nome, "", "", "", false, 0, 0))
                 listaSubpilaresNomes.add(nome)
@@ -238,7 +238,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaSubpilaresNomes)
         binding.spinnerVinculo.adapter = adapter
     }
-    private fun validarEFormatarDataInicial(dataAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Long): String? {
+    private fun validarEFormatarDataInicial(dataAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Int): String? {
         if (dataAcaoStr.isNullOrEmpty()) {
             return null
         }
@@ -256,7 +256,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
             return null
         }
 
-        if (idVinculoSelecionado != -1L && tipoVinculo.isNotEmpty()) {
+        if (idVinculoSelecionado != -1L.toInt() && tipoVinculo.isNotEmpty()) {
             val db = dbHelper.readableDatabase
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             sdf.isLenient = false
@@ -365,7 +365,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
         }
     }
 
-    private fun validarEFormatarDataFinal(dataTerminoAcaoStr: String, dataInicioAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Long): String? {
+    private fun validarEFormatarDataFinal(dataTerminoAcaoStr: String, dataInicioAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Int): String? {
         if (dataTerminoAcaoStr.isNullOrEmpty()) {
             return null
         }
@@ -396,7 +396,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         sdf.isLenient = false
 
-        if (idVinculoSelecionado != -1L && tipoVinculo.isNotEmpty()) {
+        if (idVinculoSelecionado != -1L.toInt() && tipoVinculo.isNotEmpty()) {
             val db = dbHelper.readableDatabase
 
 
