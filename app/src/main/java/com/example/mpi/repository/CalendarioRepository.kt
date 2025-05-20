@@ -1,11 +1,15 @@
 package com.example.mpi.repository
 
-import android.content.ContentValues
 import android.content.Context
+import com.example.mpi.data.Calendario
 import com.example.mpi.data.DatabaseHelper
+import android.content.ContentValues
 
-class CalendarioRepository private constructor(context: Context) {
-    private val dataBase: DatabaseHelper = DatabaseHelper(context)
+class CalendarioRepository (context: Context) {
+    private var dataBase: DatabaseHelper = DatabaseHelper(context)
+
+//class CalendarioRepository private constructor(context: Context) {
+//    private val dataBase: DatabaseHelper = DatabaseHelper(context)
 
     companion object {
         private lateinit var instance: CalendarioRepository
@@ -18,6 +22,26 @@ class CalendarioRepository private constructor(context: Context) {
             }
             return instance
         }
+    }
+
+    fun obterTodosCalendarios(): List<Calendario> {
+        val db = dataBase.readableDatabase
+
+        val cursor = db.rawQuery("SELECT * FROM calendario", null)
+
+        var calendarios: MutableList<Calendario> = arrayListOf()
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CALENDARIO_ID))
+            val ano = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CALENDARIO_ANO))
+
+            val calendario = Calendario(id, ano)
+            calendarios.add(calendario)
+        }
+
+        cursor.close()
+        db.close()
+
+        return calendarios
     }
 
     fun obterIdCalendarioPorAno(ano: Int): Int {
@@ -41,7 +65,6 @@ class CalendarioRepository private constructor(context: Context) {
         db.close()
         return calendarioId
     }
-
 
     fun inserirCalendario(ano: Int): Int {
         val db = dataBase.writableDatabase
