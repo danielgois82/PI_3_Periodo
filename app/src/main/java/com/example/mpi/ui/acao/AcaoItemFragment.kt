@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.mpi.databinding.AcaoItemFragmentBinding
+import com.example.mpi.data.Acao
 
 class AcaoItemFragment(
     private val acao: Acao,

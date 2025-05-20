@@ -3,10 +3,13 @@ package com.example.mpi.repository
 import android.content.Context
 import com.example.mpi.data.Calendario
 import com.example.mpi.data.DatabaseHelper
+import android.content.ContentValues
 
 class CalendarioRepository (context: Context) {
-
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
+
+//class CalendarioRepository private constructor(context: Context) {
+//    private val dataBase: DatabaseHelper = DatabaseHelper(context)
 
     companion object {
         private lateinit var instance: CalendarioRepository
@@ -41,4 +44,49 @@ class CalendarioRepository (context: Context) {
         return calendarios
     }
 
+    fun obterIdCalendarioPorAno(ano: Int): Int {
+        val db = dataBase.readableDatabase
+        var calendarioId: Int = -1
+        val cursor = db.query(
+            DatabaseHelper.TABLE_CALENDARIO,
+            arrayOf(DatabaseHelper.COLUMN_CALENDARIO_ID),
+            "${DatabaseHelper.COLUMN_CALENDARIO_ANO} = ?",
+            arrayOf(ano.toString()),
+            null,
+            null,
+            null
+        )
+        cursor?.use {
+            if (it.moveToFirst()) {
+                calendarioId = it.getInt(0)
+            }
+        }
+        cursor.close()
+        db.close()
+        return calendarioId
+    }
+
+    fun inserirCalendario(ano: Int): Int {
+        val db = dataBase.writableDatabase
+        val values = ContentValues().apply {
+            put(DatabaseHelper.COLUMN_CALENDARIO_ANO, ano)
+        }
+        val newRowId = db.insert(DatabaseHelper.TABLE_CALENDARIO, null, values)
+        db.close()
+        return newRowId.toInt()
+    }
+
+    fun contarPilares(): Int {
+        val db = dataBase.readableDatabase
+        var count = 0
+        val cursor = db.rawQuery("SELECT COUNT(*) FROM ${DatabaseHelper.TABLE_PILAR}", null)
+        cursor?.use {
+            if (it.moveToFirst()) {
+                count = it.getInt(0)
+            }
+        }
+        cursor.close()
+        db.close()
+        return count
+    }
 }
