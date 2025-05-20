@@ -9,7 +9,6 @@
     android:background="@android:color/white">
 
     <!-- Botão Voltar -->
-
     <ImageButton
         android:id="@+id/btnVoltar"
         android:layout_width="98dp"
@@ -18,9 +17,11 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_botaovoltar"
         android:contentDescription="@string/voltar"
-        android:layout_gravity="start"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 
+    <!-- Barra de busca com Spinner e botão -->
     <androidx.cardview.widget.CardView
         android:id="@+id/searchBar"
         android:layout_width="0dp"
@@ -36,20 +37,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <AutoCompleteTextView
-                android:id="@+id/editSearch"
+            <!-- Spinner de busca -->
+            <Spinner
+                android:id="@+id/spinnerFiltro"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toStartOf="@+id/btnSearch"
                 android:layout_alignParentStart="true"
-                android:hint="Buscar, ação, atividade, analista..."
+                android:layout_toStartOf="@+id/btnIconSearch"
                 android:paddingStart="16dp"
                 android:paddingEnd="48dp"
-                android:background="@android:color/transparent"
-                android:inputType="text" />
+                android:spinnerMode="dropdown"
+                android:background="@android:color/transparent"/>
 
+            <!-- Botão de busca (ícone) -->
             <ImageButton
-                android:id="@+id/btnSearch"
+                android:id="@+id/btnIconSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
@@ -61,9 +63,7 @@
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-
-
-    <!-- Container dos cards -->
+    <!-- Container de cards -->
     <ScrollView
         android:id="@+id/scrollCards"
         android:layout_width="0dp"
@@ -79,7 +79,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
 
             <!-- CARD 1 -->
             <androidx.cardview.widget.CardView
@@ -107,7 +106,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Analista: Tiago Silva"
+                        android:text="Analista: João Souza"
                         android:textColor="#888888"
                         android:layout_marginTop="4dp" />
 
@@ -152,7 +151,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Analista: Ana Souza"
+                        android:text="Analista: José Bezerra"
                         android:textColor="#888888"
                         android:layout_marginTop="4dp" />
 
@@ -197,7 +196,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Analista: Carlos Mendes"
+                        android:text="Analista: João Souza"
                         android:textColor="#888888"
                         android:layout_marginTop="4dp" />
 
@@ -228,6 +227,7 @@
         android:textColor="@android:color/white"
         android:backgroundTint="#00324A"
         android:layout_marginTop="8dp"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

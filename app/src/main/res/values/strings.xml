@@ -40,4 +40,6 @@
     <string name="logo_description">Logo do Senac</string>
     <string name="voltar">Voltar</string>
     <string name="pesquisar">Pesquisar</string>
+    <string name="spinner_prompt">Buscar ação, atividade...</string>
+
 </resources>
