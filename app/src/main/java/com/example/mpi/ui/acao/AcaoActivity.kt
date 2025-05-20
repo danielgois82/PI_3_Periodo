@@ -2,26 +2,16 @@ package com.example.mpi.ui.acao
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpi.databinding.ActivityAcaoBinding
 import com.example.mpi.data.DatabaseHelper
-
-data class Acao(
-    val id: Long,
-    val nome: String,
-    val descricao: String,
-    val dataInicio: String,
-    val dataTermino: String,
-    val responsavel: Int,
-    val aprovado: Boolean,
-    val finalizado: Boolean,
-    val id_pilar: Long?,
-    val id_subpilar: Long?,
-    val id_usuario: Long?
-)
+import com.example.mpi.data.Pilar
+import com.example.mpi.data.Subpilar
+import com.example.mpi.data.Acao
 
 class AcaoActivity : AppCompatActivity() {
 
@@ -39,10 +29,15 @@ class AcaoActivity : AppCompatActivity() {
         binding = ActivityAcaoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        ////////////////////// Carregando informações do usuário////////////////////////////////
         val intentExtra = intent
         val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
         val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
         val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
+        val tag = "PilarActivityLog"
+        val mensagemLog = "PilarActivity iniciada - ID Usuário: $idUsuario, Nome: $nomeUsuario"
+        Log.d(tag, mensagemLog)
+        ////////////////////////////////////////////////////////////////////////////////
 
         dbHelper = DatabaseHelper(this)
 
@@ -60,6 +55,9 @@ class AcaoActivity : AppCompatActivity() {
 
         binding.btnAdicionarAcao.setOnClickListener {
             val intent = Intent(this, CadastroAcaoActivity::class.java)
+            intent.putExtra("idUsuario", idUsuario)
+            intent.putExtra("nomeUsuario", nomeUsuario)
+            intent.putExtra("tipoUsuario", tipoUsuario)
             startActivity(intent)
         }
         binding.btnVoltar.setOnClickListener {
@@ -101,7 +99,7 @@ class AcaoActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_NOME))
                 val descricao = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DESCRICAO))
                 val dataInicio = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_INICIO))
@@ -109,9 +107,9 @@ class AcaoActivity : AppCompatActivity() {
                 val responsavel = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_RESPONSAVEL))
                 val aprovado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_APROVADO)) > 0
                 val finalizado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO)) > 0
-                val id_pilar = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
-                val id_subpilar = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
-                val id_usuario = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_USUARIO))
+                val id_pilar = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
+                val id_subpilar = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
+                val id_usuario = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_USUARIO))
 
 
                 listaAcoes.add(
