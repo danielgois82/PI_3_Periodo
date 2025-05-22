@@ -41,6 +41,8 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_NOTIFICACAO_TITULO TEXT NOT NULL,
                 $COLUMN_NOTIFICACAO_MENSAGEM TEXT NOT NULL,
                 $COLUMN_NOTIFICACAO_ID_USUARIO INTEGER NOT NULL,
+                $COLUMN_NOTIFICACAO_ID_ITEM INTEGER,
+                $COLUMN_NOTIFICACAO_TIPO_ITEM TEXT,
                 FOREIGN KEY ($COLUMN_NOTIFICACAO_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID)
             );
         """.trimIndent()
@@ -160,6 +162,7 @@ class DatabaseHelper(context: Context) :
         inserirUsuarios(db, obterUsuarios())
     }
 
+
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_CALENDARIO")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_TIPOUSUARIO")
@@ -199,6 +202,8 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_NOTIFICACAO_ISVISUALIZADO = "isVisualizado"
         const val COLUMN_NOTIFICACAO_TITULO = "titulo"
         const val COLUMN_NOTIFICACAO_MENSAGEM = "mensagem"
+        const val COLUMN_NOTIFICACAO_ID_ITEM = "id_item"
+        const val COLUMN_NOTIFICACAO_TIPO_ITEM = "tipo_item"
         const val COLUMN_NOTIFICACAO_ID_USUARIO = "id_usuario"
 
         const val TABLE_PILAR = "pilar"

@@ -2,8 +2,8 @@ package com.example.mpi.repository
 
 import android.content.Context
 import com.example.mpi.data.DatabaseHelper
-import com.example.mpi.ui.acao.Acao
-import com.example.mpi.ui.atividade.Atividade
+import com.example.mpi.data.Acao
+import com.example.mpi.data.Atividade
 
 class AtividadeRepository (context: Context) {
 
@@ -42,7 +42,41 @@ class AtividadeRepository (context: Context) {
             val idAcao = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
             val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_USUARIO))
 
-            val atividade = Atividade(id.toLong(), nome, descricao, dataInicio, dataTermino, responsavel, aprovado, finalizado, orcamento, idAcao.toLong(), idUsuario.toLong())
+            val atividade = Atividade(id, nome, descricao, dataInicio, dataTermino, responsavel, aprovado, finalizado, orcamento, idAcao, idUsuario)
+            atividades.add(atividade)
+        }
+
+        cursor.close()
+        db.close()
+
+        return atividades
+    }
+
+    //Criando método para a funcionalidade de notificação para obter as atividades que não foram finaliadas
+    fun obterAtividadesNaoFinalizadasPorUsuario(idUsuario: Int): List<Atividade> {
+        val db = dataBase.readableDatabase
+        val atividades: MutableList<Atividade> = arrayListOf()
+
+        // Seleciona atividades que não estão finalizadas (isFinalizado = 0) e pertencem ao usuário logado
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${DatabaseHelper.TABLE_ATIVIDADE} WHERE ${DatabaseHelper.COLUMN_ATIVIDADE_IS_FINALIZADO} = 0 AND ${DatabaseHelper.COLUMN_ATIVIDADE_ID_USUARIO} = ?",
+            arrayOf(idUsuario.toString())
+        )
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID))
+            val nome = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_NOME))
+            val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DATA_INICIO))
+            val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DATA_TERMINO))
+            val responsavel = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_RESPONSAVEL))
+            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_IS_APROVADO)) != 0
+            val finalizado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_IS_FINALIZADO)) != 0
+            val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DESCRICAO))
+            val orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ORCAMENTO))
+            val idAcao = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_ACAO))
+            val idUsuarioAtividade = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_USUARIO))
+
+            val atividade = Atividade(id, nome, descricao, dataInicio, dataTermino, responsavel, aprovado, finalizado, orcamento, idAcao, idUsuarioAtividade)
             atividades.add(atividade)
         }
 

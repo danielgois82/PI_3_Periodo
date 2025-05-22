@@ -19,10 +19,10 @@ import com.example.mpi.repository.AtividadeRepository
 import com.example.mpi.repository.CalendarioRepository
 import com.example.mpi.repository.PilarRepository
 import com.example.mpi.repository.SubpilarRepository
-import com.example.mpi.ui.acao.Acao
-import com.example.mpi.ui.atividade.Atividade
-import com.example.mpi.ui.pilar.Pilar
-import com.example.mpi.ui.subpilar.Subpilar
+import com.example.mpi.data.Acao
+import com.example.mpi.data.Atividade
+import com.example.mpi.data.Pilar
+import com.example.mpi.data.Subpilar
 
 class PercentualActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPercentualBinding
