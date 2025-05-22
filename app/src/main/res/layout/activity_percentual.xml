@@ -9,9 +9,9 @@
     tools:context=".ui.PercentualActivity">
 
     <LinearLayout
-        android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -33,20 +33,20 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textStyle="bold"
-                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Selecione o ano:"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <Spinner
-                android:textAlignment="textEnd"
-                android:layout_weight="1"
-                android:entries="@array/array_ano"
                 android:id="@+id/spinner_ano"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/array_ano"
+                android:textAlignment="textEnd" />
 
         </LinearLayout>
 
@@ -56,36 +56,36 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textStyle="bold"
-                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
                 android:text="O Pilar:"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <Spinner
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:entries="@array/array_pilar"
                 android:id="@+id/spinner_pilar"
-                android:layout_height="wrap_content"/>
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/array_pilar" />
 
             <TextView
-                android:textStyle="bold"
-                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
                 android:text="O Subpilar:"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <Spinner
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:entries="@array/array_subpilar"
                 android:id="@+id/spinner_subpilar"
-                android:layout_height="wrap_content"/>
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/array_subpilar" />
 
         </LinearLayout>
 
@@ -95,36 +95,36 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textStyle="bold"
-                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
                 android:text="A Ação:"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <Spinner
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:entries="@array/array_acao"
                 android:id="@+id/spinner_acao"
-                android:layout_height="wrap_content"/>
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/array_acao" />
 
             <TextView
-                android:textStyle="bold"
-                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
                 android:text="A Atividade:"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <Spinner
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:entries="@array/array_atividade"
                 android:id="@+id/spinner_atividade"
-                android:layout_height="wrap_content"/>
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/array_atividade" />
 
         </LinearLayout>
 
@@ -134,6 +134,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/textview_nomePilar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
@@ -143,6 +144,7 @@
                 android:textSize="16dp" />
 
             <TextView
+                android:id="@+id/textview_nomeSubpilar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
@@ -152,6 +154,7 @@
                 android:textSize="16dp" />
 
             <TextView
+                android:id="@+id/textview_nomeAcao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
@@ -166,7 +169,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textSize="16sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -174,10 +176,11 @@
                 android:layout_weight="1"
                 android:background="@color/blue"
                 android:text="Progresso geral da ação"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
             <TextView
-                android:textSize="16sp"
+                android:id="@+id/textview_progressoGeralAcao"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -186,7 +189,8 @@
                 android:background="@color/green"
                 android:text="100%"
                 android:textAlignment="textEnd"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -196,7 +200,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textSize="16sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -204,10 +207,11 @@
                 android:layout_weight="1"
                 android:background="@color/blue"
                 android:text="Ação Atribuído a"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
             <TextView
-                android:textSize="16sp"
+                android:id="@+id/textview_acaoAtribuida"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -216,7 +220,8 @@
                 android:background="@color/light_pink"
                 android:text="Pessoa 1"
                 android:textAlignment="textEnd"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -226,13 +231,14 @@
             android:orientation="vertical">
 
             <TextView
-                android:textSize="16sp"
+                android:id="@+id/textview_nomeAtividade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:background="@color/blue"
                 android:text="Atividade 1"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -242,7 +248,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textSize="16sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -250,10 +255,11 @@
                 android:layout_weight="1"
                 android:background="@color/blue"
                 android:text="Progresso geral desta Ativ"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
             <TextView
-                android:textSize="16sp"
+                android:id="@+id/textview_progressoGeralAtividade"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -262,7 +268,8 @@
                 android:background="@color/green"
                 android:text="100%"
                 android:textAlignment="textEnd"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -272,7 +279,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textSize="16sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -280,10 +286,11 @@
                 android:layout_weight="1"
                 android:background="@color/blue"
                 android:text="Atividade Atribuído a"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
             <TextView
-                android:textSize="16sp"
+                android:id="@+id/textview_atividadeAtribuida"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -292,7 +299,8 @@
                 android:background="@color/light_pink"
                 android:text="Pessoa 1"
                 android:textAlignment="textEnd"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -302,7 +310,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textSize="16sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -310,10 +317,11 @@
                 android:layout_weight="1"
                 android:background="@color/blue"
                 android:text="Orçamento"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
             <TextView
-                android:textSize="16sp"
+                android:id="@+id/textview_orcamentoAtividade"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -322,7 +330,8 @@
                 android:background="@color/light_pink"
                 android:text="R$ 1.000.000,00"
                 android:textAlignment="textEnd"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -332,7 +341,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textSize="16sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -340,10 +348,11 @@
                 android:layout_weight="1"
                 android:background="@color/blue"
                 android:text="Ínicio"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
             <TextView
-                android:textSize="16sp"
+                android:id="@+id/textview_inicioAtividade"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -352,7 +361,8 @@
                 android:background="@color/light_pink"
                 android:text="02/01/2025"
                 android:textAlignment="textEnd"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -362,7 +372,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textSize="16sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -370,10 +379,11 @@
                 android:layout_weight="1"
                 android:background="@color/blue"
                 android:text="Término"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
             <TextView
-                android:textSize="16sp"
+                android:id="@+id/textview_terminoAtividade"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -382,7 +392,8 @@
                 android:background="@color/light_pink"
                 android:text="31/12/2025"
                 android:textAlignment="textEnd"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -392,13 +403,13 @@
             android:orientation="vertical">
 
             <TextView
-                android:textSize="16sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:background="@color/blue"
-                android:text="Progresso geral das atividades da Ação 1"
-                android:textColor="@color/white" />
+                android:text="Progresso geral das atividades desta Ação"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -455,6 +466,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesJan"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -462,12 +474,13 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesFev"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -476,12 +489,13 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesMar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -489,7 +503,7 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -549,6 +563,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesAbr"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -556,12 +571,13 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesMai"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -570,12 +586,13 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesJun"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -583,7 +600,7 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -643,6 +660,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesJul"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -650,12 +668,13 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesAgo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -664,12 +683,13 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesSet"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -677,7 +697,7 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -737,6 +757,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesOut"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -744,12 +765,13 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesNov"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -764,6 +786,7 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_visualPercentualGeralAcoesDez"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -784,13 +807,13 @@
             android:orientation="vertical">
 
             <TextView
-                android:textSize="16sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:background="@color/blue"
-                android:text="Progresso geral da atividade 1"
-                android:textColor="@color/white" />
+                android:text="Progresso geral desta atividade"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -841,12 +864,15 @@
 
         </LinearLayout>
 
+        <!-- Parte clicável (JAN, FEZ e MAR) -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/textview_PercentualAtivJan"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -854,12 +880,13 @@
                 android:layout_weight="1"
                 android:background="@color/light_pink"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_PercentualAtivFev"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -868,12 +895,13 @@
                 android:layout_weight="1"
                 android:background="@color/light_pink"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_PercentualAtivMar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -881,7 +909,7 @@
                 android:layout_weight="1"
                 android:background="@color/light_pink"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -935,12 +963,15 @@
 
         </LinearLayout>
 
+        <!-- Parte clicável (ABR, MAI e JUN) -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/textview_PercentualAtivAbr"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -948,12 +979,13 @@
                 android:layout_weight="1"
                 android:background="@color/light_pink"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_PercentualAtivMai"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -962,12 +994,13 @@
                 android:layout_weight="1"
                 android:background="@color/light_pink"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_PercentualAtivJun"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -975,7 +1008,7 @@
                 android:layout_weight="1"
                 android:background="@color/light_pink"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -1029,12 +1062,15 @@
 
         </LinearLayout>
 
+        <!-- Parte clicável (JUL, AGO e SET) -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/textview_PercentualAtivJul"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -1042,12 +1078,13 @@
                 android:layout_weight="1"
                 android:background="@color/light_pink"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_PercentualAtivAgo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -1056,12 +1093,13 @@
                 android:layout_weight="1"
                 android:background="@color/light_pink"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_PercentualAtivSet"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -1069,7 +1107,7 @@
                 android:layout_weight="1"
                 android:background="@color/light_pink"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -1123,12 +1161,15 @@
 
         </LinearLayout>
 
+        <!-- Parte clicável -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/textview_PercentualAtivOut"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -1136,12 +1177,13 @@
                 android:layout_weight="1"
                 android:background="@color/light_pink"
                 android:padding="8dp"
-                android:text="10%"
+                android:text="0%"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_PercentualAtivNov"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -1156,6 +1198,7 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textview_PercentualAtivDez"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -1176,6 +1219,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/button_salvarAlteracoes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
