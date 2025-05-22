@@ -46,6 +46,7 @@ class FinalizacaoActivity : AppCompatActivity() {
 
         btnFinalizar.setOnClickListener {
             Toast.makeText(this, "Finalizado com sucesso!", Toast.LENGTH_SHORT).show()
+            finalizarAtividade()
         }
     }
 
@@ -89,5 +90,9 @@ class FinalizacaoActivity : AppCompatActivity() {
             btnFinalizar.alpha = 0.5f
             Toast.makeText(this, "A atividade precisa estar 100% concluída.", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun finalizarAtividade() {
+
     }
 }

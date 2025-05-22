@@ -62,13 +62,12 @@ class AprovacaoActivity : AppCompatActivity() {
 
         btnAprovar.setOnClickListener {
             Toast.makeText(this, "Aprovado com sucesso", Toast.LENGTH_SHORT).show()
+            aprovarAtividade()
         }
 
-        // Configura o spinner
         val opcoes = listOf("Buscar ação, atividade...", "Ação 2025", "Atividade 2025")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, opcoes)
         spinnerFiltro.adapter = adapter
-
     }
 
     private fun selecionarCard(card: CardView) {
@@ -76,7 +75,6 @@ class AprovacaoActivity : AppCompatActivity() {
         card.setCardBackgroundColor(Color.parseColor("#E0F7FA"))
         cardSelecionado = card
 
-        // animação de fade-in
         val animacao: Animation = AlphaAnimation(0.3f, 1.0f)
         animacao.duration = 300
         card.startAnimation(animacao)
@@ -91,5 +89,9 @@ class AprovacaoActivity : AppCompatActivity() {
 
         btnAprovar.isEnabled = false
         btnAprovar.alpha = 0.5f
+    }
+
+    private fun aprovarAtividade() {
+
     }
 }
