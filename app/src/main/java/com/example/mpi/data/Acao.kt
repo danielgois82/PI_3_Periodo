@@ -9,7 +9,7 @@ data class Acao(
     val responsavel: Int,
     val aprovado: Boolean,
     val finalizado: Boolean,
-    val id_pilar: Int,
-    val id_subpilar: Int,
-    val id_usuario: Int
+    val idPilar: Int,
+    val idSubpilar: Int,
+    val idUsuario: Int
 )

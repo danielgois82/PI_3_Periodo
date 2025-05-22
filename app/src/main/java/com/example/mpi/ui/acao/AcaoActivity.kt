@@ -144,9 +144,9 @@ class AcaoActivity : AppCompatActivity() {
         intent.putExtra("acao_codigo_responsavel", acao.responsavel)
         intent.putExtra("acao_aprovado", acao.aprovado)
         intent.putExtra("acao_finalizada", acao.finalizado)
-        intent.putExtra("acao_id_pilar", acao.id_pilar)
-        intent.putExtra("acao_id_subpilar", acao.id_subpilar)
-        intent.putExtra("acao_id_usuario", acao.id_usuario)
+        intent.putExtra("acao_id_pilar", acao.idPilar)
+        intent.putExtra("acao_id_subpilar", acao.idSubpilar)
+        intent.putExtra("acao_id_usuario", acao.idUsuario)
         startActivity(intent)
     }
 

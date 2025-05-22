@@ -3,7 +3,7 @@ package com.example.mpi.repository
 import android.content.Context
 import com.example.mpi.data.Calendario
 import com.example.mpi.data.DatabaseHelper
-import com.example.mpi.ui.pilar.Pilar
+import com.example.mpi.data.Pilar
 
 class PilarRepository (context: Context) {
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
@@ -38,7 +38,7 @@ class PilarRepository (context: Context) {
             val idCalendario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_CALENDARIO))
             val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_USUARIO))
 
-            val pilar = Pilar(id.toLong(), nome, descricao, dataInicio, dataTermino, aprovado, percentual, idCalendario, idUsuario)
+            val pilar = Pilar(id, nome, descricao, dataInicio, dataTermino, aprovado, percentual, idCalendario, idUsuario)
             pilares.add(pilar)
         }
 
@@ -65,7 +65,7 @@ class PilarRepository (context: Context) {
             val idCalendario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_CALENDARIO))
             val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_USUARIO))
 
-            pilar = Pilar(id.toLong(), nome, descricao, dataInicio, dataTermino, aprovado, percentual, idCalendario, idUsuario)
+            pilar = Pilar(id, nome, descricao, dataInicio, dataTermino, aprovado, percentual, idCalendario, idUsuario)
         }
 
         cursor.close()

@@ -45,7 +45,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:entries="@array/array_ano"
                 android:textAlignment="textEnd" />
 
         </LinearLayout>
@@ -68,8 +67,7 @@
                 android:id="@+id/spinner_pilar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/array_pilar" />
+                android:layout_weight="1" />
 
             <TextView
                 android:layout_width="0dp"
@@ -84,8 +82,7 @@
                 android:id="@+id/spinner_subpilar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/array_subpilar" />
+                android:layout_weight="1" />
 
         </LinearLayout>
 
@@ -107,8 +104,7 @@
                 android:id="@+id/spinner_acao"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/array_acao" />
+                android:layout_weight="1" />
 
             <TextView
                 android:layout_width="0dp"
@@ -123,8 +119,7 @@
                 android:id="@+id/spinner_atividade"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/array_atividade" />
+                android:layout_weight="1" />
 
         </LinearLayout>
 

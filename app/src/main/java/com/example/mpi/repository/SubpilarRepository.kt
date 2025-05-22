@@ -2,8 +2,8 @@ package com.example.mpi.repository
 
 import android.content.Context
 import com.example.mpi.data.DatabaseHelper
-import com.example.mpi.ui.pilar.Pilar
-import com.example.mpi.ui.subpilar.Subpilar
+import com.example.mpi.data.Pilar
+import com.example.mpi.data.Subpilar
 
 class SubpilarRepository (context: Context) {
 
@@ -38,7 +38,7 @@ class SubpilarRepository (context: Context) {
             val idPilar = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_PILAR))
             val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_USUARIO))
 
-            val subpilar = Subpilar(id.toLong(), nome, descricao, dataInicio, dataTermino, aprovado, idPilar.toLong(), idUsuario.toLong())
+            val subpilar = Subpilar(id, nome, descricao, dataInicio, dataTermino, aprovado, idPilar, idUsuario)
             subpilares.add(subpilar)
         }
 
