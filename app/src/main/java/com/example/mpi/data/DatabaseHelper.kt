@@ -106,6 +106,18 @@ class DatabaseHelper(context: Context) :
         """.trimIndent()
 
         val createAtividadeTable = """
+/* Pedro
+             CREATE TABLE atividades (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        status TEXT NOT NULL,
+        data TEXT NOT NULL,
+        tipo_acao TEXT NOT NULL,
+        usuario_id INTEGER,
+        aprovado INTEGER DEFAULT 0,
+        finalizado INTEGER DEFAULT 0,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+*/ Pedro
             CREATE TABLE $TABLE_ATIVIDADE (
                 $COLUMN_ATIVIDADE_ID INTEGER PRIMARY KEY,
                 $COLUMN_ATIVIDADE_NOME TEXT NOT NULL UNIQUE,
@@ -287,5 +299,33 @@ class DatabaseHelper(context: Context) :
             Usuario(5, "Gestor Geraldo", "geraldo@geraldo.com", "geraldo123", 3),
             Usuario(6, "Gestora Goreti", "goreti@goreti.com", "goreti123", 3)
         )
+    }
+
+    fun aprovarAtividade(idAtividade: Int) {
+        val db = this.writableDatabase
+        val query = "UPDATE atividade SET aprovado = 1 WHERE id = ?"
+        db.execSQL(query, arrayOf(idAtividade))
+        db.close()
+    }
+
+    fun finalizarAtividade(idAtividade: Int) {
+        val db = this.writableDatabase
+        val query = "UPDATE atividade SET finalizado = 1 WHERE id = ?"
+        db.execSQL(query, arrayOf(idAtividade))
+        db.close()
+    }
+
+    fun aprovarAcao(idAcao: Int) {
+        val db = this.writableDatabase
+        val query = "UPDATE acao SET isAprovado = 1 WHERE id = ?"
+        db.execSQL(query, arrayOf(idAcao))
+        db.close()
+    }
+
+    fun finalizarAcao(idAcao: Int) {
+        val db = this.writableDatabase
+        val query = "UPDATE acao SET isFinalizado = 1 WHERE id = ?"
+        db.execSQL(query, arrayOf(idAcao))
+        db.close()
     }
 }
