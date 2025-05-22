@@ -30,7 +30,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="4dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -45,7 +46,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:entries="@array/array_ano"
                 android:textAlignment="textEnd" />
 
         </LinearLayout>
@@ -53,7 +53,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="4dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -68,8 +69,7 @@
                 android:id="@+id/spinner_pilar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/array_pilar" />
+                android:layout_weight="1" />
 
             <TextView
                 android:layout_width="0dp"
@@ -84,15 +84,15 @@
                 android:id="@+id/spinner_subpilar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/array_subpilar" />
+                android:layout_weight="1" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="4dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -107,8 +107,7 @@
                 android:id="@+id/spinner_acao"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/array_acao" />
+                android:layout_weight="1" />
 
             <TextView
                 android:layout_width="0dp"
@@ -123,8 +122,24 @@
                 android:id="@+id/spinner_atividade"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button_pesquisar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="4dp"
                 android:layout_weight="1"
-                android:entries="@array/array_atividade" />
+                android:backgroundTint="@color/blue"
+                android:text="Pesquisar" />
 
         </LinearLayout>
 
@@ -143,6 +158,37 @@
                 android:textColor="@color/white"
                 android:textSize="16dp" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="1"
+                    android:background="@color/blue"
+                    android:text="Progresso geral do pilar"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textview_progressoGeralPilar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="1"
+                    android:background="@color/green"
+                    android:text="0%"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/textview_nomeSubpilar"
                 android:layout_width="match_parent"
@@ -152,6 +198,37 @@
                 android:text="Subpilar 1"
                 android:textColor="@color/white"
                 android:textSize="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="1"
+                    android:background="@color/blue"
+                    android:text="Progresso geral Subpilar"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textview_progressoGeralSubpilar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="1"
+                    android:background="@color/green"
+                    android:text="0%"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textview_nomeAcao"
@@ -187,9 +264,9 @@
                 android:layout_marginBottom="4dp"
                 android:layout_weight="1"
                 android:background="@color/green"
-                android:text="100%"
+                android:text="0%"
                 android:textAlignment="textEnd"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -266,9 +343,9 @@
                 android:layout_marginBottom="4dp"
                 android:layout_weight="1"
                 android:background="@color/green"
-                android:text="100%"
+                android:text="0%"
                 android:textAlignment="textEnd"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -407,7 +484,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:background="@color/blue"
-                android:text="Progresso geral das atividades desta Ação"
+                android:text="Progresso geral de todas atividades desta ação"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -476,7 +553,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -491,7 +568,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -505,7 +582,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -573,7 +650,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -588,7 +665,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -602,7 +679,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -670,7 +747,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -685,7 +762,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -699,7 +776,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -767,7 +844,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -782,7 +859,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -796,7 +873,7 @@
                 android:padding="8dp"
                 android:text="0%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
         </LinearLayout>
