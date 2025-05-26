@@ -13,6 +13,9 @@
         android:theme="@style/Theme.MPI"
         tools:targetApi="34">
         <activity
+            android:name=".ui.dashboard.ChartDashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.notificacao.NotificacaoActivity"
             android:exported="false" />
         <activity

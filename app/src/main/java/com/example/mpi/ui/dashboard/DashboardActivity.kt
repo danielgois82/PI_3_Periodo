@@ -52,5 +52,10 @@ class DashboardActivity : AppCompatActivity() {
             extra.putExtra("tipoUsuario", tipoUsuario)
             startActivity(extra)
         }
+
+        val openOpcao2: Button = findViewById(R.id.btnOption2)
+        openOpcao2.setOnClickListener {
+            startActivity(Intent(this, ChartDashboardActivity::class.java))
+        }
     }
 }

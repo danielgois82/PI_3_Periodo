@@ -119,7 +119,8 @@ class DatabaseHelper(context: Context) :
         aprovado INTEGER DEFAULT 0,
         finalizado INTEGER DEFAULT 0,
         FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-*/ Pedro
+        Pedro
+*/ 
             CREATE TABLE $TABLE_ATIVIDADE (
                 $COLUMN_ATIVIDADE_ID INTEGER PRIMARY KEY,
                 $COLUMN_ATIVIDADE_NOME TEXT NOT NULL UNIQUE,
