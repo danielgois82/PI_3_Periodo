@@ -233,7 +233,7 @@ class PercentualActivity : AppCompatActivity() {
 
         // Fim da parte das atividades
 
-        val openMenuPrincipal: ImageView = findViewById(R.id.viewVoltarMenuPrincipal)
+        val openMenuPrincipal: ImageView = findViewById(R.id.imageview_voltarPercentualParaMenuPrincipal)
         openMenuPrincipal.setOnClickListener {
             val extra = Intent(this, MenuActivity::class.java)
             extra.putExtra("idUsuario", idUsuario)
