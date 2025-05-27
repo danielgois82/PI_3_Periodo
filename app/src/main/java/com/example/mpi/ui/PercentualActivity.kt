@@ -2,6 +2,7 @@ package com.example.mpi.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,17 +13,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mpi.R
+import com.example.mpi.data.Acao
+import com.example.mpi.data.Atividade
 import com.example.mpi.data.Calendario
+import com.example.mpi.data.Pilar
+import com.example.mpi.data.Subpilar
 import com.example.mpi.databinding.ActivityPercentualBinding
 import com.example.mpi.repository.AcaoRepository
 import com.example.mpi.repository.AtividadeRepository
 import com.example.mpi.repository.CalendarioRepository
+import com.example.mpi.repository.PercentualAtividadeRepository
 import com.example.mpi.repository.PilarRepository
 import com.example.mpi.repository.SubpilarRepository
-import com.example.mpi.data.Acao
-import com.example.mpi.data.Atividade
-import com.example.mpi.data.Pilar
-import com.example.mpi.data.Subpilar
+import com.example.mpi.repository.UsuarioRepository
 
 class PercentualActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPercentualBinding
@@ -30,6 +33,14 @@ class PercentualActivity : AppCompatActivity() {
     val USUARIO_ANALISTA = "ANALISTA"
     val USUARIO_COORDENADOR = "COORDENADOR"
     val USUARIO_GESTOR = "GESTOR"
+
+    val calendarioRepository = CalendarioRepository(this)
+    val pilarRepository = PilarRepository(this)
+    val subpilarRepository = SubpilarRepository(this)
+    val acaoRepository = AcaoRepository(this)
+    val atividadeRepository = AtividadeRepository(this)
+    val usuarioRepository = UsuarioRepository(this)
+    val percentualAtividadeRepository = PercentualAtividadeRepository(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +62,197 @@ class PercentualActivity : AppCompatActivity() {
         val tipoUsuario =
             intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
 
-        carregarDados()
+        // Carregar todos oa anos no spinner
+
+        val listaCalendario = calendarioRepository.obterTodosCalendarios()
+        val listaAnoCalendario: MutableList<Int> = arrayListOf()
+        val mapaCalendario = mutableMapOf<Int, Int>()
+
+        for (cal in listaCalendario) {
+            listaAnoCalendario.add(cal.ano)
+            mapaCalendario[cal.id] = cal.ano
+        }
+
+        val adapterCalendario = ArrayAdapter(
+            this
+            , android.R.layout.simple_spinner_dropdown_item
+            , listaAnoCalendario)
+
+        binding.spinnerAno.adapter = adapterCalendario
+
+        // Fim do carregar todos os anos no spinner
+
+        // Carregar todos os pilares no spinner
+
+        val anoSelecionado = binding.spinnerAno.selectedItem.toString().toInt()
+
+        var calendarioSelecionado: Calendario? = null
+        for (cal in listaCalendario) {
+            if (cal.ano == anoSelecionado) {
+                calendarioSelecionado = cal
+            }
+        }
+
+        val listaPilar = calendarioSelecionado?.let { pilarRepository.obterTodosPilares(it) }
+        val nomePilares: MutableList<String> = arrayListOf()
+        val mapaPilar = mutableMapOf<Int, String>()
+
+        if (listaPilar != null) {
+            for (pilar in listaPilar) {
+                nomePilares.add(pilar.nome)
+                mapaPilar[pilar.id] = pilar.nome
+            }
+        }
+
+        val adapterPilar = ArrayAdapter(
+            this
+            , android.R.layout.simple_spinner_dropdown_item
+            , nomePilares)
+
+        binding.spinnerPilar.adapter = adapterPilar
+
+        // Fim do carregar todos os pilares no spinner
+
+        // Carregar todos os subpilares
+
+        val nomePilarSelecionado = binding.spinnerPilar.selectedItem.toString()
+
+        var pilarSelecionado: Pilar? = null
+        if (listaPilar != null) {
+            for (pilar in listaPilar) {
+                if (pilar.nome == nomePilarSelecionado) {
+                    pilarSelecionado = pilar
+                }
+            }
+        }
+
+        val listaSubpilar = pilarSelecionado?.let { subpilarRepository.obterTodosSubpilares(it) }
+        val nomeSubpilares: MutableList<String> = arrayListOf()
+        val mapaSubpilar = mutableMapOf<Int, String>()
+
+        if (listaSubpilar != null) {
+            for (subpilar in listaSubpilar) {
+                nomeSubpilares.add(subpilar.nome)
+                mapaSubpilar[subpilar.id] = subpilar.nome
+            }
+        }
+
+        val adapterSubpilar = ArrayAdapter(
+            this
+            , android.R.layout.simple_spinner_dropdown_item
+            , nomeSubpilares)
+
+        binding.spinnerSubpilar.adapter = adapterSubpilar
+
+        // Fim do carregar todos os subpilares
+
+        // Fim do carregar todas as ações
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                        //
+//                    FALTA FAZER A PESQUISA DE ACOES DIRETO PELO PILAR                   //
+//                                                                                        //
+////////////////////////////////////////////////////////////////////////////////////////////
+
+        val nomeSubpilarSelecionado = binding.spinnerSubpilar.selectedItem.toString()
+
+        var subpilarSelecionado: Subpilar? = null
+        if (listaSubpilar != null) {
+            for (subpilar in listaSubpilar) {
+                if (subpilar.nome == nomeSubpilarSelecionado) {
+                    subpilarSelecionado = subpilar
+                }
+            }
+        }
+
+        val listaAcao = subpilarSelecionado?.let { acaoRepository.obterTodasAcoes(it) }
+        val nomeAcoes: MutableList<String> = arrayListOf()
+        val mapaAcao = mutableMapOf<Int, String>()
+
+        if (listaAcao != null) {
+            for (acao in listaAcao) {
+                nomeAcoes.add(acao.nome)
+                mapaAcao[acao.id] = acao.nome
+            }
+        }
+
+        val adapterAcao = ArrayAdapter(
+            this
+            , android.R.layout.simple_spinner_dropdown_item
+            , nomeAcoes)
+
+        binding.spinnerAcao.adapter = adapterAcao
+
+        // Fim do carregar todas as ações
+
+        // Carregar todas as atividades
+
+        val nomeAcaoSelecionado = binding.spinnerAcao.selectedItem.toString()
+
+        var acaoSelecionado: Acao? = null
+        if (listaAcao != null) {
+            for (acao in listaAcao) {
+                if (acao.nome == nomeAcaoSelecionado) {
+                    acaoSelecionado = acao
+                }
+            }
+        }
+
+        val listaAtividade = acaoSelecionado?.let { atividadeRepository.obterTodasAtividades(it) }
+        val nomeAtividades: MutableList<String> = arrayListOf()
+        val mapaAtividade = mutableMapOf<Int, String>()
+
+        if (listaAtividade != null) {
+            for (ativ in listaAtividade) {
+                nomeAtividades.add(ativ.nome)
+                mapaAtividade[ativ.id] = ativ.nome
+            }
+        }
+
+        val adapterAtividade = ArrayAdapter(
+            this
+            , android.R.layout.simple_spinner_dropdown_item
+            , nomeAtividades)
+
+        binding.spinnerAtividade.adapter = adapterAtividade
+
+        // Fim do carregar todas as atividades
+
+        // Parte das atividades
+
+        val nomeAtividadeSelecionado = binding.spinnerAtividade.selectedItem.toString()
+
+        var atividadeSelecionado: Atividade? = null
+        if (listaAtividade != null) {
+            for (ativ in listaAtividade) {
+                if (ativ.nome == nomeAtividadeSelecionado) {
+                    atividadeSelecionado = ativ
+                }
+            }
+        }
+
+        // Fim da parte das atividades
+
+        val openMenuPrincipal: ImageView = findViewById(R.id.viewVoltarMenuPrincipal)
+        openMenuPrincipal.setOnClickListener {
+            val extra = Intent(this, MenuActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
+        }
+
+        binding.buttonPesquisar.setOnClickListener {
+            if (pilarSelecionado != null
+                && subpilarSelecionado != null
+                && acaoSelecionado != null
+                && atividadeSelecionado != null) {
+                carregarDados(pilarSelecionado
+                    , subpilarSelecionado
+                    , acaoSelecionado
+                    , atividadeSelecionado)
+            }
+        }
 
         binding.textviewPercentualAtivJan.setOnClickListener {
             atualizarPercentual(binding.textviewPercentualAtivJan)
@@ -101,67 +302,52 @@ class PercentualActivity : AppCompatActivity() {
             atualizarPercentual(binding.textviewPercentualAtivDez)
         }
 
-        val openMenuPrincipal: ImageView = findViewById(R.id.viewVoltarMenuPrincipal)
-        openMenuPrincipal.setOnClickListener {
-            val extra = Intent(this, MenuActivity::class.java)
-            extra.putExtra("idUsuario", idUsuario)
-            extra.putExtra("nomeUsuario", nomeUsuario)
-            extra.putExtra("tipoUsuario", tipoUsuario)
-            startActivity(extra)
-        }
-
         binding.buttonSalvarAlteracoes.setOnClickListener {
             salvarAlteracoes()
         }
-
     }
 
-    val calendarioRepository = CalendarioRepository(this)
-    val pilarRepository = PilarRepository(this)
-    val subpilarRepository = SubpilarRepository(this)
-    val acaoRepository = AcaoRepository(this)
-    val atividadeRepository = AtividadeRepository(this)
+    private fun carregarDados(pilar: Pilar, subpilar: Subpilar, acao: Acao, atividade: Atividade) {
 
-    private fun carregarSpinnerTodosAnos(): List<Calendario> {
-        return calendarioRepository .obterTodosCalendarios()
-    }
+        val responsavelAcao = usuarioRepository.obterUsuarioPorId(acao.responsavel)
+        val responsavelAtividade = usuarioRepository.obterUsuarioPorId(atividade.responsavel)
 
-    private fun carregarSpinnerTodosPilares(calendario: Calendario): List<Pilar> {
-        return pilarRepository.obterTodosPilares(calendario)
-    }
+        val listaAtiv = atividadeRepository.obterTodasAtividades(acao)
+        var percentualGeralTodasAtividade = 0.0
+        for (ativ in listaAtiv) {
+            val percAtividade = percentualAtividadeRepository.obterTodosPercentuais(ativ)
+            for (p in percAtividade) {
+                percentualGeralTodasAtividade += p.percentual
+            }
+        }
+        percentualGeralTodasAtividade /= listaAtiv.size
 
-    private fun carregarSpinnerTodosSubpilares(pilar: Pilar): List<Subpilar> {
-        return subpilarRepository.obterTodosSubpilares(pilar)
-    }
+        val percentuaisAtividade = percentualAtividadeRepository.obterTodosPercentuais(atividade)
+        var percentualGeralAtividade = 0.0
+        for (perc in percentuaisAtividade) {
+            percentualGeralAtividade += perc.percentual
+        }
 
-    private fun carregarSpinnerTodasAcoesDoSubpilar(subpilar: Subpilar): List<Acao> {
-        return acaoRepository.obterTodasAcoes(subpilar)
-    }
+        binding.textviewNomePilar.text = "Pilar: ${pilar.nome}"
+        // Falta botar o percentual do pilar
+        // Ver se dá para botar o orcamento do pilar
 
-    private fun carregarSpinnerTodasAcoesDoPilar(pilar: Pilar): List<Acao> {
-        return acaoRepository.obterTodasAcoes(pilar)
-    }
+        binding.textviewNomeSubpilar.text = "Subpilar: ${subpilar.nome}"
+        // Falta botar o percentual do subpilar
+        // Ver se dá para botar o orcamento do subpilar
 
-    private fun carregarSpinnerTodasAtividades(acao: Acao): List<Atividade> {
-        return atividadeRepository.obterTodasAtividades(acao)
-    }
+        binding.textviewNomeAcao.text = "Ação: ${acao.nome}"
+        binding.textviewProgressoGeralAcao.text = String.format("%.2f", percentualGeralTodasAtividade) + "%"
+        binding.textviewAcaoAtribuida.text = responsavelAcao!!.nome
 
-    private fun carregarDados() {
+        binding.textviewNomeAtividade.text = "Atividade: ${atividade.nome}"
+        binding.textviewProgressoGeralAtividade.text = String.format("%.2f", percentualGeralAtividade) + "%"
+        binding.textviewAtividadeAtribuida.text = responsavelAtividade!!.nome
+        binding.textviewOrcamentoAtividade.text = "R$" + String.format("%.2f", atividade.orcamento)
+        binding.textviewInicioAtividade.text = atividade.dataInicio
+        binding.textviewTerminoAtividade.text = atividade.dataTermino
 
-        binding.textviewNomePilar.text = "nome pilar"
-
-        binding.textviewNomeSubpilar.text = "aaa"
-
-        binding.textviewNomeAcao.text = "aaa"
-        binding.textviewProgressoGeralAcao.text = "aaa"
-        binding.textviewAcaoAtribuida.text = "Daniel Gois"
-
-        binding.textviewNomeAtividade.text = "aaa"
-        binding.textviewProgressoGeralAtividade.text = "aaa"
-        binding.textviewAtividadeAtribuida.text = "Daniel Gois"
-        binding.textviewOrcamentoAtividade.text = "aaa"
-        binding.textviewInicioAtividade.text = "aaa"
-        binding.textviewTerminoAtividade.text = "aaa"
+        // Falta todos os percentuais gerais e o percentual da atividade
     }
 
     private fun atualizarPercentual(inputTextView: TextView) {
