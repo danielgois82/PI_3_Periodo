@@ -22,7 +22,7 @@ import java.util.Locale
 class EditarAcaoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditarAcaoBinding
     private lateinit var dbHelper: DatabaseHelper
-    private var acaoId: Long = -1
+    private var acaoId: Int = -1
     private var listaPilaresNomes = mutableListOf<String>()
     private var listaPilaresObjetos = mutableListOf<Pilar>()
     private var listaSubpilaresNomes = mutableListOf<String>()
@@ -43,8 +43,8 @@ class EditarAcaoActivity : AppCompatActivity() {
         dbHelper = DatabaseHelper(this)
         carregarUsuariosNoSpinner()
 
-        acaoId = intent.getLongExtra("acao_id", -1)
-        if (acaoId == -1L) {
+        acaoId = intent.getIntExtra("acao_id", -1)
+        if (acaoId == -1L.toInt()) {
             Toast.makeText(this, "Erro: ID da ação não encontrado", Toast.LENGTH_SHORT).show()
             finish()
             return

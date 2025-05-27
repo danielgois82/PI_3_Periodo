@@ -41,6 +41,8 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_NOTIFICACAO_TITULO TEXT NOT NULL,
                 $COLUMN_NOTIFICACAO_MENSAGEM TEXT NOT NULL,
                 $COLUMN_NOTIFICACAO_ID_USUARIO INTEGER NOT NULL,
+                $COLUMN_NOTIFICACAO_ID_ITEM INTEGER,
+                $COLUMN_NOTIFICACAO_TIPO_ITEM TEXT,
                 FOREIGN KEY ($COLUMN_NOTIFICACAO_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID)
             );
         """.trimIndent()
@@ -106,6 +108,18 @@ class DatabaseHelper(context: Context) :
         """.trimIndent()
 
         val createAtividadeTable = """
+/* Pedro
+             CREATE TABLE atividades (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        status TEXT NOT NULL,
+        data TEXT NOT NULL,
+        tipo_acao TEXT NOT NULL,
+        usuario_id INTEGER,
+        aprovado INTEGER DEFAULT 0,
+        finalizado INTEGER DEFAULT 0,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+*/ Pedro
             CREATE TABLE $TABLE_ATIVIDADE (
                 $COLUMN_ATIVIDADE_ID INTEGER PRIMARY KEY,
                 $COLUMN_ATIVIDADE_NOME TEXT NOT NULL UNIQUE,
@@ -148,6 +162,7 @@ class DatabaseHelper(context: Context) :
         inserirUsuarios(db, obterUsuarios())
     }
 
+
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_CALENDARIO")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_TIPOUSUARIO")
@@ -187,6 +202,8 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_NOTIFICACAO_ISVISUALIZADO = "isVisualizado"
         const val COLUMN_NOTIFICACAO_TITULO = "titulo"
         const val COLUMN_NOTIFICACAO_MENSAGEM = "mensagem"
+        const val COLUMN_NOTIFICACAO_ID_ITEM = "id_item"
+        const val COLUMN_NOTIFICACAO_TIPO_ITEM = "tipo_item"
         const val COLUMN_NOTIFICACAO_ID_USUARIO = "id_usuario"
 
         const val TABLE_PILAR = "pilar"
@@ -287,5 +304,33 @@ class DatabaseHelper(context: Context) :
             Usuario(5, "Gestor Geraldo", "geraldo@geraldo.com", "geraldo123", 3),
             Usuario(6, "Gestora Goreti", "goreti@goreti.com", "goreti123", 3)
         )
+    }
+
+    fun aprovarAtividade(idAtividade: Int) {
+        val db = this.writableDatabase
+        val query = "UPDATE atividade SET aprovado = 1 WHERE id = ?"
+        db.execSQL(query, arrayOf(idAtividade))
+        db.close()
+    }
+
+    fun finalizarAtividade(idAtividade: Int) {
+        val db = this.writableDatabase
+        val query = "UPDATE atividade SET finalizado = 1 WHERE id = ?"
+        db.execSQL(query, arrayOf(idAtividade))
+        db.close()
+    }
+
+    fun aprovarAcao(idAcao: Int) {
+        val db = this.writableDatabase
+        val query = "UPDATE acao SET isAprovado = 1 WHERE id = ?"
+        db.execSQL(query, arrayOf(idAcao))
+        db.close()
+    }
+
+    fun finalizarAcao(idAcao: Int) {
+        val db = this.writableDatabase
+        val query = "UPDATE acao SET isFinalizado = 1 WHERE id = ?"
+        db.execSQL(query, arrayOf(idAcao))
+        db.close()
     }
 }
