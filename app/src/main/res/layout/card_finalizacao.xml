@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:elevation="4dp"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvNome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome da Atividade"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDescricao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descrição da Atividade"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tvData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="De 01/01/2025 até 31/12/2025"
+            android:layout_marginTop="4dp" />
+
+        <!-- Barra de Progresso -->
+        <ProgressBar
+            android:id="@+id/progresso"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:max="100"
+            android:progress="0" />
+
+        <!-- Texto da Porcentagem -->
+        <TextView
+            android:id="@+id/tvPorcentagem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="0% concluído" />
+
+        <Button
+            android:id="@+id/btnFinalizar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Finalizar"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp"
+            android:enabled="false" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -42,4 +42,9 @@
     <string name="pesquisar">Pesquisar</string>
     <string name="spinner_prompt">Buscar ação, atividade...</string>
 
+    <string-array name="tipos_aprovacao">
+        <item>Ação 2025</item>
+        <item>Aprovação 2025</item>
+    </string-array>
+
 </resources>

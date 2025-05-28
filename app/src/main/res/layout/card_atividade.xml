@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:padding="12dp"
+    android:backgroundTint="@android:color/white"
+    android:elevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvNome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome da Atividade"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvDescricao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descrição da Atividade"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tvData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Período"
+            android:layout_marginTop="4dp" />
+
+        <Button
+            android:id="@+id/btnAprovar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aprovar"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="end" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
