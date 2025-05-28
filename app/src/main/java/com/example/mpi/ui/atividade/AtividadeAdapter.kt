@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpi.databinding.FragmentAtividadeItemBinding // Mantive o nome do binding
+import com.example.mpi.data.Atividade
 
 class AtividadeAdapter(
     private val listaAtividades: List<Atividade>,

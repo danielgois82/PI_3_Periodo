@@ -106,20 +106,16 @@ class DatabaseHelper(context: Context) :
         """.trimIndent()
 
         val createAtividadeTable = """
-       CREATE TABLE $TABLE_ATIVIDADE (
-        $COLUMN_ATIVIDADE_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        $COLUMN_ATIVIDADE_NOME TEXT NOT NULL,
-        $COLUMN_ATIVIDADE_DATA_INICIO TEXT NOT NULL,
-        $COLUMN_ATIVIDADE_DATA_TERMINO TEXT NOT NULL,
-        $COLUMN_ATIVIDADE_RESPONSAVEL INTEGER,
-        $COLUMN_ATIVIDADE_IS_APROVADO INTEGER DEFAULT 0,
-        $COLUMN_ATIVIDADE_IS_FINALIZADO INTEGER DEFAULT 0,
-        $COLUMN_ATIVIDADE_DESCRICAO TEXT NOT NULL,
-        $COLUMN_ATIVIDADE_ORCAMENTO REAL,
-        $COLUMN_ATIVIDADE_ID_ACAO INTEGER,
-        $COLUMN_ATIVIDADE_ID_USUARIO INTEGER,
-        FOREIGN KEY ($COLUMN_ATIVIDADE_ID_ACAO) REFERENCES $TABLE_ACAO($COLUMN_ACAO_ID),
-        FOREIGN KEY ($COLUMN_ATIVIDADE_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID)
+             CREATE TABLE atividades (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        status TEXT NOT NULL,
+        data TEXT NOT NULL,
+        tipo_acao TEXT NOT NULL,
+        usuario_id INTEGER,
+        aprovado INTEGER DEFAULT 0,
+        finalizado INTEGER DEFAULT 0,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
             );
         """.trimIndent()
 
@@ -289,25 +285,19 @@ class DatabaseHelper(context: Context) :
         )
     }
 
-    fun aprovarAtividade(id: Int): Boolean {
+    fun aprovarAtividade(idAtividade: Int) {
         val db = this.writableDatabase
-        val values = ContentValues()
-        values.put("aprovado", 1)
-
-        val result = db.update("atividade", values, "id = ?", arrayOf(id.toString()))
-        return result > 0
+        val query = "UPDATE atividade SET aprovado = 1 WHERE id = ?"
+        db.execSQL(query, arrayOf(idAtividade))
+        db.close()
     }
 
-    fun finalizarAtividade(idAtividade: Int): Boolean {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put("finalizado", 1)
-        }
-        val linhasAfetadas = db.update("atividade", values, "id = ?", arrayOf(idAtividade.toString()))
-        return linhasAfetadas > 0
+    fun finalizarAtividade(idAtividade: Int) {
+        val db = this.writableDatabase
+        val query = "UPDATE atividade SET finalizado = 1 WHERE id = ?"
+        db.execSQL(query, arrayOf(idAtividade))
+        db.close()
     }
-
-
 
     fun aprovarAcao(idAcao: Int) {
         val db = this.writableDatabase
@@ -323,4 +313,3 @@ class DatabaseHelper(context: Context) :
         db.close()
     }
 }
-

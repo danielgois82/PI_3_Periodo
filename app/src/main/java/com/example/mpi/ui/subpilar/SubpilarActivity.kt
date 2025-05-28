@@ -2,22 +2,13 @@ package com.example.mpi.ui.subpilar
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.databinding.ActivitySubpilarBinding
-import com.example.mpi.ui.subpilar.EditarSubpilarActivity
+import com.example.mpi.data.Subpilar
 
-data class Subpilar(
-    val id: Long,
-    val nome: String,
-    val descricao: String,
-    val dataInicio: String,
-    val dataTermino: String,
-    val aprovado: Boolean,
-    val idPilar: Long,
-    val idUsuario: Long
-)
 
 class SubpilarActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySubpilarBinding
@@ -32,6 +23,16 @@ class SubpilarActivity : AppCompatActivity() {
 
         dbHelper = DatabaseHelper(this)
 
+        ////////////////////// Carregando informações do usuário////////////////////////////////
+        val intentExtra = intent
+        val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
+        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
+        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
+        val tag = "PilarActivityLog"
+        val mensagemLog = "PilarActivity iniciada - ID Usuário: $idUsuario, Nome: $nomeUsuario"
+        Log.d(tag, mensagemLog)
+        ////////////////////////////////////////////////////////////////////////////////
+
         binding.recyclerViewSubpilares.layoutManager = LinearLayoutManager(this)
         subpilarAdapter = SubpilarAdapter(
             listaSubpilares,
@@ -43,6 +44,9 @@ class SubpilarActivity : AppCompatActivity() {
 
         binding.btnAdicionarSubpilar.setOnClickListener {
             val intent = Intent(this, cadastroSubpilar::class.java)
+            intent.putExtra("idUsuario", idUsuario)
+            intent.putExtra("nomeUsuario", nomeUsuario)
+            intent.putExtra("tipoUsuario", tipoUsuario)
             startActivity(intent)
         }
         binding.btnVoltar.setOnClickListener {
@@ -81,14 +85,14 @@ class SubpilarActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_NOME))
                 val descricao = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DESCRICAO))
                 val dataInicio = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DATA_INICIO))
                 val dataTermino = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DATA_TERMINO))
                 val aprovado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_IS_APROVADO)) > 0
-                val idPilar = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_PILAR))
-                val idUsuario = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_USUARIO))
+                val idPilar = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_PILAR))
+                val idUsuario = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_USUARIO))
 
                 listaSubpilares.add(
                     Subpilar(

@@ -13,6 +13,9 @@
         android:theme="@style/Theme.MPI"
         tools:targetApi="34">
         <activity
+            android:name=".ui.notificacao.NotificacaoActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.atividade.EditarAtividadeActivity"
             android:exported="false" />
         <activity
@@ -26,9 +29,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.dashboard.DashboardActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.NotificacaoActivity"
             android:exported="false" />
         <activity
             android:name=".ui.atividade.AtividadeActivity"
