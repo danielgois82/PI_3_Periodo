@@ -10,4 +10,8 @@ data class Pilar (
     val percentual: Double, // Quero tirar
     val idCalendario: Int,
     val idUsuario: Int
-)
+) {
+    override fun toString(): String {
+        return nome
+    }
+}

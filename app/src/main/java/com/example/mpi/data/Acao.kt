@@ -12,4 +12,8 @@ data class Acao(
     val idPilar: Int,
     val idSubpilar: Int,
     val idUsuario: Int
-)
+) {
+    override fun toString(): String {
+        return nome
+    }
+}

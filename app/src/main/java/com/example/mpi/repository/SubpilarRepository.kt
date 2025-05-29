@@ -45,7 +45,7 @@ class SubpilarRepository (context: Context) {
         return subpilares
     }
 
-    fun obterTodosSubpilares(pilar: Pilar): List<Subpilar> {
+    fun obterTodosSubpilares(pilar: Pilar): MutableList<Subpilar> {
         val db = dataBase.readableDatabase
 
         val cursor = db.rawQuery("SELECT * FROM subpilar WHERE id_pilar = ?", arrayOf(pilar.id.toString()))

@@ -9,4 +9,8 @@ data class Subpilar(
     val aprovado: Boolean,
     val idPilar: Int,
     val idUsuario: Int
-)
+) {
+    override fun toString(): String {
+        return nome
+    }
+}

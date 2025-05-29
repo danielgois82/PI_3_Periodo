@@ -1,6 +1,7 @@
 package com.example.mpi.repository
 
 import android.content.Context
+import android.util.Log
 import com.example.mpi.data.Acao
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.data.Pilar
@@ -26,9 +27,11 @@ class AcaoRepository(context: Context) {
         }
     }
 
-    fun obterTodasAcoes(pilar: Pilar): List<Acao> {
+    fun obterTodasAcoes(pilar: Pilar): MutableList<Acao> {
         val db = dataBase.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM acao WHERE id_subpilar = ?", arrayOf(pilar.id.toString()))
+
+        val cursor = db.rawQuery("SELECT * FROM acao WHERE id_pilar = ?", arrayOf(pilar.id.toString()))
+
         var acoes: MutableList<Acao> = arrayListOf()
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
@@ -50,9 +53,11 @@ class AcaoRepository(context: Context) {
         return acoes
     }
 
-    fun obterTodasAcoes(subpilar: Subpilar): List<Acao> {
+    fun obterTodasAcoes(subpilar: Subpilar): MutableList<Acao> {
         val db = dataBase.readableDatabase
+      
         val cursor = db.rawQuery("SELECT * FROM acao WHERE id_subpilar = ?", arrayOf(subpilar.id.toString()))
+        
         var acoes: MutableList<Acao> = arrayListOf()
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
@@ -73,6 +78,7 @@ class AcaoRepository(context: Context) {
         cursor.close()
         return acoes
     }
+    
     // FUnção para consultar ações sem filtro para a listagem de ação em AcaoActivity
     fun obterTodasAcoes(): List<Acao> {
         val db = dataBase.readableDatabase
@@ -98,8 +104,6 @@ class AcaoRepository(context: Context) {
         cursor.close()
         return acoes
     }
-
-
 
     // Funções exclusivas para FILTRAGEM em AtividadeActivity
     fun obterAcoesPorPilar(pilar: Pilar): List<Acao> {
