@@ -51,6 +51,17 @@
         android:text="Cadastrar Subpilar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewListaSubpilaresTitulo" />
+    <Spinner
+        android:id="@+id/spinnerPilar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAdicionarSubpilar"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSubpilares"
@@ -60,7 +71,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAdicionarSubpilar"
-        tools:listitem="@layout/subpilar_item_fragment" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerPilar" tools:listitem="@layout/subpilar_item_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView // Import adicionado
+import android.widget.ArrayAdapter // Import adicionado
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +14,10 @@ import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.data.Pilar
 import com.example.mpi.data.Subpilar
 import com.example.mpi.data.Acao
+import com.example.mpi.data.Calendario // Import adicionado, necessário para PilarRepository
+import com.example.mpi.repository.AcaoRepository // Import adicionado
+import com.example.mpi.repository.PilarRepository // Import adicionado
+import com.example.mpi.repository.SubpilarRepository // Import adicionado
 
 class AcaoActivity : AppCompatActivity() {
 
@@ -23,6 +29,15 @@ class AcaoActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var acaoAdapter: AcaoAdapter
     private val listaAcoes = mutableListOf<Acao>()
+    private lateinit var pilarRepository: PilarRepository
+    private lateinit var subpilarRepository: SubpilarRepository
+    private lateinit var acaoRepository: AcaoRepository
+
+    private var pilares: List<Pilar> = emptyList()
+    private var subpilares: List<Subpilar> = emptyList()
+
+    private var selectedPilar: Pilar? = null
+    private var selectedSubpilar: Subpilar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +49,16 @@ class AcaoActivity : AppCompatActivity() {
         val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
         val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
         val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
-        val tag = "PilarActivityLog"
-        val mensagemLog = "PilarActivity iniciada - ID Usuário: $idUsuario, Nome: $nomeUsuario"
+        val tag = "AcaoActivityLog" // Tag ajustada para AcaoActivity
+        val mensagemLog = "AcaoActivity iniciada - ID Usuário: $idUsuario, Nome: $nomeUsuario"
         Log.d(tag, mensagemLog)
         ////////////////////////////////////////////////////////////////////////////////
 
         dbHelper = DatabaseHelper(this)
+        // Inicializando os repositórios
+        pilarRepository = PilarRepository.getInstance(this)
+        subpilarRepository = SubpilarRepository.getInstance(this)
+        acaoRepository = AcaoRepository.getInstance(this) // Garante a inicialização
 
         binding.recyclerViewAcoes.layoutManager = LinearLayoutManager(this)
         acaoAdapter = AcaoAdapter(listaAcoes,
@@ -51,7 +70,8 @@ class AcaoActivity : AppCompatActivity() {
             binding.btnAdicionarAcao.visibility = View.GONE
         }
 
-        carregarAcoes()
+        setupSpinners()
+        carregarPilaresParaSpinner()
 
         binding.btnAdicionarAcao.setOnClickListener {
             val intent = Intent(this, CadastroAcaoActivity::class.java)
@@ -67,70 +87,80 @@ class AcaoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        carregarAcoes()
+        aplicarFiltros()
     }
 
-    private fun carregarAcoes() {
-        listaAcoes.clear()
-        val db = dbHelper.readableDatabase
-        val projection = arrayOf(
-            DatabaseHelper.COLUMN_ACAO_ID,
-            DatabaseHelper.COLUMN_ACAO_NOME,
-            DatabaseHelper.COLUMN_ACAO_DESCRICAO,
-            DatabaseHelper.COLUMN_ACAO_DATA_INICIO,
-            DatabaseHelper.COLUMN_ACAO_DATA_TERMINO,
-            DatabaseHelper.COLUMN_ACAO_RESPONSAVEL,
-            DatabaseHelper.COLUMN_ACAO_IS_APROVADO,
-            DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO,
-            DatabaseHelper.COLUMN_ACAO_ID_PILAR,
-            DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR,
-            DatabaseHelper.COLUMN_ACAO_ID_USUARIO
-        )
+    // Configurando os listeners para os Spinners
+    private fun setupSpinners() {
+        binding.spinnerPilar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectedPilar = if (position > 0) pilares[position - 1] else null
+                carregarSubpilaresParaSpinner(selectedPilar) // Recarrega subpilares ao mudar pilar
+                aplicarFiltros() // Aplica filtro com o novo pilar/subpilar
+            }
 
-        val cursor = db.query(
-            DatabaseHelper.TABLE_ACAO,
-            projection,
-            null,
-            null,
-            null,
-            null,
-            null
-        )
-
-        with(cursor) {
-            while (moveToNext()) {
-                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
-                val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_NOME))
-                val descricao = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DESCRICAO))
-                val dataInicio = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_INICIO))
-                val dataTermino = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_TERMINO))
-                val responsavel = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_RESPONSAVEL))
-                val aprovado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_APROVADO)) > 0
-                val finalizado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO)) > 0
-                val id_pilar = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
-                val id_subpilar = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
-                val id_usuario = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_USUARIO))
-
-
-                listaAcoes.add(
-                    Acao(
-                        id,
-                        nome,
-                        descricao,
-                        dataInicio,
-                        dataTermino,
-                        responsavel,
-                        aprovado,
-                        finalizado,
-                        id_pilar,
-                        id_subpilar,
-                        id_usuario
-                    )
-                )
+            override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
-        cursor.close()
-        db.close()
+
+        binding.spinnerSubpilar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectedSubpilar = if (position > 0) subpilares[position - 1] else null
+                aplicarFiltros() // Aplica filtro com o novo subpilar
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+    }
+
+    // Carrega os Pilares para o Spinner de Pilares
+    private fun carregarPilaresParaSpinner() {
+        val calendarioPadrao = Calendario(1, 2025)
+        pilares = pilarRepository.obterTodosPilares(calendarioPadrao)
+
+        val pilarNames = mutableListOf("Todos os Pilares")
+        pilarNames.addAll(pilares.map { it.nome })
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, pilarNames)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerPilar.adapter = adapter
+    }
+
+    // Carrega os Subpilares para o Spinner de Subpilares com base no Pilar selecionado
+    private fun carregarSubpilaresParaSpinner(pilar: Pilar?) {
+        subpilares = if (pilar != null) {
+            subpilarRepository.obterTodosSubpilares(pilar)
+        } else {
+            emptyList()
+        }
+
+        val subpilarNames = mutableListOf("Todos os Subpilares")
+        subpilarNames.addAll(subpilares.map { it.nome })
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, subpilarNames)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerSubpilar.adapter = adapter
+
+        binding.spinnerSubpilar.setSelection(0)
+    }
+
+    // Método para aplicar os filtros e carregar as ações na lista
+    private fun aplicarFiltros() {
+        listaAcoes.clear()
+
+        val filteredAcoes = when {
+            selectedSubpilar != null -> {
+                acaoRepository.obterAcoesPorSubpilar(selectedSubpilar!!)
+            }
+            selectedPilar != null -> {
+                acaoRepository.obterAcoesPorPilar(selectedPilar!!)
+            }
+            else -> {
+                acaoRepository.obterTodasAcoes() // Novo método que precisaremos adicionar no AcaoRepository
+            }
+        }
+        listaAcoes.addAll(filteredAcoes)
         acaoAdapter.notifyDataSetChanged()
     }
 
