@@ -33,6 +33,7 @@ class PercentualAtividadeRepository(context: Context) {
             }
             db.insert(DatabaseHelper.TABLE_PERCENTUAL_ATIVIDADE, null, values)
         }
+        db.close()
     }
 
     fun obterTodosPercentuais(atividade: Atividade): List<PercentualAtividade> {
@@ -100,8 +101,9 @@ class PercentualAtividadeRepository(context: Context) {
 
         db.delete(
             DatabaseHelper.TABLE_PERCENTUAL_ATIVIDADE,
-            "${DatabaseHelper.COLUMN_PERCENTUAL_ATIVIDADE_ID} = ?",
+            "${DatabaseHelper.COLUMN_PERCENTUAL_ATIVIDADE_ID_ATIVIDADE} = ?",
             arrayOf(atividade.id.toString())
         )
+        db.close()
     }
 }

@@ -7,8 +7,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.mpi.data.Atividade
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.data.Usuario
+import com.example.mpi.repository.PercentualAtividadeRepository
 import com.example.mpi.databinding.ActivityCadastroAtividadeBinding
 import com.example.mpi.data.Acao
 import java.lang.NumberFormatException
@@ -25,6 +27,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
     private var listaResponsaveisObjetos = mutableListOf<Usuario>()
     private var listaAcoesNomes = mutableListOf<String>()
     private var listaAcoesObjetos = mutableListOf<Acao>()
+    private lateinit var percentualAtividadeRepository: PercentualAtividadeRepository
     private var idResponsavelSelecionado: Int = -1
     private var idAcaoSelecionada: Int = -1
     private var idUsuarioRecebido: Int = -1
@@ -35,6 +38,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         dbHelper = DatabaseHelper(this)
+        percentualAtividadeRepository = PercentualAtividadeRepository.getInstance(this)
 
         carregarResponsaveisNoSpinner()
         carregarAcoesNoSpinner()
@@ -173,11 +177,25 @@ class CadastroAtividadeActivity : AppCompatActivity() {
             put(DatabaseHelper.COLUMN_ATIVIDADE_ID_USUARIO, idUsuarioRecebido)
         }
 
-        val newRowId = db?.insert(DatabaseHelper.TABLE_ATIVIDADE, null, values)
-
+        val newRowId:Long = db.insert(DatabaseHelper.TABLE_ATIVIDADE, null, values)
         db.close()
 
         if (newRowId != -1L) {
+            val novaAtividade = Atividade(
+                id = newRowId.toInt(),
+                nome = nome,
+                descricao = descricao,
+                dataInicio = dataInicioFormatada,
+                dataTermino = dataTerminoFormatada,
+                responsavel = idResponsavelSelecionado,
+                aprovado = false,
+                finalizado = false,
+                orcamento = orcamento,
+                idAcao = idAcaoSelecionada,
+                idUsuario = idUsuarioRecebido
+            )
+            percentualAtividadeRepository.inserirPercentuaisAtividade(novaAtividade)
+
             Toast.makeText(this, "Atividade cadastrada com sucesso!", Toast.LENGTH_SHORT).show()
             finish()
         } else {
