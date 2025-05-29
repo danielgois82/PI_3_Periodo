@@ -2,7 +2,11 @@ package com.example.mpi.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -57,181 +61,191 @@ class PercentualActivity : AppCompatActivity() {
 
         val intentExtra = intent
         val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
-        val nomeUsuario =
-            intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
-        val tipoUsuario =
-            intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
+        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
+        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
 
-        // Carregar todos oa anos no spinner
+        binding.textviewPilar.visibility = View.INVISIBLE
+        binding.spinnerPilar.visibility = View.INVISIBLE
 
-        val listaCalendario = calendarioRepository.obterTodosCalendarios()
-        val listaAnoCalendario: MutableList<Int> = arrayListOf()
-        val mapaCalendario = mutableMapOf<Int, Int>()
+        binding.textviewSubpilar.visibility = View.INVISIBLE
+        binding.spinnerSubpilar.visibility = View.INVISIBLE
 
-        for (cal in listaCalendario) {
-            listaAnoCalendario.add(cal.ano)
-            mapaCalendario[cal.id] = cal.ano
+        binding.textviewAcao.visibility = View.INVISIBLE
+        binding.spinnerAcao.visibility = View.INVISIBLE
+
+        binding.textviewAtividade.visibility = View.INVISIBLE
+        binding.spinnerAtividade.visibility = View.INVISIBLE
+
+        binding.buttonPesquisar.visibility = View.INVISIBLE
+        binding.buttonPesquisar.visibility = View.INVISIBLE
+
+        binding.buttonPesquisar.visibility = View.INVISIBLE
+        binding.buttonNovaPesquisa.visibility = View.GONE
+
+        binding.layoutPesquisa.visibility = View.INVISIBLE
+
+        val adapterVazio = ArrayAdapter<String>(this@PercentualActivity, android.R.layout.simple_spinner_dropdown_item, emptyList())
+
+        var atividadeSelecionada: Atividade? = null
+
+        val listaPilar = pilarRepository.obterTodosPilares(Calendario(1, 2025))
+
+        if (listaPilar.isEmpty()) {
+            Toast.makeText(this, "Não existem pilares cadastradas no sistema", Toast.LENGTH_LONG).show()
         }
 
-        val adapterCalendario = ArrayAdapter(
-            this
-            , android.R.layout.simple_spinner_dropdown_item
-            , listaAnoCalendario)
+        if (listaPilar.isNotEmpty()) {
+            binding.textviewPilar.visibility = View.VISIBLE
+            binding.spinnerPilar.visibility = View.VISIBLE
 
-        binding.spinnerAno.adapter = adapterCalendario
-
-        // Fim do carregar todos os anos no spinner
-
-        // Carregar todos os pilares no spinner
-
-        val anoSelecionado = binding.spinnerAno.selectedItem.toString().toInt()
-
-        var calendarioSelecionado: Calendario? = null
-        for (cal in listaCalendario) {
-            if (cal.ano == anoSelecionado) {
-                calendarioSelecionado = cal
-            }
+            val adapterPilar = ArrayAdapter(this@PercentualActivity, android.R.layout.simple_spinner_dropdown_item, listaPilar)
+            binding.spinnerPilar.adapter = adapterPilar
         }
 
-        val listaPilar = calendarioSelecionado?.let { pilarRepository.obterTodosPilares(it) }
-        val nomePilares: MutableList<String> = arrayListOf()
-        val mapaPilar = mutableMapOf<Int, String>()
+        binding.spinnerPilar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>, view: View, position: Int, id: Long
+            ) {
+                val pilarSelecionado = parent.getItemAtPosition(position) as Pilar
 
-        if (listaPilar != null) {
-            for (pilar in listaPilar) {
-                nomePilares.add(pilar.nome)
-                mapaPilar[pilar.id] = pilar.nome
-            }
-        }
+                atividadeSelecionada = null
 
-        val adapterPilar = ArrayAdapter(
-            this
-            , android.R.layout.simple_spinner_dropdown_item
-            , nomePilares)
+                binding.spinnerSubpilar.adapter = adapterVazio
+                binding.spinnerAcao.adapter = adapterVazio
+                binding.spinnerAtividade.adapter = adapterVazio
 
-        binding.spinnerPilar.adapter = adapterPilar
+                // Verificar se existe subpilar
+                val listaSubpilar = subpilarRepository.obterTodosSubpilares(pilarSelecionado)
 
-        // Fim do carregar todos os pilares no spinner
+                // Existe subpilar
+                if (listaSubpilar.isNotEmpty()) {
+                    binding.textviewSubpilar.visibility = View.VISIBLE
+                    binding.spinnerSubpilar.visibility = View.VISIBLE
 
-        // Carregar todos os subpilares
+                    // Preencher o spinner do subpilar
+                    val adapterSubpilar = ArrayAdapter(this@PercentualActivity, android.R.layout.simple_spinner_dropdown_item, listaSubpilar)
+                    binding.spinnerSubpilar.adapter = adapterSubpilar
+                }
 
-        val nomePilarSelecionado = binding.spinnerPilar.selectedItem.toString()
+                // Não existe subpilar, ler ação
+                if (listaSubpilar.isEmpty()) {
+                    binding.textviewSubpilar.visibility = View.INVISIBLE
+                    binding.spinnerSubpilar.visibility = View.INVISIBLE
 
-        var pilarSelecionado: Pilar? = null
-        if (listaPilar != null) {
-            for (pilar in listaPilar) {
-                if (pilar.nome == nomePilarSelecionado) {
-                    pilarSelecionado = pilar
+                    binding.spinnerSubpilar.adapter = adapterVazio
+
+                    val listaAcao = acaoRepository.obterTodasAcoes(pilarSelecionado)
+
+                    // Existe ação
+                    if (listaAcao.isNotEmpty()) {
+                        binding.textviewAcao.visibility = View.VISIBLE
+                        binding.spinnerAcao.visibility = View.VISIBLE
+
+                        // Preencher o spinner da ação
+                        val adapterAcao = ArrayAdapter(this@PercentualActivity, android.R.layout.simple_spinner_dropdown_item, listaAcao)
+                        binding.spinnerAcao.adapter = adapterAcao
+                    }
+
+                    if (listaAcao.isEmpty()) {
+                        binding.textviewAcao.visibility = View.INVISIBLE
+                        binding.spinnerAcao.visibility = View.INVISIBLE
+
+                        binding.spinnerAcao.adapter = adapterVazio
+                    }
                 }
             }
-        }
 
-        val listaSubpilar = pilarSelecionado?.let { subpilarRepository.obterTodosSubpilares(it) }
-        val nomeSubpilares: MutableList<String> = arrayListOf()
-        val mapaSubpilar = mutableMapOf<Int, String>()
-
-        if (listaSubpilar != null) {
-            for (subpilar in listaSubpilar) {
-                nomeSubpilares.add(subpilar.nome)
-                mapaSubpilar[subpilar.id] = subpilar.nome
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Nada selecionado
             }
         }
 
-        val adapterSubpilar = ArrayAdapter(
-            this
-            , android.R.layout.simple_spinner_dropdown_item
-            , nomeSubpilares)
+        binding.spinnerSubpilar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>, view: View, position: Int, id: Long
+            ) {
+                val subpilarSelecionado = parent.getItemAtPosition(position) as Subpilar
 
-        binding.spinnerSubpilar.adapter = adapterSubpilar
+                atividadeSelecionada = null
 
-        // Fim do carregar todos os subpilares
+                binding.spinnerAcao.adapter = adapterVazio
+                binding.spinnerAtividade.adapter = adapterVazio
 
-        // Fim do carregar todas as ações
+                val listaAcao = acaoRepository.obterTodasAcoes(subpilarSelecionado)
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                        //
-//                    FALTA FAZER A PESQUISA DE ACOES DIRETO PELO PILAR                   //
-//                                                                                        //
-////////////////////////////////////////////////////////////////////////////////////////////
+                // Existe ação
+                if (listaAcao.isNotEmpty()) {
+                    binding.textviewAcao.visibility = View.VISIBLE
+                    binding.spinnerAcao.visibility = View.VISIBLE
 
-        val nomeSubpilarSelecionado = binding.spinnerSubpilar.selectedItem.toString()
+                    // Preencher o spinner da ação
+                    val adapterAcao = ArrayAdapter(this@PercentualActivity, android.R.layout.simple_spinner_dropdown_item, listaAcao)
+                    binding.spinnerAcao.adapter = adapterAcao
+                }
 
-        var subpilarSelecionado: Subpilar? = null
-        if (listaSubpilar != null) {
-            for (subpilar in listaSubpilar) {
-                if (subpilar.nome == nomeSubpilarSelecionado) {
-                    subpilarSelecionado = subpilar
+                if (listaAcao.isEmpty()) {
+                    binding.textviewAcao.visibility = View.INVISIBLE
+                    binding.spinnerAcao.visibility = View.INVISIBLE
+
+                    binding.spinnerAcao.adapter = adapterVazio
                 }
             }
-        }
 
-        val listaAcao = subpilarSelecionado?.let { acaoRepository.obterTodasAcoes(it) }
-        val nomeAcoes: MutableList<String> = arrayListOf()
-        val mapaAcao = mutableMapOf<Int, String>()
-
-        if (listaAcao != null) {
-            for (acao in listaAcao) {
-                nomeAcoes.add(acao.nome)
-                mapaAcao[acao.id] = acao.nome
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Nada selecionado
             }
         }
 
-        val adapterAcao = ArrayAdapter(
-            this
-            , android.R.layout.simple_spinner_dropdown_item
-            , nomeAcoes)
+        binding.spinnerAcao.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>, view: View, position: Int, id: Long
+            ) {
+                val acaoSelecionada = parent.getItemAtPosition(position) as Acao
 
-        binding.spinnerAcao.adapter = adapterAcao
+                atividadeSelecionada = null
 
-        // Fim do carregar todas as ações
+                binding.spinnerAtividade.adapter = adapterVazio
 
-        // Carregar todas as atividades
+                val listaAtividade = atividadeRepository.obterTodasAtividades(acaoSelecionada)
 
-        val nomeAcaoSelecionado = binding.spinnerAcao.selectedItem.toString()
+                // Existe atividade
+                if (listaAtividade.isNotEmpty()) {
+                    binding.textviewAtividade.visibility = View.VISIBLE
+                    binding.spinnerAtividade.visibility = View.VISIBLE
 
-        var acaoSelecionado: Acao? = null
-        if (listaAcao != null) {
-            for (acao in listaAcao) {
-                if (acao.nome == nomeAcaoSelecionado) {
-                    acaoSelecionado = acao
+                    // Preencher o spinner da ação
+                    val adapterAtividade = ArrayAdapter(this@PercentualActivity, android.R.layout.simple_spinner_dropdown_item, listaAtividade)
+                    binding.spinnerAtividade.adapter = adapterAtividade
+                }
+
+                if (listaAtividade.isEmpty()) {
+                    binding.textviewAtividade.visibility = View.INVISIBLE
+                    binding.spinnerAtividade.visibility = View.INVISIBLE
+
+                    binding.spinnerAtividade.adapter = adapterVazio
                 }
             }
-        }
 
-        val listaAtividade = acaoSelecionado?.let { atividadeRepository.obterTodasAtividades(it) }
-        val nomeAtividades: MutableList<String> = arrayListOf()
-        val mapaAtividade = mutableMapOf<Int, String>()
-
-        if (listaAtividade != null) {
-            for (ativ in listaAtividade) {
-                nomeAtividades.add(ativ.nome)
-                mapaAtividade[ativ.id] = ativ.nome
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Nada selecionado
             }
         }
 
-        val adapterAtividade = ArrayAdapter(
-            this
-            , android.R.layout.simple_spinner_dropdown_item
-            , nomeAtividades)
+        binding.spinnerAtividade.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>, view: View, position: Int, id: Long
+            ) {
+                atividadeSelecionada = null
 
-        binding.spinnerAtividade.adapter = adapterAtividade
+                atividadeSelecionada = parent.getItemAtPosition(position) as Atividade
 
-        // Fim do carregar todas as atividades
+                binding.buttonPesquisar.visibility = View.VISIBLE
+            }
 
-        // Parte das atividades
-
-        val nomeAtividadeSelecionado = binding.spinnerAtividade.selectedItem.toString()
-
-        var atividadeSelecionado: Atividade? = null
-        if (listaAtividade != null) {
-            for (ativ in listaAtividade) {
-                if (ativ.nome == nomeAtividadeSelecionado) {
-                    atividadeSelecionado = ativ
-                }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Nada selecionado
             }
         }
-
-        // Fim da parte das atividades
 
         val openMenuPrincipal: ImageView = findViewById(R.id.imageview_voltarPercentualParaMenuPrincipal)
         openMenuPrincipal.setOnClickListener {
@@ -239,19 +253,39 @@ class PercentualActivity : AppCompatActivity() {
             extra.putExtra("idUsuario", idUsuario)
             extra.putExtra("nomeUsuario", nomeUsuario)
             extra.putExtra("tipoUsuario", tipoUsuario)
+            finish()
             startActivity(extra)
         }
 
         binding.buttonPesquisar.setOnClickListener {
-            if (pilarSelecionado != null
-                && subpilarSelecionado != null
-                && acaoSelecionado != null
-                && atividadeSelecionado != null) {
-                carregarDados(pilarSelecionado
-                    , subpilarSelecionado
-                    , acaoSelecionado
-                    , atividadeSelecionado)
+            if (atividadeSelecionada != null) {
+                binding.spinnerPilar.isEnabled = false
+                binding.spinnerSubpilar.isEnabled = false
+                binding.spinnerAcao.isEnabled = false
+                binding.spinnerAtividade.isEnabled = false
+
+                binding.layoutSelecao.visibility = View.GONE
+
+                binding.buttonPesquisar.visibility = View.GONE
+
+                binding.buttonNovaPesquisa.visibility = View.VISIBLE
+
+                binding.layoutPesquisa.visibility = View.VISIBLE
+
+                carregarDados(atividadeSelecionada!!)
+            } else {
+                Toast.makeText(this, "Não existe atividade para esta seleção!", Toast.LENGTH_LONG).show()
             }
+        }
+
+        val reloadPercentual: Button = findViewById(R.id.button_novaPesquisa)
+        reloadPercentual.setOnClickListener {
+            val extra = Intent(this, PercentualActivity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            finish()
+            startActivity(extra)
         }
 
         binding.textviewPercentualAtivJan.setOnClickListener {
@@ -303,51 +337,56 @@ class PercentualActivity : AppCompatActivity() {
         }
 
         binding.buttonSalvarAlteracoes.setOnClickListener {
-            salvarAlteracoes()
-        }
-    }
-
-    private fun carregarDados(pilar: Pilar, subpilar: Subpilar, acao: Acao, atividade: Atividade) {
-
-        val responsavelAcao = usuarioRepository.obterUsuarioPorId(acao.responsavel)
-        val responsavelAtividade = usuarioRepository.obterUsuarioPorId(atividade.responsavel)
-
-        val listaAtiv = atividadeRepository.obterTodasAtividades(acao)
-        var percentualGeralTodasAtividade = 0.0
-        for (ativ in listaAtiv) {
-            val percAtividade = percentualAtividadeRepository.obterTodosPercentuais(ativ)
-            for (p in percAtividade) {
-                percentualGeralTodasAtividade += p.percentual
+            if (atividadeSelecionada != null) {
+                salvarAlteracoes(atividadeSelecionada!!)
             }
         }
-        percentualGeralTodasAtividade /= listaAtiv.size
 
-        val percentuaisAtividade = percentualAtividadeRepository.obterTodosPercentuais(atividade)
-        var percentualGeralAtividade = 0.0
-        for (perc in percentuaisAtividade) {
-            percentualGeralAtividade += perc.percentual
+    }
+
+    private fun carregarDados(atividade: Atividade) {
+
+        val percentuais = percentualAtividadeRepository.obterTodosPercentuais(atividade)
+
+        for (p in percentuais) {
+            if (p.mes == 1) {
+                binding.textviewPercentualAtivJan.text = p.percentual.toString() + "%"
+            }
+            if (p.mes == 2) {
+                binding.textviewPercentualAtivFev.text = p.percentual.toString() + "%"
+            }
+            if (p.mes == 3) {
+                binding.textviewPercentualAtivMar.text = p.percentual.toString() + "%"
+            }
+            if (p.mes == 4) {
+                binding.textviewPercentualAtivAbr.text = p.percentual.toString() + "%"
+            }
+            if (p.mes == 5) {
+                binding.textviewPercentualAtivMai.text = p.percentual.toString() + "%"
+            }
+            if (p.mes == 6) {
+                binding.textviewPercentualAtivJun.text = p.percentual.toString() + "%"
+            }
+            if (p.mes == 7) {
+                binding.textviewPercentualAtivJul.text = p.percentual.toString() + "%"
+            }
+            if (p.mes == 8) {
+                binding.textviewPercentualAtivAgo.text = p.percentual.toString() + "%"
+            }
+            if (p.mes == 9) {
+                binding.textviewPercentualAtivSet.text = p.percentual.toString() + "%"
+            }
+            if (p.mes == 10) {
+                binding.textviewPercentualAtivOut.text = p.percentual.toString() + "%"
+            }
+            if (p.mes == 11) {
+                binding.textviewPercentualAtivNov.text = p.percentual.toString() + "%"
+            }
+            if (p.mes == 12) {
+                binding.textviewPercentualAtivDez.text = p.percentual.toString() + "%"
+            }
         }
 
-        binding.textviewNomePilar.text = "Pilar: ${pilar.nome}"
-        // Falta botar o percentual do pilar
-        // Ver se dá para botar o orcamento do pilar
-
-        binding.textviewNomeSubpilar.text = "Subpilar: ${subpilar.nome}"
-        // Falta botar o percentual do subpilar
-        // Ver se dá para botar o orcamento do subpilar
-
-        binding.textviewNomeAcao.text = "Ação: ${acao.nome}"
-        binding.textviewProgressoGeralAcao.text = String.format("%.2f", percentualGeralTodasAtividade) + "%"
-        binding.textviewAcaoAtribuida.text = responsavelAcao!!.nome
-
-        binding.textviewNomeAtividade.text = "Atividade: ${atividade.nome}"
-        binding.textviewProgressoGeralAtividade.text = String.format("%.2f", percentualGeralAtividade) + "%"
-        binding.textviewAtividadeAtribuida.text = responsavelAtividade!!.nome
-        binding.textviewOrcamentoAtividade.text = "R$" + String.format("%.2f", atividade.orcamento)
-        binding.textviewInicioAtividade.text = atividade.dataInicio
-        binding.textviewTerminoAtividade.text = atividade.dataTermino
-
-        // Falta todos os percentuais gerais e o percentual da atividade
     }
 
     private fun atualizarPercentual(inputTextView: TextView) {
@@ -410,8 +449,62 @@ class PercentualActivity : AppCompatActivity() {
         }
     }
 
-    private fun salvarAlteracoes() {
-        binding.textviewNomePilar.text = "eueueueueueu"
+    private fun salvarAlteracoes(atividade: Atividade) {
+        val percentuais = percentualAtividadeRepository.obterTodosPercentuais(atividade)
+
+        var novoPercentual: Double
+
+        for (p in percentuais) {
+            if (p.mes == 1) {
+                novoPercentual = binding.textviewPercentualAtivJan.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+            if (p.mes == 2) {
+                novoPercentual = binding.textviewPercentualAtivFev.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+            if (p.mes == 3) {
+                novoPercentual = binding.textviewPercentualAtivMar.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+            if (p.mes == 4) {
+                novoPercentual = binding.textviewPercentualAtivAbr.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+            if (p.mes == 5) {
+                novoPercentual = binding.textviewPercentualAtivMai.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+            if (p.mes == 6) {
+                novoPercentual = binding.textviewPercentualAtivJun.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+            if (p.mes == 7) {
+                novoPercentual = binding.textviewPercentualAtivJul.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+            if (p.mes == 8) {
+                novoPercentual = binding.textviewPercentualAtivAgo.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+            if (p.mes == 9) {
+                novoPercentual = binding.textviewPercentualAtivSet.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+            if (p.mes == 10) {
+                novoPercentual = binding.textviewPercentualAtivOut.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+            if (p.mes == 11) {
+                novoPercentual = binding.textviewPercentualAtivNov.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+            if (p.mes == 12) {
+                novoPercentual = binding.textviewPercentualAtivDez.text.toString().replace("%", "").toDouble()
+                percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
+            }
+        }
+
     }
 
 }

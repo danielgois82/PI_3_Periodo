@@ -24,7 +24,7 @@ class CalendarioRepository (context: Context) {
         }
     }
 
-    fun obterTodosCalendarios(): List<Calendario> {
+    fun obterTodosCalendarios(): MutableList<Calendario> {
         val db = dataBase.readableDatabase
 
         val cursor = db.rawQuery("SELECT * FROM calendario", null)

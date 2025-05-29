@@ -21,12 +21,12 @@ class PilarRepository (context: Context) {
         }
     }
 
-    fun obterTodosPilares(calendario: Calendario): List<Pilar> {
+    fun obterTodosPilares(calendario: Calendario): MutableList<Pilar> {
         val db = dataBase.readableDatabase
 
         val cursor = db.rawQuery("SELECT * FROM pilar WHERE id_calendario = ?", arrayOf(calendario.id.toString()))
 
-        var pilares: MutableList<Pilar> = arrayListOf()
+        val pilares: MutableList<Pilar> = arrayListOf()
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
             val nome = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))

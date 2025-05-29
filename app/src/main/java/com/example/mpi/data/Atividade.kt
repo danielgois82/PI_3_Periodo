@@ -12,4 +12,8 @@ data class Atividade(
     val orcamento: Double,
     val idAcao: Int,
     val idUsuario: Int
-)
+) {
+    override fun toString(): String {
+        return nome
+    }
+}

@@ -22,7 +22,7 @@ class AtividadeRepository (context: Context) {
         }
     }
 
-    fun obterTodasAtividades(acao: Acao) : List<Atividade> {
+    fun obterTodasAtividades(acao: Acao) : MutableList<Atividade> {
 
         val db = dataBase.readableDatabase
 
