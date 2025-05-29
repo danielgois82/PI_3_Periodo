@@ -19,6 +19,7 @@ import com.example.mpi.data.Calendario
 import com.example.mpi.repository.AcaoRepository
 import com.example.mpi.repository.PilarRepository
 import com.example.mpi.repository.SubpilarRepository
+import com.example.mpi.repository.PercentualAtividadeRepository
 
 class AtividadeActivity : AppCompatActivity() {
 
@@ -30,6 +31,7 @@ class AtividadeActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var atividadeAdapter: AtividadeAdapter
     private val listaAtividades = mutableListOf<Atividade>()
+    private lateinit var percentualAtividadeRepository: PercentualAtividadeRepository
 
     private lateinit var pilarRepository: PilarRepository
     private lateinit var subpilarRepository: SubpilarRepository
@@ -52,6 +54,7 @@ class AtividadeActivity : AppCompatActivity() {
         pilarRepository = PilarRepository.getInstance(this)
         subpilarRepository = SubpilarRepository.getInstance(this)
         acaoRepository = AcaoRepository.getInstance(this)
+        percentualAtividadeRepository = PercentualAtividadeRepository.getInstance(this)
 
         ////////////////////// Carregando informações do usuário////////////////////////////////
         val intentExtra = intent
@@ -286,6 +289,7 @@ class AtividadeActivity : AppCompatActivity() {
     }
 
     private fun excluirAtividade(atividade: Atividade) {
+        percentualAtividadeRepository.removerPercentuaisAtividade(atividade)
         val db = dbHelper.writableDatabase
         val whereClause = "${DatabaseHelper.COLUMN_ATIVIDADE_ID} = ?"
         val whereArgs = arrayOf(atividade.id.toString())

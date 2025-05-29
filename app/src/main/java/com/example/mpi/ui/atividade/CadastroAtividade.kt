@@ -2,16 +2,19 @@ package com.example.mpi.ui.atividade
 
 import android.content.ContentValues
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.example.mpi.data.Atividade
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mpi.data.Atividade
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.data.Usuario
 import com.example.mpi.repository.PercentualAtividadeRepository
 import com.example.mpi.databinding.ActivityCadastroAtividadeBinding
+import com.example.mpi.repository.PercentualAtividadeRepository
 import com.example.mpi.data.Acao
 import java.lang.NumberFormatException
 import java.text.ParseException
@@ -23,6 +26,8 @@ class CadastroAtividadeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCadastroAtividadeBinding
     private lateinit var dbHelper: DatabaseHelper
+    private lateinit var percentualAtividadeRepository: PercentualAtividadeRepository
+
     private var listaResponsaveisNomes = mutableListOf<String>()
     private var listaResponsaveisObjetos = mutableListOf<Usuario>()
     private var listaAcoesNomes = mutableListOf<String>()
@@ -180,6 +185,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         val newRowId:Long = db.insert(DatabaseHelper.TABLE_ATIVIDADE, null, values)
         db.close()
 
+
         if (newRowId != -1L) {
             val novaAtividade = Atividade(
                 id = newRowId.toInt(),
@@ -201,7 +207,9 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Erro ao cadastrar atividade", Toast.LENGTH_SHORT).show()
         }
+
     }
+
 
     private fun validarEFormatarDataInicio(dataAtividadeStr: String, idAcaoSelecionada: Int): String? {
         if (dataAtividadeStr.isNullOrEmpty()) {

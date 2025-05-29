@@ -33,6 +33,7 @@ class PercentualAtividadeRepository(context: Context) {
             }
             db.insert(DatabaseHelper.TABLE_PERCENTUAL_ATIVIDADE, null, values)
         }
+
         db.close()
     }
 
