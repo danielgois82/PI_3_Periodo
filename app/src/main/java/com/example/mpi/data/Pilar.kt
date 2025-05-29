@@ -7,7 +7,7 @@ data class Pilar (
     val dataInicio: String,
     val dataTermino: String,
     val aprovado: Boolean,
-    val percentual: Double,
+    val percentual: Double, // Quero tirar
     val idCalendario: Int,
     val idUsuario: Int
 )

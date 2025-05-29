@@ -5,59 +5,56 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/imageview_voltarDashboardParaMenuPrincipal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:src="@drawable/arrow_back" />
 
-        <ImageView
-            android:id="@+id/viewVoltarMenuPrincipal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/arrow_back" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/textview_statusAtividades"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/inter18pt_extra_bold"
+        android:text="Menu dos Dashboards"
+        android:textSize="32sp" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btnOption1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/blue"
+        android:text="Ações concluídas/em andamento/atrasadas" />
 
-        <TextView
-            android:id="@+id/textTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:text="Dashboard"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+    <Button
+        android:id="@+id/btnOption2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/blue"
+        android:text="Progresso por pilar" />
 
-        <Button
-            android:id="@+id/btnOption1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/blue"
-            android:text="Opção 1" />
-
-        <Button
-            android:id="@+id/btnOption2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/blue"
-            android:text="Opção 2" />
-
-        <Button
-            android:id="@+id/btnOption3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/blue"
-            android:text="Opção 3" />
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/btnOption3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/blue"
+        android:text="Prazos criticos" />
 
 </LinearLayout>

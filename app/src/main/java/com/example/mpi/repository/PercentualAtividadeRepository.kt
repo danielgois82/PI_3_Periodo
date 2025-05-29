@@ -25,6 +25,7 @@ class PercentualAtividadeRepository(context: Context) {
 
     fun inserirPercentuaisAtividade(atividade: Atividade) {
         val db = dataBase.writableDatabase
+
         for (mes in 1..12) {
             val values = ContentValues().apply {
                 put(DatabaseHelper.COLUMN_PERCENTUAL_ATIVIDADE_MES, mes)
@@ -32,6 +33,7 @@ class PercentualAtividadeRepository(context: Context) {
             }
             db.insert(DatabaseHelper.TABLE_PERCENTUAL_ATIVIDADE, null, values)
         }
+
         db.close()
     }
 

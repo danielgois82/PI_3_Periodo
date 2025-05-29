@@ -35,7 +35,7 @@ class DashboardActivity : AppCompatActivity() {
         val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
         val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
 
-        val openMenuPrincipal: ImageView = findViewById(R.id.viewVoltarMenuPrincipal)
+        val openMenuPrincipal: ImageView = findViewById(R.id.imageview_voltarDashboardParaMenuPrincipal)
         openMenuPrincipal.setOnClickListener {
             val extra = Intent(this, MenuActivity::class.java)
             extra.putExtra("idUsuario", idUsuario)
