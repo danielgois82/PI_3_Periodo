@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpi.databinding.ActivityAtividadeBinding
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.data.Atividade
+import com.example.mpi.repository.PercentualAtividadeRepository
 
 class AtividadeActivity : AppCompatActivity() {
 
@@ -21,6 +22,7 @@ class AtividadeActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var atividadeAdapter: AtividadeAdapter
     private val listaAtividades = mutableListOf<Atividade>()
+    private lateinit var percentualAtividadeRepository: PercentualAtividadeRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +31,8 @@ class AtividadeActivity : AppCompatActivity() {
 
 
         dbHelper = DatabaseHelper(this)
+        percentualAtividadeRepository = PercentualAtividadeRepository.getInstance(this)
+
 
         ////////////////////// Carregando informações do usuário////////////////////////////////
         val intentExtra = intent
@@ -150,6 +154,7 @@ class AtividadeActivity : AppCompatActivity() {
     }
 
     private fun excluirAtividade(atividade: Atividade) {
+        percentualAtividadeRepository.removerPercentuaisAtividade(atividade)
         val db = dbHelper.writableDatabase
         val whereClause = "${DatabaseHelper.COLUMN_ATIVIDADE_ID} = ?"
         val whereArgs = arrayOf(atividade.id.toString())
