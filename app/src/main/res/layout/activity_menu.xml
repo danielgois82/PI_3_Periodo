@@ -21,6 +21,7 @@
             android:paddingBottom="16dp">
 
             <ImageView
+                android:visibility="invisible"
                 android:layout_width="40dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="100dp"
@@ -57,8 +58,9 @@
             android:text="Menu Principal "
             android:layout_marginBottom="1dp"
             android:textSize="20sp"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
+
+        <!--
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -68,6 +70,7 @@
             android:contentDescription="Perfil"
             android:background="@drawable/circle_background"
             android:clipToOutline="true"/>
+        -->
 
         <TextView
             android:id="@+id/textviewNomeUsuario"
@@ -126,7 +129,7 @@
             android:id="@+id/btnPercentualActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Percentual/Relatório"
+            android:text="Progresso da atividade"
             android:backgroundTint="#055196"/>
 
         <Button
@@ -134,7 +137,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#055196"
-            android:text="Dashboard" />
+            android:text="Dashboards" />
+
+        <Button
+            android:id="@+id/btnRelatorioActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#055196"
+            android:text="Relatórios" />
+
+        <Button
+            android:id="@+id/btnSair"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#055196"
+            android:text="Sair da aplicação" />
 
     </LinearLayout>
+
 </LinearLayout>

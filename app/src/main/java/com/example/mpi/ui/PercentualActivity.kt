@@ -2,7 +2,6 @@ package com.example.mpi.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -77,9 +76,6 @@ class PercentualActivity : AppCompatActivity() {
         binding.spinnerAtividade.visibility = View.INVISIBLE
 
         binding.buttonPesquisar.visibility = View.INVISIBLE
-        binding.buttonPesquisar.visibility = View.INVISIBLE
-
-        binding.buttonPesquisar.visibility = View.INVISIBLE
         binding.buttonNovaPesquisa.visibility = View.GONE
 
         binding.layoutPesquisa.visibility = View.INVISIBLE
@@ -91,7 +87,7 @@ class PercentualActivity : AppCompatActivity() {
         val listaPilar = pilarRepository.obterTodosPilares(Calendario(1, 2025))
 
         if (listaPilar.isEmpty()) {
-            Toast.makeText(this, "Não existem pilares cadastradas no sistema", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Não existem atividades cadastradas no sistema", Toast.LENGTH_LONG).show()
         }
 
         if (listaPilar.isNotEmpty()) {
@@ -134,7 +130,15 @@ class PercentualActivity : AppCompatActivity() {
 
                     binding.spinnerSubpilar.adapter = adapterVazio
 
-                    val listaAcao = acaoRepository.obterTodasAcoes(pilarSelecionado)
+                    var listaAcao = acaoRepository.obterTodasAcoes(pilarSelecionado)
+                    val listaAcaoAux: MutableList<Acao> = arrayListOf()
+                    for (item in listaAcao) {
+                        if (item.aprovado) {
+                            listaAcaoAux.add(item)
+                        }
+                    }
+                    listaAcao.clear()
+                    listaAcao = listaAcaoAux
 
                     // Existe ação
                     if (listaAcao.isNotEmpty()) {
@@ -171,7 +175,15 @@ class PercentualActivity : AppCompatActivity() {
                 binding.spinnerAcao.adapter = adapterVazio
                 binding.spinnerAtividade.adapter = adapterVazio
 
-                val listaAcao = acaoRepository.obterTodasAcoes(subpilarSelecionado)
+                var listaAcao = acaoRepository.obterTodasAcoes(subpilarSelecionado)
+                val listaAcaoAux: MutableList<Acao> = arrayListOf()
+                for (item in listaAcao) {
+                    if (item.aprovado) {
+                        listaAcaoAux.add(item)
+                    }
+                }
+                listaAcao.clear()
+                listaAcao = listaAcaoAux
 
                 // Existe ação
                 if (listaAcao.isNotEmpty()) {
@@ -206,7 +218,15 @@ class PercentualActivity : AppCompatActivity() {
 
                 binding.spinnerAtividade.adapter = adapterVazio
 
-                val listaAtividade = atividadeRepository.obterTodasAtividades(acaoSelecionada)
+                var listaAtividade = atividadeRepository.obterTodasAtividades(acaoSelecionada)
+                val listaAtividadeAux: MutableList<Atividade> = arrayListOf()
+                for (item in listaAtividade) {
+                    if (item.aprovado) {
+                        listaAtividadeAux.add(item)
+                    }
+                }
+                listaAtividade.clear()
+                listaAtividade = listaAtividadeAux
 
                 // Existe atividade
                 if (listaAtividade.isNotEmpty()) {
@@ -269,6 +289,14 @@ class PercentualActivity : AppCompatActivity() {
                 binding.buttonPesquisar.visibility = View.GONE
 
                 binding.buttonNovaPesquisa.visibility = View.VISIBLE
+
+                binding.textviewNomeAtividade.text = "Atividade: ${atividadeSelecionada!!.nome}"
+
+                if (tipoUsuario.uppercase() == USUARIO_GESTOR) {
+                    percentualApenasLeitura("Visualização do progresso da atividade")
+                } else if (atividadeSelecionada!!.finalizado) {
+                    percentualApenasLeitura("Obs: Atividade finalizada, não é possível atualizar os percentuais")
+                }
 
                 binding.layoutPesquisa.visibility = View.VISIBLE
 
@@ -342,6 +370,25 @@ class PercentualActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun percentualApenasLeitura(texto: String) {
+        binding.textviewPercentualAtivJan.isClickable = false
+        binding.textviewPercentualAtivFev.isClickable = false
+        binding.textviewPercentualAtivMar.isClickable = false
+        binding.textviewPercentualAtivAbr.isClickable = false
+        binding.textviewPercentualAtivMai.isClickable = false
+        binding.textviewPercentualAtivJun.isClickable = false
+        binding.textviewPercentualAtivJul.isClickable = false
+        binding.textviewPercentualAtivAgo.isClickable = false
+        binding.textviewPercentualAtivSet.isClickable = false
+        binding.textviewPercentualAtivOut.isClickable = false
+        binding.textviewPercentualAtivNov.isClickable = false
+        binding.textviewPercentualAtivDez.isClickable = false
+
+        binding.buttonSalvarAlteracoes.visibility = View.GONE
+
+        binding.textviewObs.text = texto
     }
 
     private fun carregarDados(atividade: Atividade) {
@@ -452,7 +499,65 @@ class PercentualActivity : AppCompatActivity() {
     private fun salvarAlteracoes(atividade: Atividade) {
         val percentuais = percentualAtividadeRepository.obterTodosPercentuais(atividade)
 
+        var somaPercentuais = 0.0
+
         var novoPercentual: Double
+
+        for (p in percentuais) {
+            if (p.mes == 1) {
+                novoPercentual = binding.textviewPercentualAtivJan.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+            if (p.mes == 2) {
+                novoPercentual = binding.textviewPercentualAtivFev.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+            if (p.mes == 3) {
+                novoPercentual = binding.textviewPercentualAtivMar.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+            if (p.mes == 4) {
+                novoPercentual = binding.textviewPercentualAtivAbr.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+            if (p.mes == 5) {
+                novoPercentual = binding.textviewPercentualAtivMai.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+            if (p.mes == 6) {
+                novoPercentual = binding.textviewPercentualAtivJun.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+            if (p.mes == 7) {
+                novoPercentual = binding.textviewPercentualAtivJul.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+            if (p.mes == 8) {
+                novoPercentual = binding.textviewPercentualAtivAgo.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+            if (p.mes == 9) {
+                novoPercentual = binding.textviewPercentualAtivSet.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+            if (p.mes == 10) {
+                novoPercentual = binding.textviewPercentualAtivOut.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+            if (p.mes == 11) {
+                novoPercentual = binding.textviewPercentualAtivNov.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+            if (p.mes == 12) {
+                novoPercentual = binding.textviewPercentualAtivDez.text.toString().replace("%", "").toDouble()
+                somaPercentuais += novoPercentual
+            }
+        }
+
+        if (somaPercentuais > 100.0) {
+            Toast.makeText(this, "A soma dos percentuais não pode passar de 100%", Toast.LENGTH_LONG).show()
+            return
+        }
 
         for (p in percentuais) {
             if (p.mes == 1) {
@@ -504,6 +609,8 @@ class PercentualActivity : AppCompatActivity() {
                 percentualAtividadeRepository.atualizarPercentualMes(p, novoPercentual)
             }
         }
+
+        Toast.makeText(this, "Atualizações gravadas com sucesso", Toast.LENGTH_LONG).show()
 
     }
 
