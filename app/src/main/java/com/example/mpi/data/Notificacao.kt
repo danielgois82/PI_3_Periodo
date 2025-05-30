@@ -5,5 +5,7 @@ data class Notificacao(
     val isVisualizado: Boolean,
     val titulo: String,
     val mensagem: String,
-    val idUsuario: Int
+    val idUsuario: Int,
+    val idItem: Int?,
+    val tipoItem: String?
 )

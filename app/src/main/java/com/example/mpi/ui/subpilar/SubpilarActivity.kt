@@ -2,28 +2,30 @@ package com.example.mpi.ui.subpilar
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.databinding.ActivitySubpilarBinding
-import com.example.mpi.ui.subpilar.EditarSubpilarActivity
-
-data class Subpilar(
-    val id: Long,
-    val nome: String,
-    val descricao: String,
-    val dataInicio: String,
-    val dataTermino: String,
-    val aprovado: Boolean,
-    val idPilar: Long,
-    val idUsuario: Long
-)
+import com.example.mpi.data.Pilar
+import com.example.mpi.data.Subpilar
+import com.example.mpi.data.Calendario
+import com.example.mpi.repository.PilarRepository
+import com.example.mpi.repository.SubpilarRepository
 
 class SubpilarActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySubpilarBinding
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var subpilarAdapter: SubpilarAdapter
     private val listaSubpilares = mutableListOf<Subpilar>()
+    private lateinit var pilarRepository: PilarRepository
+    private lateinit var subpilarRepository: SubpilarRepository
+
+    private var pilares: List<Pilar> = emptyList()
+    private var selectedPilar: Pilar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,18 @@ class SubpilarActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         dbHelper = DatabaseHelper(this)
+        pilarRepository = PilarRepository.getInstance(this)
+        subpilarRepository = SubpilarRepository.getInstance(this)
+
+        ////////////////////// Carregando informações do usuário////////////////////////////////
+        val intentExtra = intent
+        val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
+        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
+        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
+        val tag = "SubpilarActivityLog"
+        val mensagemLog = "SubpilarActivity iniciada - ID Usuário: $idUsuario, Nome: $nomeUsuario"
+        Log.d(tag, mensagemLog)
+        ////////////////////////////////////////////////////////////////////////////////
 
         binding.recyclerViewSubpilares.layoutManager = LinearLayoutManager(this)
         subpilarAdapter = SubpilarAdapter(
@@ -39,10 +53,15 @@ class SubpilarActivity : AppCompatActivity() {
             { subpilar -> excluirSubpilar(subpilar) })
         binding.recyclerViewSubpilares.adapter = subpilarAdapter
 
-        carregarSubpilares()
+        // Configura o Spinner e carrega os Pilares
+        setupSpinner()
+        carregarPilaresParaSpinner()
 
         binding.btnAdicionarSubpilar.setOnClickListener {
             val intent = Intent(this, cadastroSubpilar::class.java)
+            intent.putExtra("idUsuario", idUsuario)
+            intent.putExtra("nomeUsuario", nomeUsuario)
+            intent.putExtra("tipoUsuario", tipoUsuario)
             startActivity(intent)
         }
         binding.btnVoltar.setOnClickListener {
@@ -52,60 +71,44 @@ class SubpilarActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        carregarSubpilares()
+        aplicarFiltros()
     }
 
-    private fun carregarSubpilares() {
-        listaSubpilares.clear()
-        val db = dbHelper.readableDatabase
-        val projection = arrayOf(
-            DatabaseHelper.COLUMN_SUBPILAR_ID,
-            DatabaseHelper.COLUMN_SUBPILAR_NOME,
-            DatabaseHelper.COLUMN_SUBPILAR_DESCRICAO,
-            DatabaseHelper.COLUMN_SUBPILAR_DATA_INICIO,
-            DatabaseHelper.COLUMN_SUBPILAR_DATA_TERMINO,
-            DatabaseHelper.COLUMN_SUBPILAR_IS_APROVADO,
-            DatabaseHelper.COLUMN_SUBPILAR_ID_PILAR,
-            DatabaseHelper.COLUMN_SUBPILAR_ID_USUARIO
-        )
+    private fun setupSpinner() {
+        binding.spinnerPilar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectedPilar = if (position > 0) pilares[position - 1] else null
+                aplicarFiltros()
+            }
 
-        val cursor = db.query(
-            DatabaseHelper.TABLE_SUBPILAR,
-            projection,
-            null,
-            null,
-            null,
-            null,
-            null
-        )
-
-        with(cursor) {
-            while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID))
-                val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_NOME))
-                val descricao = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DESCRICAO))
-                val dataInicio = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DATA_INICIO))
-                val dataTermino = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DATA_TERMINO))
-                val aprovado = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_IS_APROVADO)) > 0
-                val idPilar = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_PILAR))
-                val idUsuario = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_USUARIO))
-
-                listaSubpilares.add(
-                    Subpilar(
-                        id,
-                        nome,
-                        descricao,
-                        dataInicio,
-                        dataTermino,
-                        aprovado,
-                        idPilar,
-                        idUsuario
-                    )
-                )
+            override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
-        cursor.close()
-        db.close()
+    }
+
+    // Carregando os Pilares para o Spinner de Pilares
+    private fun carregarPilaresParaSpinner() {
+        val calendarioPadrao = Calendario(1, 2025)
+        pilares = pilarRepository.obterTodosPilares(calendarioPadrao)
+
+        val pilarNames = mutableListOf("Todos os Pilares")
+        pilarNames.addAll(pilares.map { it.nome })
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, pilarNames)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerPilar.adapter = adapter
+    }
+
+    // Método para aplicar os filtros e carregar os subpilares na lista
+    private fun aplicarFiltros() {
+        listaSubpilares.clear()
+
+        val filteredSubpilares = if (selectedPilar != null) {
+            subpilarRepository.obterTodosSubpilares(selectedPilar!!)
+        } else {
+            subpilarRepository.obterTodosSubpilares()
+        }
+        listaSubpilares.addAll(filteredSubpilares)
         subpilarAdapter.notifyDataSetChanged()
     }
 

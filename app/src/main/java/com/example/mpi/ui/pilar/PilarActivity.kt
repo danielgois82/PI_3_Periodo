@@ -8,23 +8,14 @@ import com.example.mpi.databinding.ActivityPilarBinding
 import com.example.mpi.ui.pilar.cadastroPilar
 import com.example.mpi.ui.pilar.EditarPilarActivity
 import com.example.mpi.data.DatabaseHelper
+import android.util.Log
+import com.example.mpi.data.Pilar
 
-data class Pilar(
-    val id: Long,
-    val nome: String,
-    val descricao: String,
-    val dataInicio: String,
-    val dataTermino: String,
-    val aprovado: Boolean,
-    val percentual: Double,
-    val idCalendario: Int,
-    val idUsuario: Int
-)
 
 class PilarActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPilarBinding
-    private lateinit var dbHelper: DatabaseHelper // Use o DatabaseHelper que criamos
+    private lateinit var dbHelper: DatabaseHelper
     private lateinit var pilarAdapter: PilarAdapter
     private val listaPilares = mutableListOf<Pilar>()
 
@@ -35,6 +26,16 @@ class PilarActivity : AppCompatActivity() {
 
         dbHelper = DatabaseHelper(this)
 
+        ////////////////////// Carregando informações do usuário////////////////////////////////
+        val intentExtra = intent
+        val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
+        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
+        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
+        val tag = "PilarActivityLog"
+        val mensagemLog = "PilarActivity iniciada - ID Usuário: $idUsuario, Nome: $nomeUsuario"
+        Log.d(tag, mensagemLog)
+        ////////////////////////////////////////////////////////////////////////////////
+
         binding.recyclerViewPilares.layoutManager = LinearLayoutManager(this)
         pilarAdapter = PilarAdapter(listaPilares, { pilar -> editarPilar(pilar) }, { pilar -> excluirPilar(pilar) })
         binding.recyclerViewPilares.adapter = pilarAdapter
@@ -43,6 +44,9 @@ class PilarActivity : AppCompatActivity() {
 
         binding.btnAdicionarPilar.setOnClickListener {
             val intent = Intent(this, cadastroPilar::class.java)
+            intent.putExtra("idUsuario", idUsuario)
+            intent.putExtra("nomeUsuario", nomeUsuario)
+            intent.putExtra("tipoUsuario", tipoUsuario)
             startActivity(intent)
         }
         binding.btnVoltar.setOnClickListener {
@@ -58,6 +62,8 @@ class PilarActivity : AppCompatActivity() {
     private fun carregarPilares() {
         listaPilares.clear()
         val db = dbHelper.readableDatabase
+
+
         val projection = arrayOf(
             DatabaseHelper.COLUMN_PILAR_ID,
             DatabaseHelper.COLUMN_PILAR_NOME,
@@ -82,7 +88,7 @@ class PilarActivity : AppCompatActivity() {
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
                 val descricao = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DESCRICAO))
                 val dataInicio = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_INICIO))
@@ -135,6 +141,19 @@ class PilarActivity : AppCompatActivity() {
         if (deletedRows > 0) {
             listaPilares.remove(pilar)
             pilarAdapter.notifyDataSetChanged()
+
+            //verificando se o Pilar era o único existente, se sim o registro da tabela calendário sera apagado
+            if (listaPilares.isEmpty()) {
+                val idCalendarioExcluir = pilar.idCalendario
+                val whereClauseCalendario = "${DatabaseHelper.COLUMN_CALENDARIO_ID} = ?"
+                val whereArgsCalendario = arrayOf(idCalendarioExcluir.toString())
+                db.delete(
+                    DatabaseHelper.TABLE_CALENDARIO,
+                    whereClauseCalendario,
+                    whereArgsCalendario
+                )
+            }
+
             android.widget.Toast.makeText(this, "Pilar '${pilar.nome}' excluído com sucesso!", android.widget.Toast.LENGTH_SHORT).show()
         } else {
             android.widget.Toast.makeText(this, "Erro ao excluir o pilar.", android.widget.Toast.LENGTH_SHORT).show()

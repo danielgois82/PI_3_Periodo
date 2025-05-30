@@ -1,67 +1,95 @@
 package com.example.mpi.ui
 
-import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import com.example.mpi.R
+import com.example.mpi.data.DatabaseHelper
 
 class AprovacaoActivity : AppCompatActivity() {
 
-    val USUARIO_ANALISTA = "ANALISTA"
-    val USUARIO_COORDENADOR = "COORDENADOR"
-    val USUARIO_GESTOR = "GESTOR"
-
-    private lateinit var btnAprovar: Button
-    private lateinit var card1: CardView
-    private lateinit var card2: CardView
-    private lateinit var card3: CardView
-
-    private var cardSelecionado: CardView? = null // controle de seleção
+    private lateinit var dbHelper: DatabaseHelper
+    private lateinit var containerCards: LinearLayout
+    private lateinit var spinnerTipo: Spinner
+    private lateinit var btnVoltar: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_aprovacao)
 
-        val intentExtra = intent
-        val idUsuario = intentExtra.getIntExtra("idUsuario", 999999)
-        val nomeUsuario = intentExtra.getStringExtra("nomeUsuario") ?: "Nome de usuário desconhecido"
-        val tipoUsuario = intentExtra.getStringExtra("tipoUsuario") ?: "Tipo de usuário desconhecido"
+        dbHelper = DatabaseHelper(this)
+        containerCards = findViewById(R.id.containerCards)
+        spinnerTipo = findViewById(R.id.spinnerTipo)
+        btnVoltar = findViewById(R.id.botaoVoltar)
 
-        btnAprovar = findViewById(R.id.btnAprovar)
-        card1 = findViewById(R.id.card1)
-        card2 = findViewById(R.id.card2)
-        card3 = findViewById(R.id.card3)
+        val tipos = arrayOf("Ação 2025", "Aprovação 2025")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, tipos)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerTipo.adapter = adapter
 
-        // botão começa desativado
-        btnAprovar.isEnabled = false
-        btnAprovar.alpha = 0.5f
-
-        val cards = listOf(card1, card2, card3)
-
-        cards.forEach { card ->
-            card.setOnClickListener {
-                selecionarCard(card)
+        spinnerTipo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val tipoSelecionado = tipos[position]
+                exibirCards(tipoSelecionado)
             }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        btnAprovar.setOnClickListener {
-            val extra = Intent(this, FinalizacaoActivity::class.java)
-            extra.putExtra("idUsuario", idUsuario)
-            extra.putExtra("nomeUsuario", nomeUsuario)
-            extra.putExtra("tipoUsuario", tipoUsuario)
-            startActivity(extra)
+        btnVoltar.setOnClickListener {
+            finish()
         }
     }
 
-    private fun selecionarCard(card: CardView) {
-        cardSelecionado?.setCardBackgroundColor(Color.WHITE) // reseta anterior
-        card.setCardBackgroundColor(Color.parseColor("#E0F7FA")) // destaque azul claro
-        cardSelecionado = card
+    private fun exibirCards(tipo: String) {
+        containerCards.removeAllViews()
+        val db = dbHelper.readableDatabase
 
-        btnAprovar.isEnabled = true
-        btnAprovar.alpha = 1.0f
+        val query = """
+            SELECT a.id, a.nome, a.dataInicio, a.dataTermino, a.descricao
+            FROM atividade a
+            INNER JOIN acao ac ON a.id_acao = ac.id
+            WHERE a.isAprovado = 0 AND (
+                ? = 'Ação 2025' OR ? = 'Aprovação 2025'
+            )
+        """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(tipo, tipo))
+        if (cursor.moveToFirst()) {
+            do {
+                val idAtividade = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                val nome = cursor.getString(cursor.getColumnIndexOrThrow("nome"))
+                val descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"))
+                val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow("dataInicio"))
+                val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow("dataTermino"))
+
+                val card = layoutInflater.inflate(R.layout.card_atividade, null)
+
+                card.findViewById<TextView>(R.id.tvNome).text = nome
+                card.findViewById<TextView>(R.id.tvDescricao).text = descricao
+                card.findViewById<TextView>(R.id.tvData).text = "De $dataInicio até $dataTermino"
+
+                val btnAprovar = card.findViewById<Button>(R.id.btnAprovar)
+                btnAprovar.setOnClickListener {
+                    val success = dbHelper.aprovarAtividade(idAtividade)
+                    if (success) {
+                        containerCards.removeView(card)
+                        Toast.makeText(this, "Atividade aprovada!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Erro ao aprovar.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                containerCards.addView(card)
+            } while (cursor.moveToNext())
+        } else {
+            val textoVazio = TextView(this)
+            textoVazio.text = "Nenhuma atividade pendente para aprovação."
+            containerCards.addView(textoVazio)
+        }
+
+        cursor.close()
+        db.close()
     }
 }

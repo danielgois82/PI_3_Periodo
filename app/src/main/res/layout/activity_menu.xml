@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
@@ -12,7 +13,6 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <!-- Topo com ícones -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,35 +20,47 @@
             android:gravity="center_horizontal"
             android:paddingBottom="16dp">
 
-            <!-- Ícone de Configurações -->
-
-            <!-- Ícone de Notificações -->
-
             <ImageView
+                android:visibility="invisible"
                 android:layout_width="40dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="100dp"
                 android:contentDescription="Configurações"
                 android:src="@drawable/img_1" />
 
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="160dp">
 
-            <ImageView
-                android:id="@+id/btnNotificacaoActivity"
-                android:layout_width="70dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="160dp"
-                android:contentDescription="Notificações"
-                android:src="@drawable/img" />
+                <ImageView
+                    android:id="@+id/btnNotificacaoActivity"
+                    android:layout_width="70dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="Notificações"
+                    android:src="@drawable/img" />
+
+                <ImageView
+                    android:id="@+id/notificationBadge"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/red_circle"
+                    android:visibility="gone"
+                    android:contentDescription="Nova Notificação" />
+            </FrameLayout>
         </LinearLayout>
         <TextView
+            android:fontFamily="@font/inter18pt_extra_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Menu Principal "
             android:layout_marginBottom="1dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            />
-        <!-- Imagem de perfil -->
+            android:textSize="40sp" />
+
+        <!--
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -58,27 +70,30 @@
             android:contentDescription="Perfil"
             android:background="@drawable/circle_background"
             android:clipToOutline="true"/>
+        -->
 
-        <!-- Botões -->
         <TextView
+            android:fontFamily="@font/inter18pt_extra_bold"
             android:id="@+id/textviewNomeUsuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pessoa 1 "
             android:layout_marginBottom="12dp"
-            android:textSize="20sp"
+            android:textSize="32sp"
             android:textStyle="bold"
             />
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnPilarActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cadastro de Pilar"
             android:backgroundTint="#055196"
-                />
+            />
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnSubpilarActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,6 +101,7 @@
             android:backgroundTint="#055196"/>
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnAcaoActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,6 +109,7 @@
             android:backgroundTint="#055196"/>
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnAtividadeActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,6 +117,7 @@
             android:backgroundTint="#055196"/>
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnAprovacaoActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,26 +125,45 @@
             android:backgroundTint="#055196"/>
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnFinalizacaoActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Finalização"
             android:backgroundTint="#055196"/>
 
-
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnPercentualActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Percentual/Relatório"
+            android:text="Progresso da Atividade"
             android:backgroundTint="#055196"/>
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnDashboardActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#055196"
-            android:text="Dashboard" />
+            android:text="Dashboards" />
+
+        <Button
+            android:textSize="20dp"
+            android:id="@+id/btnRelatorioActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#055196"
+            android:text="Relatórios" />
+
+        <Button
+            android:textSize="20dp"
+            android:id="@+id/btnSair"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#055196"
+            android:text="Sair da aplicação" />
 
     </LinearLayout>
+
 </LinearLayout>

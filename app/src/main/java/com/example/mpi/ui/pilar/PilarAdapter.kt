@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpi.databinding.FragmentPilarItemBinding
+import com.example.mpi.data.Pilar
 
 class PilarAdapter(
     private val listaPilares: List<Pilar>,

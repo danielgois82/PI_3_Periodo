@@ -47,11 +47,32 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#03324A"
+        android:backgroundTint="#055196"
         android:text="Cadastrar Ação"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewListaAcoesTitulo" />
 
+    <Spinner
+        android:id="@+id/spinnerPilar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAdicionarAcao" />
+
+    <Spinner
+        android:id="@+id/spinnerSubpilar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerPilar" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAcoes"
         android:layout_width="0dp"
@@ -60,7 +81,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAdicionarAcao"
-        tools:listitem="@layout/acao_item_fragment" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerSubpilar" tools:listitem="@layout/acao_item_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
