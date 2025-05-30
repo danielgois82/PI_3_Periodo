@@ -48,7 +48,7 @@
 
         <Button
             android:id="@+id/btnBuscar"
-            android:backgroundTint="#00324A"
+            android:backgroundTint="#055196"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Buscar"

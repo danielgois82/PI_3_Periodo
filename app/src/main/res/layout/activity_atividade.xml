@@ -44,7 +44,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="#03324A"
+        android:backgroundTint="#055196"
         android:fontFamily="@font/inria_sans_regular"
         android:text="Cadastrar Atividade"
         android:textColor="#FFFFFF"
