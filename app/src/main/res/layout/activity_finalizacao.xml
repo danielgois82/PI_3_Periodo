@@ -47,6 +47,7 @@
             android:id="@+id/btnBuscar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="#055196"
             android:text="Buscar"
             android:layout_marginStart="8dp" />
     </LinearLayout>
