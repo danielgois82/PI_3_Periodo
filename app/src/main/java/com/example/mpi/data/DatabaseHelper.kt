@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper
 
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-    override fun onCreate(db: SQLiteDatabase) {
 
+    override fun onCreate(db: SQLiteDatabase) {
         val createCalendarioTable = """
             CREATE TABLE $TABLE_CALENDARIO (
                 $COLUMN_CALENDARIO_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,8 +58,8 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_PILAR_PERCENTUAL REAL DEFAULT 0,
                 $COLUMN_PILAR_ID_CALENDARIO INTEGER NOT NULL,
                 $COLUMN_PILAR_ID_USUARIO INTEGER NOT NULL,
-                FOREIGN KEY ($COLUMN_PILAR_ID_CALENDARIO) REFERENCES Calendario (id),
-                FOREIGN KEY ($COLUMN_PILAR_ID_USUARIO) REFERENCES Usuario (id)
+                FOREIGN KEY ($COLUMN_PILAR_ID_CALENDARIO) REFERENCES $TABLE_CALENDARIO($COLUMN_CALENDARIO_ID),
+                FOREIGN KEY ($COLUMN_PILAR_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID)
             );
         """.trimIndent()
 
@@ -73,8 +73,8 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_SUBPILAR_DESCRICAO TEXT NOT NULL,
                 $COLUMN_SUBPILAR_ID_PILAR INTEGER NOT NULL,
                 $COLUMN_SUBPILAR_ID_USUARIO INTEGER NOT NULL,
-                FOREIGN KEY ($COLUMN_SUBPILAR_ID_PILAR) REFERENCES Pilar (id),
-                FOREIGN KEY ($COLUMN_SUBPILAR_ID_USUARIO) REFERENCES Usuario (id)
+                FOREIGN KEY ($COLUMN_SUBPILAR_ID_PILAR) REFERENCES $TABLE_PILAR($COLUMN_PILAR_ID),
+                FOREIGN KEY ($COLUMN_SUBPILAR_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID)
             );
         """.trimIndent()
 
@@ -91,9 +91,9 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_ACAO_ID_PILAR INTEGER,
                 $COLUMN_ACAO_ID_SUBPILAR INTEGER,
                 $COLUMN_ACAO_ID_USUARIO INTEGER NOT NULL,
-                FOREIGN KEY ($COLUMN_ACAO_ID_PILAR) REFERENCES Pilar (id),
-                FOREIGN KEY ($COLUMN_ACAO_ID_SUBPILAR) REFERENCES Subpilar (id),
-                FOREIGN KEY ($COLUMN_ACAO_ID_USUARIO) REFERENCES Usuario (id)
+                FOREIGN KEY ($COLUMN_ACAO_ID_PILAR) REFERENCES $TABLE_PILAR($COLUMN_PILAR_ID),
+                FOREIGN KEY ($COLUMN_ACAO_ID_SUBPILAR) REFERENCES $TABLE_SUBPILAR($COLUMN_SUBPILAR_ID),
+                FOREIGN KEY ($COLUMN_ACAO_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID)
             );
         """.trimIndent()
 
@@ -103,26 +103,14 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_PERCENTUAL_ACAO_MES INTEGER NOT NULL,
                 $COLUMN_PERCENTUAL_ACAO_PERCENTUAL REAL DEFAULT 0,
                 $COLUMN_PERCENTUAL_ACAO_ID_ACAO INTEGER NOT NULL,
-                FOREIGN KEY ($COLUMN_PERCENTUAL_ACAO_ID_ACAO) REFERENCES Acao (id)
+                FOREIGN KEY ($COLUMN_PERCENTUAL_ACAO_ID_ACAO) REFERENCES $TABLE_ACAO($COLUMN_ACAO_ID)
             );
         """.trimIndent()
 
         val createAtividadeTable = """
-/* Pedro
-             CREATE TABLE atividades (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nome TEXT NOT NULL,
-        status TEXT NOT NULL,
-        data TEXT NOT NULL,
-        tipo_acao TEXT NOT NULL,
-        usuario_id INTEGER,
-        aprovado INTEGER DEFAULT 0,
-        finalizado INTEGER DEFAULT 0,
-        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-Pedro */
             CREATE TABLE $TABLE_ATIVIDADE (
-                $COLUMN_ATIVIDADE_ID INTEGER PRIMARY KEY,
-                $COLUMN_ATIVIDADE_NOME TEXT NOT NULL UNIQUE,
+                $COLUMN_ATIVIDADE_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                $COLUMN_ATIVIDADE_NOME TEXT NOT NULL,
                 $COLUMN_ATIVIDADE_DATA_INICIO TEXT NOT NULL,
                 $COLUMN_ATIVIDADE_DATA_TERMINO TEXT NOT NULL,
                 $COLUMN_ATIVIDADE_RESPONSAVEL INTEGER,
@@ -132,8 +120,8 @@ Pedro */
                 $COLUMN_ATIVIDADE_ORCAMENTO REAL DEFAULT 0,
                 $COLUMN_ATIVIDADE_ID_ACAO INTEGER NOT NULL,
                 $COLUMN_ATIVIDADE_ID_USUARIO INTEGER NOT NULL,
-                FOREIGN KEY ($COLUMN_ATIVIDADE_ID_ACAO) REFERENCES Acao (id),
-                FOREIGN KEY ($COLUMN_ATIVIDADE_ID_USUARIO) REFERENCES Usuario (id)
+                FOREIGN KEY ($COLUMN_ATIVIDADE_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID),
+                FOREIGN KEY ($COLUMN_ATIVIDADE_ID_ACAO) REFERENCES $TABLE_ACAO($COLUMN_ACAO_ID)
             );
         """.trimIndent()
 
@@ -143,7 +131,7 @@ Pedro */
                 $COLUMN_PERCENTUAL_ATIVIDADE_MES INTEGER NOT NULL,
                 $COLUMN_PERCENTUAL_ATIVIDADE_PERCENTUAL REAL DEFAULT 0,
                 $COLUMN_PERCENTUAL_ATIVIDADE_ID_ATIVIDADE INTEGER NOT NULL,
-                FOREIGN KEY ($COLUMN_PERCENTUAL_ATIVIDADE_ID_ATIVIDADE) REFERENCES Atividade (id)
+                FOREIGN KEY ($COLUMN_PERCENTUAL_ATIVIDADE_ID_ATIVIDADE) REFERENCES $TABLE_ATIVIDADE($COLUMN_ATIVIDADE_ID)
             );
         """.trimIndent()
 
@@ -162,25 +150,25 @@ Pedro */
         inserirUsuarios(db, obterUsuarios())
     }
 
-
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_CALENDARIO")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_TIPOUSUARIO")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_USUARIO")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NOTIFICACAO")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_PERCENTUAL_ATIVIDADE")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_ATIVIDADE")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_PERCENTUAL_ACAO")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_ACAO")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_SUBPILAR")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_PILAR")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NOTIFICACAO")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_USUARIO")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_TIPOUSUARIO")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_CALENDARIO")
 
         onCreate(db)
     }
 
+    // Constantes globais (NOMES DE TABELAS E COLUNAS)
     companion object {
-        private const val DATABASE_NAME = "mpi.db"
-        private const val DATABASE_VERSION = 1
+        const val DATABASE_NAME = "mpi.db"
+        const val DATABASE_VERSION = 1
 
         const val TABLE_CALENDARIO = "calendario"
         const val COLUMN_CALENDARIO_ID = "id"
@@ -202,9 +190,9 @@ Pedro */
         const val COLUMN_NOTIFICACAO_ISVISUALIZADO = "isVisualizado"
         const val COLUMN_NOTIFICACAO_TITULO = "titulo"
         const val COLUMN_NOTIFICACAO_MENSAGEM = "mensagem"
+        const val COLUMN_NOTIFICACAO_ID_USUARIO = "id_usuario"
         const val COLUMN_NOTIFICACAO_ID_ITEM = "id_item"
         const val COLUMN_NOTIFICACAO_TIPO_ITEM = "tipo_item"
-        const val COLUMN_NOTIFICACAO_ID_USUARIO = "id_usuario"
 
         const val TABLE_PILAR = "pilar"
         const val COLUMN_PILAR_ID = "id"
@@ -240,7 +228,7 @@ Pedro */
         const val COLUMN_ACAO_ID_SUBPILAR = "id_subpilar"
         const val COLUMN_ACAO_ID_USUARIO = "id_usuario"
 
-        const val TABLE_PERCENTUAL_ACAO = "percentual_Acao"
+        const val TABLE_PERCENTUAL_ACAO = "percentual_acao"
         const val COLUMN_PERCENTUAL_ACAO_ID = "id"
         const val COLUMN_PERCENTUAL_ACAO_MES = "mes"
         const val COLUMN_PERCENTUAL_ACAO_PERCENTUAL = "percentual"
@@ -259,11 +247,50 @@ Pedro */
         const val COLUMN_ATIVIDADE_ID_ACAO = "id_acao"
         const val COLUMN_ATIVIDADE_ID_USUARIO = "id_usuario"
 
-        const val TABLE_PERCENTUAL_ATIVIDADE = "percentual_Atividade"
+        const val TABLE_PERCENTUAL_ATIVIDADE = "percentual_atividade"
         const val COLUMN_PERCENTUAL_ATIVIDADE_ID = "id"
         const val COLUMN_PERCENTUAL_ATIVIDADE_MES = "mes"
         const val COLUMN_PERCENTUAL_ATIVIDADE_PERCENTUAL = "percentual"
         const val COLUMN_PERCENTUAL_ATIVIDADE_ID_ATIVIDADE = "id_atividade"
+    }
+
+    fun aprovarAtividade(id: Int): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ATIVIDADE_IS_APROVADO, 1)
+        }
+        val result = db.update(TABLE_ATIVIDADE, values, "$COLUMN_ATIVIDADE_ID = ?", arrayOf(id.toString()))
+        db.close()
+        return result > 0
+    }
+
+    fun finalizarAtividade(id: Int): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ATIVIDADE_IS_FINALIZADO, 1)
+        }
+        val result = db.update(TABLE_ATIVIDADE, values, "$COLUMN_ATIVIDADE_ID = ?", arrayOf(id.toString()))
+        db.close()
+        return result > 0
+    }
+
+
+    fun aprovarAcao(idAcao: Int) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ACAO_IS_APROVADO, 1)
+        }
+        db.update(TABLE_ACAO, values, "$COLUMN_ACAO_ID = ?", arrayOf(idAcao.toString()))
+        db.close()
+    }
+
+    fun finalizarAcao(idAcao: Int) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ACAO_IS_FINALIZADO, 1)
+        }
+        db.update(TABLE_ACAO, values, "$COLUMN_ACAO_ID = ?", arrayOf(idAcao.toString()))
+        db.close()
     }
 
     private fun inserirTipoUsuario(db: SQLiteDatabase, tipoUsuario: List<TipoUsuario>) {
@@ -287,50 +314,18 @@ Pedro */
         }
     }
 
-    private fun obterTipoUsuario(): List<TipoUsuario> {
-        return listOf(
-            TipoUsuario(1, "Analista"),
-            TipoUsuario(2, "Coordenador"),
-            TipoUsuario(3, "Gestor")
-        )
-    }
+    private fun obterTipoUsuario(): List<TipoUsuario> = listOf(
+        TipoUsuario(1, "Analista"),
+        TipoUsuario(2, "Coordenador"),
+        TipoUsuario(3, "Gestor")
+    )
 
-    private fun obterUsuarios(): List<Usuario> {
-        return listOf(
-            Usuario(1, "Analista José", "jose@jose.com", "jose123", 1),
-            Usuario(2, "Analista João", "joao@joao.com", "joao123", 1),
-            Usuario(3, "Coordenador Marcos", "marcos@marcos.com", "marcos123", 2),
-            Usuario(4, "Coordenadora Marta", "marta@marta.com", "marta123", 2),
-            Usuario(5, "Gestor Geraldo", "geraldo@geraldo.com", "geraldo123", 3),
-            Usuario(6, "Gestora Goreti", "goreti@goreti.com", "goreti123", 3)
-        )
-    }
-
-    fun aprovarAtividade(idAtividade: Int) {
-        val db = this.writableDatabase
-        val query = "UPDATE atividade SET aprovado = 1 WHERE id = ?"
-        db.execSQL(query, arrayOf(idAtividade))
-        db.close()
-    }
-
-    fun finalizarAtividade(idAtividade: Int) {
-        val db = this.writableDatabase
-        val query = "UPDATE atividade SET finalizado = 1 WHERE id = ?"
-        db.execSQL(query, arrayOf(idAtividade))
-        db.close()
-    }
-
-    fun aprovarAcao(idAcao: Int) {
-        val db = this.writableDatabase
-        val query = "UPDATE acao SET isAprovado = 1 WHERE id = ?"
-        db.execSQL(query, arrayOf(idAcao))
-        db.close()
-    }
-
-    fun finalizarAcao(idAcao: Int) {
-        val db = this.writableDatabase
-        val query = "UPDATE acao SET isFinalizado = 1 WHERE id = ?"
-        db.execSQL(query, arrayOf(idAcao))
-        db.close()
-    }
+    private fun obterUsuarios(): List<Usuario> = listOf(
+        Usuario(1, "Analista José", "jose@jose.com", "jose123", 1),
+        Usuario(2, "Analista João", "joao@joao.com", "joao123", 1),
+        Usuario(3, "Coordenador Marcos", "marcos@marcos.com", "marcos123", 2),
+        Usuario(4, "Coordenadora Marta", "marta@marta.com", "marta123", 2),
+        Usuario(5, "Gestor Geraldo", "geraldo@geraldo.com", "geraldo123", 3),
+        Usuario(6, "Gestora Goreti", "goreti@goreti.com", "goreti123", 3)
+    )
 }

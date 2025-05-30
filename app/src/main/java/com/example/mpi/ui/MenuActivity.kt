@@ -20,6 +20,9 @@ import com.example.mpi.ui.atividade.AtividadeActivity
 import com.example.mpi.ui.dashboard.DashboardActivity
 import com.example.mpi.ui.pilar.PilarActivity
 import com.example.mpi.ui.subpilar.SubpilarActivity
+import com.example.mpi.ui.AprovacaoActivity
+
+
 
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
