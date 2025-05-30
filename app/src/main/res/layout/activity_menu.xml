@@ -53,12 +53,12 @@
             </FrameLayout>
         </LinearLayout>
         <TextView
+            android:fontFamily="@font/inter18pt_extra_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Menu Principal "
             android:layout_marginBottom="1dp"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="40sp" />
 
         <!--
         <ImageView
@@ -73,16 +73,18 @@
         -->
 
         <TextView
+            android:fontFamily="@font/inter18pt_extra_bold"
             android:id="@+id/textviewNomeUsuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pessoa 1 "
             android:layout_marginBottom="12dp"
-            android:textSize="20sp"
+            android:textSize="32sp"
             android:textStyle="bold"
             />
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnPilarActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,6 +93,7 @@
             />
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnSubpilarActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -98,6 +101,7 @@
             android:backgroundTint="#055196"/>
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnAcaoActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -105,6 +109,7 @@
             android:backgroundTint="#055196"/>
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnAtividadeActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -112,6 +117,7 @@
             android:backgroundTint="#055196"/>
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnAprovacaoActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -119,6 +125,7 @@
             android:backgroundTint="#055196"/>
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnFinalizacaoActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,13 +133,15 @@
             android:backgroundTint="#055196"/>
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnPercentualActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Progresso da atividade"
+            android:text="Progresso da Atividade"
             android:backgroundTint="#055196"/>
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnDashboardActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -140,6 +149,7 @@
             android:text="Dashboards" />
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnRelatorioActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -147,6 +157,7 @@
             android:text="Relatórios" />
 
         <Button
+            android:textSize="20dp"
             android:id="@+id/btnSair"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

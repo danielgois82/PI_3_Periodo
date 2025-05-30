@@ -88,11 +88,12 @@
 
             <!-- Botão Entrar -->
             <Button
+                android:textSize="20dp"
                 android:id="@+id/btnEntrar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="24dp"
-                android:backgroundTint="#00324A"
+                android:backgroundTint="#055196"
                 android:text="Entrar"
                 android:textColor="@android:color/white" />
         </LinearLayout>
