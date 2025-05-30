@@ -21,7 +21,8 @@ import com.example.mpi.ui.dashboard.DashboardActivity
 import com.example.mpi.ui.pilar.PilarActivity
 import com.example.mpi.ui.subpilar.SubpilarActivity
 import com.example.mpi.ui.AprovacaoActivity
-
+import com.example.mpi.ui.relatorio.RelatorioActivity
+import kotlin.system.exitProcess
 
 
 class MenuActivity : AppCompatActivity() {
@@ -66,6 +67,8 @@ class MenuActivity : AppCompatActivity() {
         val openPercentual: Button = findViewById(R.id.btnPercentualActivity)
         val openDashboard: Button = findViewById(R.id.btnDashboardActivity)
         val openNotificacao: ImageView = findViewById(R.id.btnNotificacaoActivity)
+        val openRelatorio: Button = findViewById(R.id.btnRelatorioActivity)
+        val closeApp: Button = findViewById(R.id.btnSair)
         notificationBadge = findViewById(R.id.notificationBadge)
 
         val textViewNomeUsuario = findViewById<TextView>(R.id.textviewNomeUsuario)
@@ -87,7 +90,6 @@ class MenuActivity : AppCompatActivity() {
             openSubpilar.visibility = View.GONE
             openAprovacao.visibility = View.GONE
             openFinalizacao.visibility = View.GONE
-            openPercentual.visibility = View.GONE
             openNotificacao.visibility = View.INVISIBLE
             notificationBadge.visibility = View.GONE
         }
@@ -163,6 +165,21 @@ class MenuActivity : AppCompatActivity() {
             extra.putExtra("tipoUsuario", tipoUsuario)
             startActivity(extra)
         }
+
+        openRelatorio.setOnClickListener {
+            val extra = Intent(this, RelatorioActivity::class.java)
+            extra.putExtra("idUsuario", idUsuarioLogado)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            startActivity(extra)
+        }
+
+        closeApp.setOnClickListener {
+            finishAffinity()
+            android.os.Process.killProcess(android.os.Process.myPid())
+            exitProcess(0)
+        }
+
     }
 
     override fun onResume() {

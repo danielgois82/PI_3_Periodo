@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/inter18pt_extra_bold"
-            android:text="Percentuais"
+            android:text="Progresso da atividade"
             android:textAlignment="center"
             android:textSize="32sp" />
 
@@ -154,6 +154,22 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/textview_nomeAtividade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:background="@color/blue"
+                android:padding="8dp"
+                android:text="Atividade: XPTO"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+
+
+            <TextView
+                android:id="@+id/textview_obs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
