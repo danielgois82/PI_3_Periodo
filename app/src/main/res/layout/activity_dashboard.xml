@@ -27,6 +27,7 @@
         android:textSize="32sp" />
 
     <Button
+        android:textSize="20dp"
         android:id="@+id/btnOption1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,9 +36,10 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:backgroundTint="@color/blue"
-        android:text="Ações concluídas/em andamento/atrasadas" />
+        android:text="Status das Ações" />
 
     <Button
+        android:textSize="20dp"
         android:id="@+id/btnOption2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,9 +47,10 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:backgroundTint="@color/blue"
-        android:text="Progresso por pilar" />
+        android:text="Progresso por Pilar" />
 
     <Button
+        android:textSize="20dp"
         android:id="@+id/btnOption3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
