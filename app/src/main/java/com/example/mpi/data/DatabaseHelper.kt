@@ -41,6 +41,8 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_NOTIFICACAO_TITULO TEXT NOT NULL,
                 $COLUMN_NOTIFICACAO_MENSAGEM TEXT NOT NULL,
                 $COLUMN_NOTIFICACAO_ID_USUARIO INTEGER NOT NULL,
+                $COLUMN_NOTIFICACAO_ID_ITEM INTEGER,
+                $COLUMN_NOTIFICACAO_TIPO_ITEM TEXT,
                 FOREIGN KEY ($COLUMN_NOTIFICACAO_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID)
             );
         """.trimIndent()
@@ -55,7 +57,7 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_PILAR_DESCRICAO TEXT NOT NULL,
                 $COLUMN_PILAR_PERCENTUAL REAL DEFAULT 0,
                 $COLUMN_PILAR_ID_CALENDARIO INTEGER NOT NULL,
-                $COLUMN_PILAR_ID_USUARIO INTEGER,
+                $COLUMN_PILAR_ID_USUARIO INTEGER NOT NULL,
                 FOREIGN KEY ($COLUMN_PILAR_ID_CALENDARIO) REFERENCES $TABLE_CALENDARIO($COLUMN_CALENDARIO_ID),
                 FOREIGN KEY ($COLUMN_PILAR_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID)
             );
@@ -70,7 +72,7 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_SUBPILAR_IS_APROVADO INTEGER DEFAULT 0,
                 $COLUMN_SUBPILAR_DESCRICAO TEXT NOT NULL,
                 $COLUMN_SUBPILAR_ID_PILAR INTEGER NOT NULL,
-                $COLUMN_SUBPILAR_ID_USUARIO INTEGER,
+                $COLUMN_SUBPILAR_ID_USUARIO INTEGER NOT NULL,
                 FOREIGN KEY ($COLUMN_SUBPILAR_ID_PILAR) REFERENCES $TABLE_PILAR($COLUMN_PILAR_ID),
                 FOREIGN KEY ($COLUMN_SUBPILAR_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID)
             );
@@ -88,7 +90,7 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_ACAO_DESCRICAO TEXT NOT NULL,
                 $COLUMN_ACAO_ID_PILAR INTEGER,
                 $COLUMN_ACAO_ID_SUBPILAR INTEGER,
-                $COLUMN_ACAO_ID_USUARIO INTEGER,
+                $COLUMN_ACAO_ID_USUARIO INTEGER NOT NULL,
                 FOREIGN KEY ($COLUMN_ACAO_ID_PILAR) REFERENCES $TABLE_PILAR($COLUMN_PILAR_ID),
                 FOREIGN KEY ($COLUMN_ACAO_ID_SUBPILAR) REFERENCES $TABLE_SUBPILAR($COLUMN_SUBPILAR_ID),
                 FOREIGN KEY ($COLUMN_ACAO_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID)
@@ -111,13 +113,13 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_ATIVIDADE_NOME TEXT NOT NULL,
                 $COLUMN_ATIVIDADE_DATA_INICIO TEXT NOT NULL,
                 $COLUMN_ATIVIDADE_DATA_TERMINO TEXT NOT NULL,
-                $COLUMN_ATIVIDADE_RESPONSAVEL TEXT,
+                $COLUMN_ATIVIDADE_RESPONSAVEL INTEGER,
                 $COLUMN_ATIVIDADE_IS_APROVADO INTEGER DEFAULT 0,
                 $COLUMN_ATIVIDADE_IS_FINALIZADO INTEGER DEFAULT 0,
-                $COLUMN_ATIVIDADE_DESCRICAO TEXT,
-                $COLUMN_ATIVIDADE_ORCAMENTO REAL,
-                $COLUMN_ATIVIDADE_ID_ACAO INTEGER,
-                $COLUMN_ATIVIDADE_ID_USUARIO INTEGER,
+                $COLUMN_ATIVIDADE_DESCRICAO TEXT NOT NULL,
+                $COLUMN_ATIVIDADE_ORCAMENTO REAL DEFAULT 0,
+                $COLUMN_ATIVIDADE_ID_ACAO INTEGER NOT NULL,
+                $COLUMN_ATIVIDADE_ID_USUARIO INTEGER NOT NULL,
                 FOREIGN KEY ($COLUMN_ATIVIDADE_ID_USUARIO) REFERENCES $TABLE_USUARIO($COLUMN_USUARIO_ID),
                 FOREIGN KEY ($COLUMN_ATIVIDADE_ID_ACAO) REFERENCES $TABLE_ACAO($COLUMN_ACAO_ID)
             );
@@ -190,9 +192,7 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_NOTIFICACAO_MENSAGEM = "mensagem"
         const val COLUMN_NOTIFICACAO_ID_USUARIO = "id_usuario"
         const val COLUMN_NOTIFICACAO_ID_ITEM = "id_item"
-        const val COLUMN_NOTIFICACAO_TIPO = "tipo"
         const val COLUMN_NOTIFICACAO_TIPO_ITEM = "tipo_item"
-
 
         const val TABLE_PILAR = "pilar"
         const val COLUMN_PILAR_ID = "id"
@@ -228,6 +228,12 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_ACAO_ID_SUBPILAR = "id_subpilar"
         const val COLUMN_ACAO_ID_USUARIO = "id_usuario"
 
+        const val TABLE_PERCENTUAL_ACAO = "percentual_acao"
+        const val COLUMN_PERCENTUAL_ACAO_ID = "id"
+        const val COLUMN_PERCENTUAL_ACAO_MES = "mes"
+        const val COLUMN_PERCENTUAL_ACAO_PERCENTUAL = "percentual"
+        const val COLUMN_PERCENTUAL_ACAO_ID_ACAO = "id_acao"
+
         const val TABLE_ATIVIDADE = "atividade"
         const val COLUMN_ATIVIDADE_ID = "id"
         const val COLUMN_ATIVIDADE_NOME = "nome"
@@ -240,12 +246,6 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_ATIVIDADE_ORCAMENTO = "orcamento"
         const val COLUMN_ATIVIDADE_ID_ACAO = "id_acao"
         const val COLUMN_ATIVIDADE_ID_USUARIO = "id_usuario"
-
-        const val TABLE_PERCENTUAL_ACAO = "percentual_acao"
-        const val COLUMN_PERCENTUAL_ACAO_ID = "id"
-        const val COLUMN_PERCENTUAL_ACAO_MES = "mes"
-        const val COLUMN_PERCENTUAL_ACAO_PERCENTUAL = "percentual"
-        const val COLUMN_PERCENTUAL_ACAO_ID_ACAO = "id_acao"
 
         const val TABLE_PERCENTUAL_ATIVIDADE = "percentual_atividade"
         const val COLUMN_PERCENTUAL_ATIVIDADE_ID = "id"
