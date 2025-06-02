@@ -78,10 +78,12 @@ class MenuActivity : AppCompatActivity() {
         if (tipoUsuario.uppercase() == USUARIO_ANALISTA) {
             openAprovacao.visibility = View.GONE
             openFinalizacao.visibility = View.GONE
+            openRelatorio.visibility = View.GONE
             openDashboard.visibility = View.GONE
         }
 
         if (tipoUsuario.uppercase() == USUARIO_COORDENADOR) {
+            openRelatorio.visibility = View.GONE
             openDashboard.visibility = View.GONE
         }
 
@@ -90,6 +92,7 @@ class MenuActivity : AppCompatActivity() {
             openSubpilar.visibility = View.GONE
             openAprovacao.visibility = View.GONE
             openFinalizacao.visibility = View.GONE
+            openRelatorio.visibility = View.GONE
             openNotificacao.visibility = View.INVISIBLE
             notificationBadge.visibility = View.GONE
         }
