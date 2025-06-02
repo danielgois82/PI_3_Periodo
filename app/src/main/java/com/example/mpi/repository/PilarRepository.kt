@@ -7,6 +7,8 @@ import com.example.mpi.data.Pilar
 
 class PilarRepository (context: Context) {
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
+    private val acaoRepository: AcaoRepository = AcaoRepository.getInstance(context)
+    private val subpilarRepository: SubpilarRepository = SubpilarRepository.getInstance(context)
 
     companion object {
         private lateinit var instance: PilarRepository
@@ -72,6 +74,42 @@ class PilarRepository (context: Context) {
         db.close()
 
         return pilar
+    }
+
+    fun obterProgressoPilar(pilar: Pilar): Double {
+        var percentualTotalPilar = 0.0
+
+        val listaSubpilar = subpilarRepository.obterTodosSubpilares(pilar)
+
+        if (listaSubpilar.isEmpty()) {
+            val listaAcoes = acaoRepository.obterTodasAcoes(pilar)
+            var qtdAcoes = 0
+            var somaPercentualAcoes = 0.0
+            for (acao in listaAcoes) {
+                somaPercentualAcoes += acaoRepository.obterPercentualTotalAcao(acao)
+                qtdAcoes++
+            }
+            percentualTotalPilar = somaPercentualAcoes / qtdAcoes
+        }
+
+        if (listaSubpilar.isNotEmpty()) {
+            var percentualTotalSubpilar = 0.0
+            var qtdSubpilar = 0
+            for (subpilar in listaSubpilar) {
+                qtdSubpilar++
+                val listaAcoes = acaoRepository.obterTodasAcoes(subpilar)
+                var qtdAcoes = 0
+                var somaPercentualAcoes = 0.0
+                for (acao in listaAcoes) {
+                    somaPercentualAcoes += acaoRepository.obterPercentualTotalAcao(acao)
+                    qtdAcoes++
+                }
+                percentualTotalSubpilar += somaPercentualAcoes / qtdAcoes
+            }
+            percentualTotalPilar = percentualTotalSubpilar / qtdSubpilar
+        }
+
+        return percentualTotalPilar
     }
 
 }

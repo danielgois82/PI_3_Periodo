@@ -41,6 +41,7 @@ class DashboardActivity : AppCompatActivity() {
             extra.putExtra("idUsuario", idUsuario)
             extra.putExtra("nomeUsuario", nomeUsuario)
             extra.putExtra("tipoUsuario", tipoUsuario)
+            finish()
             startActivity(extra)
         }
 
@@ -50,6 +51,27 @@ class DashboardActivity : AppCompatActivity() {
             extra.putExtra("idUsuario", idUsuario)
             extra.putExtra("nomeUsuario", nomeUsuario)
             extra.putExtra("tipoUsuario", tipoUsuario)
+            finish()
+            startActivity(extra)
+        }
+
+        val openOpcao2: Button = findViewById(R.id.btnOption2)
+        openOpcao2.setOnClickListener {
+            val extra = Intent(this, Opcao2Activity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            finish()
+            startActivity(extra)
+        }
+
+        val openOpcao3: Button = findViewById(R.id.btnOption3)
+        openOpcao3.setOnClickListener {
+            val extra = Intent(this, Opcao3Activity::class.java)
+            extra.putExtra("idUsuario", idUsuario)
+            extra.putExtra("nomeUsuario", nomeUsuario)
+            extra.putExtra("tipoUsuario", tipoUsuario)
+            finish()
             startActivity(extra)
         }
     }

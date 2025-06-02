@@ -3,6 +3,7 @@ package com.example.mpi.repository
 import android.content.Context
 import android.util.Log
 import com.example.mpi.data.Acao
+import com.example.mpi.data.Atividade
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.data.Pilar
 import com.example.mpi.data.Subpilar
@@ -12,7 +13,7 @@ class AcaoRepository(context: Context) {
 
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
     private val subpilarRepository: SubpilarRepository = SubpilarRepository.getInstance(context)
-
+    private val atividadeRepository: AtividadeRepository = AtividadeRepository.getInstance(context)
 
     companion object {
         private lateinit var instance: AcaoRepository
@@ -231,13 +232,26 @@ class AcaoRepository(context: Context) {
     fun obterQuantidadeAcoesAtrasadas(): Int {
         val db = dataBase.readableDatabase
         var quantidadeAcoesAtrasadas = 0
-        val cursor = db.rawQuery("SELECT COUNT(*) AS ATRARASA FROM ${DatabaseHelper.TABLE_ACAO} WHERE date(substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 7, 4) || '-' || substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 4, 2) || '-' || substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 1, 2)) < date('now') AND ${DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO} = 0", null)
+        val cursor = db.rawQuery("SELECT COUNT(*) AS ATRASADA FROM ${DatabaseHelper.TABLE_ACAO} WHERE date(substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 7, 4) || '-' || substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 4, 2) || '-' || substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 1, 2)) < date('now') AND ${DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO} = 0", null)
 
         if (cursor.moveToNext()) {
-            quantidadeAcoesAtrasadas = cursor.getInt(cursor.getColumnIndexOrThrow("ATRARASA"))
+            quantidadeAcoesAtrasadas = cursor.getInt(cursor.getColumnIndexOrThrow("ATRASADA"))
         }
 
         cursor.close()
         return quantidadeAcoesAtrasadas
+    }
+
+    fun obterPercentualTotalAcao(acao: Acao) : Double {
+        val listaAtividade = atividadeRepository.obterTodasAtividades(acao)
+        var divisor = 0
+        var somaPercentualAtividade = 0.0
+        for (atividade in listaAtividade) {
+            somaPercentualAtividade += atividadeRepository.obterPercentualTotalAtividade(atividade)
+            divisor++
+        }
+        val percentualTotalAcao = somaPercentualAtividade / divisor
+
+        return percentualTotalAcao
     }
 }
