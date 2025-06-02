@@ -103,7 +103,7 @@ class Opcao1Activity : AppCompatActivity() {
 
         dataVals.add(PieEntry(qtdeFinalizado.toFloat(), "Finalizado"))
         dataVals.add(PieEntry(qtdeEmAndamento.toFloat(), "Em andamento"))
-        dataVals.add(PieEntry(qtdeAtrasado.toFloat(), "Em atrasado"))
+        dataVals.add(PieEntry(qtdeAtrasado.toFloat(), "Em atraso"))
 
         return dataVals
     }
