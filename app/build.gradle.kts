@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.mpi"
-        minSdk = 21
+        minSdk = 29 // Antes estava 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -42,6 +42,8 @@ android {
 }
 
 dependencies {
+    implementation ("com.itextpdf:itextg:5.5.10")
+    implementation ("androidx.activity:activity-ktx:1.8.0")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

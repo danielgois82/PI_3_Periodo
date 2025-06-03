@@ -51,7 +51,7 @@ class DashboardActivity : AppCompatActivity() {
             extra.putExtra("idUsuario", idUsuario)
             extra.putExtra("nomeUsuario", nomeUsuario)
             extra.putExtra("tipoUsuario", tipoUsuario)
-            finish()
+//            finish()
             startActivity(extra)
         }
 
@@ -61,7 +61,7 @@ class DashboardActivity : AppCompatActivity() {
             extra.putExtra("idUsuario", idUsuario)
             extra.putExtra("nomeUsuario", nomeUsuario)
             extra.putExtra("tipoUsuario", tipoUsuario)
-            finish()
+//            finish()
             startActivity(extra)
         }
 
@@ -71,7 +71,7 @@ class DashboardActivity : AppCompatActivity() {
             extra.putExtra("idUsuario", idUsuario)
             extra.putExtra("nomeUsuario", nomeUsuario)
             extra.putExtra("tipoUsuario", tipoUsuario)
-            finish()
+//            finish()
             startActivity(extra)
         }
     }

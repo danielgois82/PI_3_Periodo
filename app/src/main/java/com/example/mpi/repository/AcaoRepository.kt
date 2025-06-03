@@ -254,4 +254,27 @@ class AcaoRepository(context: Context) {
 
         return percentualTotalAcao
     }
+
+    fun obterPercentualMes(atividades: List<Atividade>, mes: Int): Double {
+        val percentualTotal: Double
+        var somaPercentual = 0.0
+        var qtdAtividades = 0
+        for (atividade in atividades) {
+            val percentualMes = atividadeRepository.obterPercentualMes(atividade, mes)
+            somaPercentual += percentualMes
+            qtdAtividades++
+        }
+        percentualTotal = somaPercentual / qtdAtividades
+
+        return percentualTotal
+    }
+
+    fun obterOrcamentoAcao(atividades: List<Atividade>): Double {
+        var orcamentoTotal = 0.0
+        for (atividade in atividades) {
+            orcamentoTotal += atividade.orcamento
+        }
+
+        return orcamentoTotal
+    }
 }

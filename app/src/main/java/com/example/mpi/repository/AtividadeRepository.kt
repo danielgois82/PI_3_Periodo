@@ -163,4 +163,20 @@ class AtividadeRepository (context: Context) {
         return total
     }
 
+    fun obterPercentualMes(atividade: Atividade, mes: Int): Double {
+        val db = dataBase.readableDatabase
+
+        val cursor = db.rawQuery("SELECT percentual FROM percentual_atividade WHERE id_atividade = ? AND mes = ?", arrayOf(atividade.id.toString(), mes.toString()))
+
+        var percentual = 0.0
+        if (cursor.moveToFirst()) {
+            percentual = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PERCENTUAL_ATIVIDADE_PERCENTUAL))
+        }
+
+        cursor.close()
+        db.close()
+
+        return percentual
+    }
+
 }
