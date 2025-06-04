@@ -1,8 +1,12 @@
 package com.example.mpi.ui.dashboard
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,7 +21,6 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 
 class Opcao2Activity : AppCompatActivity() {
@@ -62,14 +65,12 @@ class Opcao2Activity : AppCompatActivity() {
     }
 
     private fun gerarHorizontalChart() {
-        // https://www.youtube.com/watch?v=js1oJfRfjjI
-
         val idCal = calendarioRepository.obterIdCalendarioPorAno(2025)
         val todosPilares = pilarRepository.obterTodosPilares(Calendario(idCal, 2025))
 
 // Lista de entradas para o gráfico de barras
         val barEntries = ArrayList<BarEntry>()
-        var idx = 0f
+        var idx = 1f
         for (p in todosPilares) {
             val progresso = pilarRepository.obterProgressoPilar(p).toFloat()
             barEntries.add(BarEntry(idx, progresso))
@@ -106,12 +107,12 @@ class Opcao2Activity : AppCompatActivity() {
         binding.hChartbar.xAxis.labelCount = qtdPilares
         binding.hChartbar.extraRightOffset = 50f
 
-        barData.setValueTextSize(14f)
+        barData.setValueTextSize(15f)
 
         binding.hChartbar.invalidate() // Atualiza o gráfico
 
         val legend = binding.hChartbar.legend
-        legend.isEnabled = true
+        legend.isEnabled = false
 
         val xAxis: XAxis = binding.hChartbar.xAxis
         xAxis.setDrawGridLines(true)
@@ -122,7 +123,8 @@ class Opcao2Activity : AppCompatActivity() {
         xAxis.xOffset = 10f
         xAxis.setDrawAxisLine(true)
 
-        binding.hChartbar.xAxis.valueFormatter = IndexAxisValueFormatter(nomePilares)
+//        binding.hChartbar.xAxis.valueFormatter = IndexAxisValueFormatter(nomePilares)
+        binding.hChartbar.xAxis.textSize = 15f
         binding.hChartbar.xAxis.granularity = 0.2f
         binding.hChartbar.xAxis.isGranularityEnabled = true
 
@@ -134,7 +136,43 @@ class Opcao2Activity : AppCompatActivity() {
         rightAxis.axisMaximum = 100f
         rightAxis.axisMinimum = 0f
 
+        binding.hChartbar.setTouchEnabled(false)
+
         binding.hChartbar.setVisibleXRangeMaximum(qtdPilares.toFloat())
 
+        leftAxis.setDrawLabels(false)
+        leftAxis.setDrawGridLines(false)
+        leftAxis.setDrawAxisLine(false)
+
+        val legendContainer = binding.legendContainer
+        legendContainer.removeAllViews()
+
+        nomePilares.forEachIndexed { index, nome ->
+            val itemLayout = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                setPadding(0, 8, 0, 8)
+            }
+
+            val colorBox = View(this).apply {
+                layoutParams = LinearLayout.LayoutParams(40, 40).apply {
+                    setMargins(0, 0, 16, 0)
+                }
+                setBackgroundColor(ColorTemplate.COLORFUL_COLORS[index % ColorTemplate.COLORFUL_COLORS.size])
+            }
+
+            val label = TextView(this).apply {
+                text = "${index + 1} - $nome"
+                textSize = 16f
+                setTextColor(Color.BLACK)
+            }
+
+            itemLayout.addView(colorBox)
+            itemLayout.addView(label)
+            legendContainer.addView(itemLayout)
+        }
     }
 }

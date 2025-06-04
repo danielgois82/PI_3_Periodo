@@ -12,6 +12,12 @@
         android:theme="@style/Theme.MPI"
         tools:targetApi="34">
         <activity
+            android:name=".ui.relatorio.RelatorioOKRActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.relatorio.RelatorioPilarActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.dashboard.Opcao3Activity"
             android:exported="false" />
         <activity

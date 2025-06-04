@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -42,6 +43,13 @@ class MenuActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Aqui você bloqueia o botão voltar (sem nenhuma ação)
+            }
+        })
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -92,7 +100,6 @@ class MenuActivity : AppCompatActivity() {
             openSubpilar.visibility = View.GONE
             openAprovacao.visibility = View.GONE
             openFinalizacao.visibility = View.GONE
-            openRelatorio.visibility = View.GONE
             openNotificacao.visibility = View.INVISIBLE
             notificationBadge.visibility = View.GONE
         }

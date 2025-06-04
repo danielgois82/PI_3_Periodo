@@ -60,8 +60,6 @@ class Opcao3Activity : AppCompatActivity() {
     }
 
     private fun gerarHorizontalChart() {
-        // https://www.youtube.com/watch?v=js1oJfRfjjI
-
 // Lista de entradas para o gráfico de barras
         val barEntries = ArrayList<BarEntry>()
         val total30OuMenos = atividadeRepository.obterQuantidadeAtividades30DiasOuMenos()
@@ -109,12 +107,12 @@ class Opcao3Activity : AppCompatActivity() {
         binding.hChartbar.xAxis.labelCount = qtdPrazos
         binding.hChartbar.extraRightOffset = 50f
 
-        barData.setValueTextSize(14f)
+        barData.setValueTextSize(15f)
 
         binding.hChartbar.invalidate() // Atualiza o gráfico
 
         val legend = binding.hChartbar.legend
-        legend.isEnabled = true
+        legend.isEnabled = false
 
         val xAxis: XAxis = binding.hChartbar.xAxis
         xAxis.setDrawGridLines(true)
@@ -126,6 +124,7 @@ class Opcao3Activity : AppCompatActivity() {
         xAxis.setDrawAxisLine(true)
 
         binding.hChartbar.xAxis.valueFormatter = IndexAxisValueFormatter(nomePrazos)
+        binding.hChartbar.xAxis.textSize = 15f
         binding.hChartbar.xAxis.granularity = 0.2f
         binding.hChartbar.xAxis.isGranularityEnabled = true
 
@@ -136,6 +135,8 @@ class Opcao3Activity : AppCompatActivity() {
         val rightAxis = binding.hChartbar.axisRight
         rightAxis.granularity = 1f
         rightAxis.isGranularityEnabled = true
+
+        binding.hChartbar.setTouchEnabled(false)
 
         binding.hChartbar.setVisibleXRangeMaximum(qtdPrazos.toFloat())
 

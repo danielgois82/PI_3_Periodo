@@ -30,6 +30,14 @@
     <com.github.mikephil.charting.charts.HorizontalBarChart
         android:id="@+id/h_chartbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="500dp" />
+
+    <LinearLayout
+        android:id="@+id/legendContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="8dp"
+        android:layout_below="@id/h_chartbar" />
 
 </LinearLayout>

@@ -59,6 +59,7 @@ class PercentualAtividadeRepository(context: Context) {
         return percentuaisAtividade
     }
 
+    /*
     fun obterPercentualMes(atividade: Atividade, mes: Int): PercentualAtividade? {
         val db = dataBase.readableDatabase
 
@@ -79,6 +80,7 @@ class PercentualAtividadeRepository(context: Context) {
 
         return percentualMes
     }
+    */
 
     fun atualizarPercentualMes(percentualAtividade: PercentualAtividade, novoPercentual: Double): Boolean {
         val db = dataBase.writableDatabase
