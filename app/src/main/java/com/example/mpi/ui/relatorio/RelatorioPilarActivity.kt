@@ -24,10 +24,8 @@ import com.example.mpi.repository.PilarRepository
 import com.example.mpi.data.Pilar
 import com.example.mpi.repository.AcaoRepository
 import com.example.mpi.repository.AtividadeRepository
-import com.example.mpi.repository.PercentualAtividadeRepository
 import com.example.mpi.repository.SubpilarRepository
 import com.example.mpi.repository.UsuarioRepository
-import com.itextpdf.text.Chunk
 import com.itextpdf.text.Document
 import com.itextpdf.text.PageSize
 import com.itextpdf.text.Paragraph
@@ -47,7 +45,6 @@ class RelatorioPilarActivity : AppCompatActivity() {
     val subpilarRepository = SubpilarRepository(this)
     val acaoRepository = AcaoRepository(this)
     val atividadeRepository = AtividadeRepository(this)
-    val percentualAtividadeRepository = PercentualAtividadeRepository(this)
     val usuarioRepository = UsuarioRepository(this)
 
     private var pdfUri: Uri? = null
@@ -122,7 +119,7 @@ class RelatorioPilarActivity : AppCompatActivity() {
 
     private fun gerarPDFRelatorioPilar(pilar: Pilar) {
         try {
-            val fileName = "Relatório_Pilar_${pilar.nome}.pdf"
+            val fileName = "MPI - Relatório Pilar ${pilar.nome}.pdf"
             val mimeType = "application/pdf"
 
             deletarPdfSeExistir(fileName)
@@ -151,12 +148,17 @@ class RelatorioPilarActivity : AppCompatActivity() {
 
                     val todosSubpilares = subpilarRepository.obterTodosSubpilares(pilar)
 
-                    // Adiciona um parágrafo
+/*                    // Adiciona um parágrafo
                     document.add(Paragraph("MPI - Monitoramento do Programa de Integridade"))
-                    document.add(Paragraph("Pilar: ${pilar.nome}"))
+                    document.add(Paragraph("Relatório do Pilar: ${pilar.nome}"))
+
+ */
 
                     if (todosSubpilares.isNotEmpty()) {
                         for (subpilar in todosSubpilares) {
+                            // Adiciona um parágrafo
+                            document.add(Paragraph("MPI - Monitoramento do Programa de Integridade"))
+                            document.add(Paragraph("Relatório do Pilar: ${pilar.nome}"))
                             document.add(Paragraph("Subpilar: ${subpilar.nome}"))
                             document.add(Paragraph(" "))
 
@@ -190,7 +192,7 @@ class RelatorioPilarActivity : AppCompatActivity() {
                                     tabelaAcao.addCell(acao.dataTermino)
 
                                     document.add(tabelaAcao)
-                                    document.add(Paragraph(" "))
+//                                    document.add(Paragraph(" "))
 
                                     // Cria uma tabela com 13 colunas para o progresso da ação
                                     val progressoAcao = PdfPTable(13)
@@ -246,7 +248,7 @@ class RelatorioPilarActivity : AppCompatActivity() {
                                             tabelaAtividade.addCell(atividade.dataTermino)
 
                                             document.add(tabelaAtividade)
-                                            document.add(Paragraph(" "))
+//                                            document.add(Paragraph(" "))
 
                                             // Cria uma tabela com 13 colunas para o progresso da atividade
                                             val progressoAtividade = PdfPTable(13)
@@ -302,7 +304,7 @@ class RelatorioPilarActivity : AppCompatActivity() {
                                         document.add(Paragraph(" "))
                                     }
 
-                                    document.add(Paragraph(" "))
+//                                    document.add(Paragraph(" "))
                                 }
                             }
 
@@ -339,6 +341,9 @@ class RelatorioPilarActivity : AppCompatActivity() {
 
                     // Ir direto para Ações
                     if (todosSubpilares.isEmpty()) {
+                        document.add(Paragraph("MPI - Monitoramento do Programa de Integridade"))
+                        document.add(Paragraph("Relatório do Pilar: ${pilar.nome}"))
+                        document.add(Paragraph(" "))
                         document.add(Paragraph(" "))
                         val todasAcoes = acaoRepository.obterTodasAcoes(pilar)
 
@@ -370,7 +375,7 @@ class RelatorioPilarActivity : AppCompatActivity() {
                                 tabelaAcao.addCell(acao.dataTermino)
 
                                 document.add(tabelaAcao)
-                                document.add(Paragraph(" "))
+//                                document.add(Paragraph(" "))
 
                                 // Cria uma tabela com 13 colunas para o progresso da ação
                                 val progressoAcao = PdfPTable(13)
@@ -426,7 +431,7 @@ class RelatorioPilarActivity : AppCompatActivity() {
                                         tabelaAtividade.addCell(atividade.dataTermino)
 
                                         document.add(tabelaAtividade)
-                                        document.add(Paragraph(" "))
+//                                        document.add(Paragraph(" "))
 
                                         // Cria uma tabela com 13 colunas para o progresso da atividade
                                         val progressoAtividade = PdfPTable(13)
@@ -482,7 +487,7 @@ class RelatorioPilarActivity : AppCompatActivity() {
                                     document.add(Paragraph(" "))
                                 }
 
-                                document.add(Paragraph(" "))
+//                                document.add(Paragraph(" "))
                             }
                         }
 

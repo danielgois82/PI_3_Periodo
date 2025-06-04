@@ -1,12 +1,14 @@
 package com.example.mpi.repository
 
 import android.content.Context
+import com.example.mpi.data.Atividade
 import com.example.mpi.data.Calendario
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.data.Pilar
 
 class PilarRepository (context: Context) {
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
+    private val atividadeRepository: AtividadeRepository = AtividadeRepository.getInstance(context)
     private val acaoRepository: AcaoRepository = AcaoRepository.getInstance(context)
     private val subpilarRepository: SubpilarRepository = SubpilarRepository.getInstance(context)
 
@@ -110,6 +112,44 @@ class PilarRepository (context: Context) {
         }
 
         return percentualTotalPilar
+    }
+
+    fun obterPercentualMes(pilar: Pilar, mes: Int): Double {
+        var percentualMesPilar = 0.0
+
+        val listaSubpilar = subpilarRepository.obterTodosSubpilares(pilar)
+
+        if (listaSubpilar.isEmpty()) {
+            val listaAcoes = acaoRepository.obterTodasAcoes(pilar)
+            var qtdAcoes = 0
+            var somaPercentualAcoes = 0.0
+            for (acao in listaAcoes) {
+                val listarAtividade = atividadeRepository.obterTodasAtividades(acao)
+                somaPercentualAcoes += acaoRepository.obterPercentualMes(listarAtividade, mes)
+                qtdAcoes++
+            }
+            percentualMesPilar = somaPercentualAcoes / qtdAcoes
+        }
+
+        if (listaSubpilar.isNotEmpty()) {
+            var percentualTotalSubpilar = 0.0
+            var qtdSubpilar = 0
+            for (subpilar in listaSubpilar) {
+                qtdSubpilar++
+                val listaAcoes = acaoRepository.obterTodasAcoes(subpilar)
+                var qtdAcoes = 0
+                var somaPercentualAcoes = 0.0
+                for (acao in listaAcoes) {
+                    val listarAtividade = atividadeRepository.obterTodasAtividades(acao)
+                    somaPercentualAcoes += acaoRepository.obterPercentualMes(listarAtividade, mes)
+                    qtdAcoes++
+                }
+                percentualTotalSubpilar += somaPercentualAcoes / qtdAcoes
+            }
+            percentualMesPilar = percentualTotalSubpilar / qtdSubpilar
+        }
+
+        return percentualMesPilar
     }
 
 }
