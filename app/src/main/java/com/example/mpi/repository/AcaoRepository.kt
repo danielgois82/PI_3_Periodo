@@ -1,10 +1,15 @@
 package com.example.mpi.repository
 
+import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import com.example.mpi.data.Acao
 import com.example.mpi.data.Atividade
 import com.example.mpi.data.DatabaseHelper
+import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_ACAO_ID
+import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_ACAO_IS_APROVADO
+import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_ACAO_IS_FINALIZADO
+import com.example.mpi.data.DatabaseHelper.Companion.TABLE_ACAO
 import com.example.mpi.data.Pilar
 import com.example.mpi.data.Subpilar
 import com.example.mpi.repository.SubpilarRepository
@@ -277,4 +282,91 @@ class AcaoRepository(context: Context) {
 
         return orcamentoTotal
     }
+
+    //FUNÇÃO PARA APROVAÇÃO DAS AÇÕES
+    fun aprovarAcao(idAcao: Int) {
+        val db = dataBase.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ACAO_IS_APROVADO, 1)
+        }
+        db.update(TABLE_ACAO, values, "$COLUMN_ACAO_ID = ?", arrayOf(idAcao.toString()))
+        db.close()
+    }
+
+    fun obterAcoesNaoAprovadas(): List<Acao> {
+        val db = dataBase.readableDatabase
+        val acoes: MutableList<Acao> = arrayListOf()
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${DatabaseHelper.TABLE_ACAO} WHERE ${DatabaseHelper.COLUMN_ACAO_IS_APROVADO} = 0",
+            null
+        )
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
+            val nome = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_NOME))
+            val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DESCRICAO))
+            val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_INICIO))
+            val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_TERMINO))
+            val responsavel = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_RESPONSAVEL))
+            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_APROVADO)) != 0
+            val finalizado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO)) != 0
+            val idPilar = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
+            val idSubpilar = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
+            val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_USUARIO))
+
+            val acao = Acao(id, nome, descricao, dataInicio, dataTermino, responsavel, aprovado, finalizado, idPilar, idSubpilar, idUsuario)
+            acoes.add(acao)
+        }
+        cursor.close()
+        return acoes
+    }
+
+
+    // FUNÇÃO PARA FINALIZAR AÇÃO
+
+    fun finalizarAcao(idAcao: Int) {
+        val db = dataBase.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ACAO_IS_FINALIZADO, 1)
+        }
+        db.update(TABLE_ACAO, values, "$COLUMN_ACAO_ID = ?", arrayOf(idAcao.toString()))
+        db.close()
+    }
+
+    fun obterAcoesNaoFinalizadas(): List<Acao> {
+        val db = dataBase.readableDatabase
+        val acoes: MutableList<Acao> = arrayListOf()
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${DatabaseHelper.TABLE_ACAO} WHERE ${DatabaseHelper.COLUMN_ACAO_IS_APROVADO} = 1 AND ${DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO} = 0",
+            null
+        )
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
+            val nome = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_NOME))
+            val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DESCRICAO))
+            val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_INICIO))
+            val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_TERMINO))
+            val responsavel = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_RESPONSAVEL))
+            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_APROVADO)) != 0
+            val finalizado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO)) != 0
+            val idPilar = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
+            val idSubpilar = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
+            val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_USUARIO))
+
+            val acao = Acao(id, nome, descricao, dataInicio, dataTermino, responsavel, aprovado, finalizado, idPilar, idSubpilar, idUsuario)
+
+            if(obterPercentualTotalAcao(acao) == 100.0){
+                acoes.add(acao)
+            }else{
+                continue
+            }
+        }
+        cursor.close()
+        return acoes
+    }
+
+
+
+
 }

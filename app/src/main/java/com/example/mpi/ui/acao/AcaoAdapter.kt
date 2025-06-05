@@ -5,12 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpi.databinding.AcaoItemFragmentBinding
 import com.example.mpi.data.Acao
+import com.example.mpi.repository.UsuarioRepository
+import android.content.Context
 
 class AcaoAdapter(
     private val listaAcoes: List<Acao>,
     private val onEditarClicked: (Acao) -> Unit,
-    private val onExcluirClicked: (Acao) -> Unit
+    private val onExcluirClicked: (Acao) -> Unit,
+    private val context: Context
 ) : RecyclerView.Adapter<AcaoAdapter.AcaoViewHolder>() {
+
+    private val usuarioRepository: UsuarioRepository = UsuarioRepository.getInstance(context)
 
     inner class AcaoViewHolder(binding: AcaoItemFragmentBinding) : RecyclerView.ViewHolder(binding.root) {
         val tvNome = binding.tvNomeAcaoItem
@@ -35,7 +40,8 @@ class AcaoAdapter(
         holder.tvDescricao.text = acao.descricao
         holder.tvDataInicio.text = "Início: ${acao.dataInicio}"
         holder.tvDataTermino.text = "Término: ${acao.dataTermino}"
-        holder.tvResponsavel.text = "Responsável: ${acao.responsavel}"
+        val nomeResponsavel = usuarioRepository.obterNomeUsuarioPorId(acao.responsavel)
+        holder.tvResponsavel.text = "Responsável: ${nomeResponsavel ?: "Desconhecido"}"
         holder.tvAprovado.text = if (acao.aprovado) "Aprovada" else "Não Aprovada"
         holder.tvFinalizada.text = if (acao.finalizado) "Finalizada" else "Não Finalizada"
 

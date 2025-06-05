@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.databinding.ActivityEditarSubpilarBinding
@@ -28,6 +29,8 @@ class EditarSubpilarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
         binding = ActivityEditarSubpilarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -49,7 +52,6 @@ class EditarSubpilarActivity : AppCompatActivity() {
             binding.etEditarDescricaoSubpilar.setText(descricao)
             binding.etEditarDataInicio.setText(dataInicio)
             binding.etEditarDataTermino.setText(dataTermino)
-            binding.tvExibirAprovado.text = if (aprovado) "Sim" else "Não"
 
             carregarPilaresNoSpinnerEditar(idPilarAtual)
         }
@@ -107,7 +109,7 @@ class EditarSubpilarActivity : AppCompatActivity() {
             while (moveToNext()) {
                 val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
-                listaPilaresObjetosEditar.add(Pilar(id, nome, "", "", "", false, 0.0, 0, 0))
+                listaPilaresObjetosEditar.add(Pilar(id, nome, "", "", "",  0.0, 0, 0))
                 listaPilaresNomesEditar.add(nome)
                 if (id == idPilarSelecionado) {
                     pilarSelecionadoPosition = listaPilaresNomesEditar.size - 1

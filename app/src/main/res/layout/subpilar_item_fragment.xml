@@ -65,17 +65,6 @@
             app:layout_constraintTop_toBottomOf="@+id/tvDataInicioSubpilarItem"
             app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes" />
 
-        <TextView
-            android:id="@+id/tvAprovadoSubpilarItem"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/inria_sans_regular"
-            tools:text="Aprovado"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDataTerminoSubpilarItem"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes" />
 
         <TextView
             android:id="@+id/tvIdPilarSubpilarItem"
@@ -86,7 +75,7 @@
             android:textSize="14sp"
             tools:text="ID Pilar associado: 1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvAprovadoSubpilarItem"
+            app:layout_constraintTop_toBottomOf="@+id/tvDataTerminoSubpilarItem"
             app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes" />
 
         <LinearLayout

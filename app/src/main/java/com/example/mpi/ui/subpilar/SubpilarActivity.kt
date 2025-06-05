@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpi.data.DatabaseHelper
@@ -15,6 +16,7 @@ import com.example.mpi.data.Subpilar
 import com.example.mpi.data.Calendario
 import com.example.mpi.repository.PilarRepository
 import com.example.mpi.repository.SubpilarRepository
+import com.example.mpi.repository.AcaoRepository
 
 class SubpilarActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySubpilarBinding
@@ -22,6 +24,7 @@ class SubpilarActivity : AppCompatActivity() {
     private lateinit var subpilarAdapter: SubpilarAdapter
     private val listaSubpilares = mutableListOf<Subpilar>()
     private lateinit var pilarRepository: PilarRepository
+    private lateinit var acaoRepository: AcaoRepository
     private lateinit var subpilarRepository: SubpilarRepository
 
     private var pilares: List<Pilar> = emptyList()
@@ -29,12 +32,14 @@ class SubpilarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivitySubpilarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         dbHelper = DatabaseHelper(this)
         pilarRepository = PilarRepository.getInstance(this)
         subpilarRepository = SubpilarRepository.getInstance(this)
+        acaoRepository = AcaoRepository.getInstance(this)
 
         ////////////////////// Carregando informações do usuário////////////////////////////////
         val intentExtra = intent
@@ -119,23 +124,46 @@ class SubpilarActivity : AppCompatActivity() {
         intent.putExtra("subpilar_descricao", subpilar.descricao)
         intent.putExtra("subpilar_data_inicio", subpilar.dataInicio)
         intent.putExtra("subpilar_data_termino", subpilar.dataTermino)
-        intent.putExtra("subpilar_aprovado", subpilar.aprovado)
         intent.putExtra("subpilar_id_pilar", subpilar.idPilar)
         intent.putExtra("subpilar_id_usuario", subpilar.idUsuario)
         startActivity(intent)
     }
 
     private fun excluirSubpilar(subpilar: Subpilar) {
-        val db = dbHelper.writableDatabase
-        val whereClause = "${DatabaseHelper.COLUMN_SUBPILAR_ID} = ?"
-        val whereArgs = arrayOf(subpilar.id.toString())
-        val deletedRows = db.delete(DatabaseHelper.TABLE_SUBPILAR, whereClause, whereArgs)
-        if (deletedRows > 0) {
-            listaSubpilares.remove(subpilar)
-            subpilarAdapter.notifyDataSetChanged()
-            android.widget.Toast.makeText(this, "Subpilar '${subpilar.nome}' excluído com sucesso!", android.widget.Toast.LENGTH_SHORT).show()
-        } else {
-            android.widget.Toast.makeText(this, "Erro ao excluir o subpilar.", android.widget.Toast.LENGTH_SHORT).show()
+        if(validarExclusaoSubpilar(subpilar) == true){
+            val db = dbHelper.writableDatabase
+            val whereClause = "${DatabaseHelper.COLUMN_SUBPILAR_ID} = ?"
+            val whereArgs = arrayOf(subpilar.id.toString())
+            val deletedRows = db.delete(DatabaseHelper.TABLE_SUBPILAR, whereClause, whereArgs)
+            if (deletedRows > 0) {
+                listaSubpilares.remove(subpilar)
+                subpilarAdapter.notifyDataSetChanged()
+                android.widget.Toast.makeText(this, "Subpilar '${subpilar.nome}' excluído com sucesso!", android.widget.Toast.LENGTH_SHORT).show()
+            } else {
+                android.widget.Toast.makeText(this, "Erro ao excluir o subpilar.", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }else{
+            android.widget.Toast.makeText(this, "Erro! Existem ações existentes vinculadas ao subpilar.", android.widget.Toast.LENGTH_SHORT).show()
+
+        }
+    }
+
+    //Validar exclusão do subpilar
+    fun validarExclusaoSubpilar(subpilar: Subpilar) : Boolean{
+        val todasAcoes = acaoRepository.obterTodasAcoes()
+        var temAcaoAssociada = false
+
+        for(acao in todasAcoes){
+            if(acao.idSubpilar == subpilar.id){
+                temAcaoAssociada = true
+                break
+            }
+        }
+
+        if(temAcaoAssociada == true){
+            return false
+        }else{
+            return true
         }
     }
 }

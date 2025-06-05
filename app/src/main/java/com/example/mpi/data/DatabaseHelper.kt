@@ -53,7 +53,6 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_PILAR_NOME TEXT NOT NULL,
                 $COLUMN_PILAR_DATA_INICIO TEXT NOT NULL,
                 $COLUMN_PILAR_DATA_TERMINO TEXT NOT NULL,
-                $COLUMN_PILAR_IS_APROVADO INTEGER DEFAULT 0,
                 $COLUMN_PILAR_DESCRICAO TEXT NOT NULL,
                 $COLUMN_PILAR_PERCENTUAL REAL DEFAULT 0,
                 $COLUMN_PILAR_ID_CALENDARIO INTEGER NOT NULL,
@@ -69,7 +68,6 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_SUBPILAR_NOME TEXT NOT NULL,
                 $COLUMN_SUBPILAR_DATA_INICIO TEXT NOT NULL,
                 $COLUMN_SUBPILAR_DATA_TERMINO TEXT NOT NULL,
-                $COLUMN_SUBPILAR_IS_APROVADO INTEGER DEFAULT 0,
                 $COLUMN_SUBPILAR_DESCRICAO TEXT NOT NULL,
                 $COLUMN_SUBPILAR_ID_PILAR INTEGER NOT NULL,
                 $COLUMN_SUBPILAR_ID_USUARIO INTEGER NOT NULL,
@@ -199,7 +197,6 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_PILAR_NOME = "nome"
         const val COLUMN_PILAR_DATA_INICIO = "dataInicio"
         const val COLUMN_PILAR_DATA_TERMINO = "dataTermino"
-        const val COLUMN_PILAR_IS_APROVADO = "isAprovado"
         const val COLUMN_PILAR_DESCRICAO = "descricao"
         const val COLUMN_PILAR_PERCENTUAL = "percentual"
         const val COLUMN_PILAR_ID_CALENDARIO = "id_calendario"
@@ -210,7 +207,6 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_SUBPILAR_NOME = "nome"
         const val COLUMN_SUBPILAR_DATA_INICIO = "dataInicio"
         const val COLUMN_SUBPILAR_DATA_TERMINO = "dataTermino"
-        const val COLUMN_SUBPILAR_IS_APROVADO = "isAprovado"
         const val COLUMN_SUBPILAR_DESCRICAO = "descricao"
         const val COLUMN_SUBPILAR_ID_PILAR = "id_pilar"
         const val COLUMN_SUBPILAR_ID_USUARIO = "id_usuario"
@@ -254,44 +250,14 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_PERCENTUAL_ATIVIDADE_ID_ATIVIDADE = "id_atividade"
     }
 
-    fun aprovarAtividade(id: Int): Boolean {
-        val db = this.writableDatabase
-        val values = ContentValues().apply {
-            put(COLUMN_ATIVIDADE_IS_APROVADO, 1)
-        }
-        val result = db.update(TABLE_ATIVIDADE, values, "$COLUMN_ATIVIDADE_ID = ?", arrayOf(id.toString()))
-        db.close()
-        return result > 0
-    }
-
-    fun finalizarAtividade(id: Int): Boolean {
-        val db = this.writableDatabase
-        val values = ContentValues().apply {
-            put(COLUMN_ATIVIDADE_IS_FINALIZADO, 1)
-        }
-        val result = db.update(TABLE_ATIVIDADE, values, "$COLUMN_ATIVIDADE_ID = ?", arrayOf(id.toString()))
-        db.close()
-        return result > 0
-    }
 
 
-    fun aprovarAcao(idAcao: Int) {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put(COLUMN_ACAO_IS_APROVADO, 1)
-        }
-        db.update(TABLE_ACAO, values, "$COLUMN_ACAO_ID = ?", arrayOf(idAcao.toString()))
-        db.close()
-    }
 
-    fun finalizarAcao(idAcao: Int) {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put(COLUMN_ACAO_IS_FINALIZADO, 1)
-        }
-        db.update(TABLE_ACAO, values, "$COLUMN_ACAO_ID = ?", arrayOf(idAcao.toString()))
-        db.close()
-    }
+
+
+
+
+
 
     private fun inserirTipoUsuario(db: SQLiteDatabase, tipoUsuario: List<TipoUsuario>) {
         for (tipo in tipoUsuario) {

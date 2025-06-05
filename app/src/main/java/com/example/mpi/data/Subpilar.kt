@@ -6,7 +6,6 @@ data class Subpilar(
     val descricao: String,
     val dataInicio: String,
     val dataTermino: String,
-    val aprovado: Boolean,
     val idPilar: Int,
     val idUsuario: Int
 ) {

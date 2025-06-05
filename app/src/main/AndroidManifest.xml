@@ -81,10 +81,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.AprovacaoActivity"
+            android:name=".ui.aprovacao.AprovacaoActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.FinalizacaoActivity"
+            android:name=".ui.finalizacao.FinalizacaoActivity"
             android:exported="false" />
         <activity
             android:name=".ui.MenuActivity"

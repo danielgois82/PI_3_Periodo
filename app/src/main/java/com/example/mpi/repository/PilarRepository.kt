@@ -5,12 +5,15 @@ import com.example.mpi.data.Atividade
 import com.example.mpi.data.Calendario
 import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.data.Pilar
+import com.example.mpi.repository.AcaoRepository
+import com.example.mpi.repository.SubpilarRepository
 
 class PilarRepository (context: Context) {
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
     private val atividadeRepository: AtividadeRepository = AtividadeRepository.getInstance(context)
     private val acaoRepository: AcaoRepository = AcaoRepository.getInstance(context)
     private val subpilarRepository: SubpilarRepository = SubpilarRepository.getInstance(context)
+
 
     companion object {
         private lateinit var instance: PilarRepository
@@ -28,21 +31,39 @@ class PilarRepository (context: Context) {
     fun obterTodosPilares(calendario: Calendario): MutableList<Pilar> {
         val db = dataBase.readableDatabase
 
-        val cursor = db.rawQuery("SELECT * FROM pilar WHERE id_calendario = ?", arrayOf(calendario.id.toString()))
+        val cursor = db.rawQuery(
+            "SELECT * FROM pilar WHERE id_calendario = ?",
+            arrayOf(calendario.id.toString())
+        )
 
         val pilares: MutableList<Pilar> = arrayListOf()
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
-            val nome = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
-            val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DESCRICAO))
-            val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_INICIO))
-            val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_TERMINO))
-            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_IS_APROVADO)) != 0
-            val percentual = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_PERCENTUAL)) // Quero tirar
-            val idCalendario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_CALENDARIO))
-            val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_USUARIO))
+            val nome =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
+            val descricao =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DESCRICAO))
+            val dataInicio =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_INICIO))
+            val dataTermino =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_TERMINO))
+            val percentual =
+                cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_PERCENTUAL)) // Quero tirar
+            val idCalendario =
+                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_CALENDARIO))
+            val idUsuario =
+                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_USUARIO))
 
-            val pilar = Pilar(id, nome, descricao, dataInicio, dataTermino, aprovado, percentual, idCalendario, idUsuario)
+            val pilar = Pilar(
+                id,
+                nome,
+                descricao,
+                dataInicio,
+                dataTermino,
+                percentual,
+                idCalendario,
+                idUsuario
+            )
             pilares.add(pilar)
         }
 
@@ -55,21 +76,39 @@ class PilarRepository (context: Context) {
     fun obterPilarPorId(calendario: Calendario, idPilar: Int): Pilar? {
         val db = dataBase.readableDatabase
 
-        val cursor = db.rawQuery("SELECT * FROM pilar WHERE id_calendario = ? AND id = ?", arrayOf(calendario.id.toString(), idPilar.toString()))
+        val cursor = db.rawQuery(
+            "SELECT * FROM pilar WHERE id_calendario = ? AND id = ?",
+            arrayOf(calendario.id.toString(), idPilar.toString())
+        )
 
         var pilar: Pilar? = null
         if (cursor.moveToFirst()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
-            val nome = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
-            val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DESCRICAO))
-            val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_INICIO))
-            val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_TERMINO))
-            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_IS_APROVADO)) != 0
-            val percentual = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_PERCENTUAL)) // Quero tirar
-            val idCalendario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_CALENDARIO))
-            val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_USUARIO))
+            val nome =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
+            val descricao =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DESCRICAO))
+            val dataInicio =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_INICIO))
+            val dataTermino =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_DATA_TERMINO))
+            val percentual =
+                cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_PERCENTUAL)) // Quero tirar
+            val idCalendario =
+                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_CALENDARIO))
+            val idUsuario =
+                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID_USUARIO))
 
-            pilar = Pilar(id, nome, descricao, dataInicio, dataTermino, aprovado, percentual, idCalendario, idUsuario)
+            pilar = Pilar(
+                id,
+                nome,
+                descricao,
+                dataInicio,
+                dataTermino,
+                percentual,
+                idCalendario,
+                idUsuario
+            )
         }
 
         cursor.close()
@@ -150,6 +189,62 @@ class PilarRepository (context: Context) {
         }
 
         return percentualMesPilar
+    }
+
+    fun validarExclusaoPilar(pilar: Pilar): Boolean {
+        val todosSubpilares = subpilarRepository.obterTodosSubpilares()
+        val todasAcoes = acaoRepository.obterTodasAcoes()
+        var temSubpilarAssociado = false
+        var temAcaoAssociada = false
+
+        for (subpilar in todosSubpilares) {
+            if (subpilar.idPilar == pilar.id) {
+                temSubpilarAssociado = true
+                break
+            }
+        }
+        for (acao in todasAcoes) {
+            if (acao.idPilar == pilar.id) {
+                temAcaoAssociada = true
+                break
+            }
+        }
+
+        if (temSubpilarAssociado == true || temAcaoAssociada == true){
+            return false
+        }else{
+            return true
+        }
+
+    }
+
+    fun obterOrcamentoTotalPilar(pilar: Pilar): Double {
+        val db = dataBase.readableDatabase
+        var orcamentoTotal = 0.0
+
+        val query = """
+        SELECT SUM(${DatabaseHelper.TABLE_ATIVIDADE}.${DatabaseHelper.COLUMN_ATIVIDADE_ORCAMENTO})
+        FROM ${DatabaseHelper.TABLE_ATIVIDADE}
+        INNER JOIN ${DatabaseHelper.TABLE_ACAO}
+            ON ${DatabaseHelper.TABLE_ATIVIDADE}.${DatabaseHelper.COLUMN_ATIVIDADE_ID_ACAO} = ${DatabaseHelper.TABLE_ACAO}.${DatabaseHelper.COLUMN_ACAO_ID}
+        LEFT JOIN ${DatabaseHelper.TABLE_SUBPILAR}
+            ON ${DatabaseHelper.TABLE_ACAO}.${DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR} = ${DatabaseHelper.TABLE_SUBPILAR}.${DatabaseHelper.COLUMN_SUBPILAR_ID}
+        WHERE
+            (${DatabaseHelper.TABLE_ACAO}.${DatabaseHelper.COLUMN_ACAO_ID_PILAR} = ?
+            OR ${DatabaseHelper.TABLE_SUBPILAR}.${DatabaseHelper.COLUMN_SUBPILAR_ID_PILAR} = ?);
+    """.trimIndent()
+
+        val selectionArgs = arrayOf(pilar.id.toString(), pilar.id.toString())
+
+        val cursor = db.rawQuery(query, selectionArgs)
+
+        if (cursor.moveToFirst()) {
+            orcamentoTotal = cursor.getDouble(0)
+        }
+
+        cursor.close()
+        db.close()
+        return orcamentoTotal
     }
 
 }

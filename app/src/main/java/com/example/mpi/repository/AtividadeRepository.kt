@@ -1,9 +1,14 @@
 package com.example.mpi.repository
 
+import android.content.ContentValues
 import android.content.Context
 import com.example.mpi.data.Acao
 import com.example.mpi.data.Atividade
 import com.example.mpi.data.DatabaseHelper
+import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_ATIVIDADE_ID
+import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_ATIVIDADE_IS_APROVADO
+import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_ATIVIDADE_IS_FINALIZADO
+import com.example.mpi.data.DatabaseHelper.Companion.TABLE_ATIVIDADE
 
 class AtividadeRepository (context: Context) {
 
@@ -22,6 +27,36 @@ class AtividadeRepository (context: Context) {
             return instance
         }
     }
+
+    fun obterTodasAtividades(): List<Atividade>{
+        val db = dataBase.readableDatabase
+        val atividades: MutableList<Atividade> = arrayListOf()
+        val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_ATIVIDADE}", null)
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID))
+            val nome = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_NOME))
+            val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DESCRICAO))
+            val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DATA_INICIO))
+            val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DATA_TERMINO))
+            val responsavel = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_RESPONSAVEL))
+            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_IS_APROVADO)) != 0
+            val finalizado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_IS_FINALIZADO)) != 0
+            val orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ORCAMENTO))
+            val idAcao = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_ACAO))
+            val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_USUARIO))
+
+            val atividade = Atividade(id, nome, descricao, dataInicio, dataTermino, responsavel, aprovado, finalizado, orcamento, idAcao, idUsuario)
+
+            atividades.add(atividade)
+        }
+
+        cursor.close()
+        db.close()
+
+        return atividades
+    }
+
 
     fun obterTodasAtividades(acao: Acao) : MutableList<Atividade> {
 
@@ -177,6 +212,100 @@ class AtividadeRepository (context: Context) {
         db.close()
 
         return percentual
+    }
+
+    //FUNÇÃO PARA APROVAÇÃO DAS ATIVIDADES
+
+    fun aprovarAtividade(id: Int): Boolean {
+        val db = dataBase.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ATIVIDADE_IS_APROVADO, 1)
+        }
+        val result = db.update(TABLE_ATIVIDADE, values, "$COLUMN_ATIVIDADE_ID = ?", arrayOf(id.toString()))
+        db.close()
+        return result > 0
+    }
+
+    fun obterAtividadesNaoAprovadas(): List<Atividade> {
+        val db = dataBase.readableDatabase
+        val atividades: MutableList<Atividade> = arrayListOf()
+        val query = """
+            SELECT A.*
+            FROM ${DatabaseHelper.TABLE_ATIVIDADE} AS A
+            INNER JOIN ${DatabaseHelper.TABLE_ACAO} AS B
+            ON A.${DatabaseHelper.COLUMN_ATIVIDADE_ID_ACAO} = B.${DatabaseHelper.COLUMN_ACAO_ID}
+            WHERE A.${DatabaseHelper.COLUMN_ATIVIDADE_IS_APROVADO} = 0
+            AND B.${DatabaseHelper.COLUMN_ACAO_IS_APROVADO} = 1;
+        """.trimIndent()
+        val cursor = db.rawQuery(query, null)
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID))
+            val nome = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_NOME))
+            val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DESCRICAO))
+            val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DATA_INICIO))
+            val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DATA_TERMINO))
+            val responsavel = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_RESPONSAVEL))
+            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_IS_APROVADO)) != 0
+            val finalizado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_IS_FINALIZADO)) != 0
+            val orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ORCAMENTO))
+            val idAcao = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_ACAO))
+            val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_USUARIO))
+
+            val atividade = Atividade(id, nome, descricao, dataInicio, dataTermino, responsavel, aprovado, finalizado, orcamento, idAcao, idUsuario)
+            atividades.add(atividade)
+        }
+        cursor.close()
+        db.close()
+        return atividades
+    }
+
+    // FUNÇÃO PARA FINALIZAÇÃO DE ATIVIDADES
+
+    fun finalizarAtividade(id: Int): Boolean {
+        val db = dataBase.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ATIVIDADE_IS_FINALIZADO, 1)
+        }
+        val result = db.update(TABLE_ATIVIDADE, values, "$COLUMN_ATIVIDADE_ID = ?", arrayOf(id.toString()))
+        db.close()
+        return result > 0
+    }
+
+    fun obterAtividadesNaoFinalizadas() :List<Atividade>{
+        val db = dataBase.readableDatabase
+        val atividades: MutableList<Atividade> = arrayListOf()
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${DatabaseHelper.TABLE_ATIVIDADE} WHERE ${DatabaseHelper.COLUMN_ATIVIDADE_IS_APROVADO} = 1 AND ${DatabaseHelper.COLUMN_ATIVIDADE_IS_FINALIZADO} = 0",
+            null
+        )
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID))
+            val nome = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_NOME))
+            val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DATA_INICIO))
+            val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DATA_TERMINO))
+            val responsavel = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_RESPONSAVEL))
+            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_IS_APROVADO)) != 0
+            val finalizado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_IS_FINALIZADO)) != 0
+            val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_DESCRICAO))
+            val orcamento = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ORCAMENTO))
+            val idAcao = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_ACAO))
+            val idUsuarioAtividade = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ATIVIDADE_ID_USUARIO))
+
+            val atividade = Atividade(id, nome, descricao, dataInicio, dataTermino, responsavel, aprovado, finalizado, orcamento, idAcao, idUsuarioAtividade)
+
+            if(obterPercentualTotalAtividade(atividade) == 100.0){
+                atividades.add(atividade)
+            }else{
+                continue
+            }
+
+        }
+        cursor.close()
+        db.close()
+
+        return atividades
     }
 
 }

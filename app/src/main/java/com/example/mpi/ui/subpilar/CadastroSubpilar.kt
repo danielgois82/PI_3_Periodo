@@ -143,7 +143,7 @@ class cadastroSubpilar : AppCompatActivity() {
             while (moveToNext()) {
                 val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
-                listaPilaresObjetos.add(Pilar(id, nome, "", "", "", false, 0.0, 0, 0)) // Cria objetos Pilar
+                listaPilaresObjetos.add(Pilar(id, nome, "", "", "",  0.0, 0, 0)) // Cria objetos Pilar
                 listaPilaresNomes.add(nome)
             }
         }
