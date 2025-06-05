@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:paddingBottom="56dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -150,7 +151,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etEditarDataInicio" />
+            app:layout_constraintTop_toBottomOf="@+id/etEditarDataTermino" />
 
         <Spinner
             android:id="@+id/spinnerResponsavelEditar"
@@ -178,7 +179,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerResponsavelEditar" />
+            app:layout_constraintTop_toBottomOf="@+id/etEditarDataInicio" />
 
         <EditText
             android:id="@+id/etEditarDataTermino"
@@ -208,7 +209,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etEditarDataTermino" />
+            app:layout_constraintTop_toBottomOf="@+id/spinnerResponsavelEditar" />
 
         <RadioGroup
             android:id="@+id/radioGroupVinculoEditar"

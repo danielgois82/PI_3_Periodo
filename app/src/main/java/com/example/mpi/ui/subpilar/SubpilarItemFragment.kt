@@ -31,7 +31,6 @@ class SubpilarItemFragment(
         binding.tvDescricaoSubpilarItem.text = subpilar.descricao
         binding.tvDataInicioSubpilarItem.text = "Início: ${subpilar.dataInicio}"
         binding.tvDataTerminoSubpilarItem.text = "Término: ${subpilar.dataTermino}"
-        binding.tvAprovadoSubpilarItem.text = if (subpilar.aprovado) "Aprovado" else "Pendente"
         binding.tvIdPilarSubpilarItem.text = "ID Pilar associado: ${subpilar.idPilar}"
 
         binding.btnEditarSubpilar.setOnClickListener {

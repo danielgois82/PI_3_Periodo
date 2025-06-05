@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.mpi.databinding.FragmentAtividadeItemBinding
 import com.example.mpi.data.Atividade
+import com.example.mpi.repository.UsuarioRepository
 
 class AtividadeItemFragment(
     private val atividade: Atividade,
@@ -17,11 +18,14 @@ class AtividadeItemFragment(
     private var _binding: FragmentAtividadeItemBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var usuarioRepository: UsuarioRepository
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentAtividadeItemBinding.inflate(inflater, container, false)
+        usuarioRepository = UsuarioRepository.getInstance(requireContext())
         return binding.root
     }
 
@@ -32,7 +36,8 @@ class AtividadeItemFragment(
         binding.tvDescricaoAtividadeItem.text = atividade.descricao
         binding.tvDataInicioAtividadeItem.text = "Início: ${atividade.dataInicio}"
         binding.tvDataTerminoAtividadeItem.text = "Término: ${atividade.dataTermino}"
-        binding.tvResponsavelAtividadeItem.text = "Responsável: ${atividade.responsavel}"
+        val nomeResponsavel = usuarioRepository.obterNomeUsuarioPorId(atividade.responsavel)
+        binding.tvResponsavelAtividadeItem.text = "Responsável: ${nomeResponsavel ?: "Desconhecido"}"
         binding.tvAprovadoAtividadeItem.text = if (atividade.aprovado) "Aprovada" else "Não Aprovada"
         binding.tvFinalizadaAtividadeItem.text = if (atividade.finalizado) "Finalizada" else "Não Finalizada"
         binding.tvOrcamentoAtividadeItem.text = "Orçamento: ${String.format("%.2f", atividade.orcamento)}"

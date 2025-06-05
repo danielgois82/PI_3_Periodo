@@ -17,7 +17,6 @@ class SubpilarAdapter(
         val tvDescricao = binding.tvDescricaoSubpilarItem
         val tvDataInicio = binding.tvDataInicioSubpilarItem
         val tvDataTermino = binding.tvDataTerminoSubpilarItem
-        val tvAprovado = binding.tvAprovadoSubpilarItem
         val btnEditar = binding.btnEditarSubpilar
         val btnExcluir = binding.btnExcluirSubpilar
     }
@@ -33,7 +32,6 @@ class SubpilarAdapter(
         holder.tvDescricao.text = subpilar.descricao
         holder.tvDataInicio.text = "Início: ${subpilar.dataInicio}"
         holder.tvDataTermino.text = "Término: ${subpilar.dataTermino}"
-        holder.tvAprovado.text = if (subpilar.aprovado) "Aprovado" else "Pendente"
 
         holder.btnEditar.setOnClickListener {
             onEditarClicked(subpilar)

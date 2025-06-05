@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpi.databinding.ActivityAtividadeBinding
@@ -20,6 +21,7 @@ import com.example.mpi.repository.AcaoRepository
 import com.example.mpi.repository.PilarRepository
 import com.example.mpi.repository.SubpilarRepository
 import com.example.mpi.repository.PercentualAtividadeRepository
+import com.example.mpi.repository.UsuarioRepository
 
 class AtividadeActivity : AppCompatActivity() {
 
@@ -32,7 +34,7 @@ class AtividadeActivity : AppCompatActivity() {
     private lateinit var atividadeAdapter: AtividadeAdapter
     private val listaAtividades = mutableListOf<Atividade>()
     private lateinit var percentualAtividadeRepository: PercentualAtividadeRepository
-
+    private lateinit var usuarioRepository: UsuarioRepository
     private lateinit var pilarRepository: PilarRepository
     private lateinit var subpilarRepository: SubpilarRepository
     private lateinit var acaoRepository: AcaoRepository
@@ -47,6 +49,7 @@ class AtividadeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityAtividadeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -55,6 +58,7 @@ class AtividadeActivity : AppCompatActivity() {
         subpilarRepository = SubpilarRepository.getInstance(this)
         acaoRepository = AcaoRepository.getInstance(this)
         percentualAtividadeRepository = PercentualAtividadeRepository.getInstance(this)
+        usuarioRepository = UsuarioRepository.getInstance(this)
 
         ////////////////////// Carregando informações do usuário////////////////////////////////
         val intentExtra = intent
@@ -70,7 +74,8 @@ class AtividadeActivity : AppCompatActivity() {
         atividadeAdapter = AtividadeAdapter(
             listaAtividades,
             { atividade -> editarAtividade(atividade) },
-            { atividade -> excluirAtividade(atividade) })
+            { atividade -> excluirAtividade(atividade) },
+            this)
         binding.recyclerViewAtividades.adapter = atividadeAdapter
 
         if (tipoUsuario.uppercase() == USUARIO_GESTOR) {
@@ -279,7 +284,7 @@ class AtividadeActivity : AppCompatActivity() {
         intent.putExtra("atividade_descricao", atividade.descricao)
         intent.putExtra("atividade_data_inicio", atividade.dataInicio)
         intent.putExtra("atividade_data_termino", atividade.dataTermino)
-        intent.putExtra("atividade_codigo_responsavel", atividade.responsavel)
+        intent.putExtra("atividade_id_responsavel", atividade.responsavel)
         intent.putExtra("atividade_aprovado", atividade.aprovado)
         intent.putExtra("atividade_finalizada", atividade.finalizado)
         intent.putExtra("atividade_orcamento", atividade.orcamento)

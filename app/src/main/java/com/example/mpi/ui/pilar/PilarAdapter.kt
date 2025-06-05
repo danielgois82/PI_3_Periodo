@@ -5,12 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpi.databinding.FragmentPilarItemBinding
 import com.example.mpi.data.Pilar
+import com.example.mpi.repository.PilarRepository
+import android.content.Context
 
 class PilarAdapter(
     private val listaPilares: List<Pilar>,
     private val onEditarClicked: (Pilar) -> Unit,
-    private val onExcluirClicked: (Pilar) -> Unit
+    private val onExcluirClicked: (Pilar) -> Unit,
+    private val context: Context
 ) : RecyclerView.Adapter<PilarAdapter.PilarViewHolder>() {
+
+    private val pilarRepository: PilarRepository = PilarRepository.getInstance(context)
 
     inner class PilarViewHolder(binding: FragmentPilarItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val tvNome = binding.tvNomePilarItem
@@ -18,7 +23,7 @@ class PilarAdapter(
         val tvDataInicio = binding.tvDataInicioPilarItem
         val tvDataTermino = binding.tvDataTerminoPilarItem
         val tvPercentual = binding.tvPercentualPilarItem
-        val tvAprovado = binding.tvAprovadoPilarItem
+        val tvOrcamento = binding.tvOrcamentoPilarItem
         val btnEditar = binding.btnEditarPilar
         val btnExcluir = binding.btnExcluirPilar
     }
@@ -30,17 +35,23 @@ class PilarAdapter(
 
     override fun onBindViewHolder(holder: PilarViewHolder, position: Int) {
         val pilar = listaPilares[position]
+        var percentualPilar = 0.0
         holder.tvNome.text = pilar.nome
         holder.tvDescricao.text = pilar.descricao
         holder.tvDataInicio.text = "Início: ${pilar.dataInicio}"
         holder.tvDataTermino.text = "Término: ${pilar.dataTermino}"
-        holder.tvPercentual.text = String.format("%.2f%%", pilar.percentual * 100)
-        holder.tvAprovado.text = if (pilar.aprovado) "Aprovado" else "Pendente"
-
+        val percento = pilarRepository.obterProgressoPilar(pilar)
+        if (percento.isNaN()){
+            percentualPilar = 0.0
+        }else{
+            percentualPilar = percento
+        }
+        holder.tvPercentual.text = "Percentual: ${String.format("%.2f%%", percentualPilar * 100)}"
+        val orcamento = pilarRepository.obterOrcamentoTotalPilar(pilar)
+        holder.tvOrcamento.text = "Orçamento: R$ ${orcamento}"
         holder.btnEditar.setOnClickListener {
             onEditarClicked(pilar)
         }
-
         holder.btnExcluir.setOnClickListener {
             onExcluirClicked(pilar)
         }

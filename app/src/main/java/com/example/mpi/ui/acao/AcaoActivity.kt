@@ -4,9 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView // Import adicionado
-import android.widget.ArrayAdapter // Import adicionado
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpi.databinding.ActivityAcaoBinding
@@ -14,10 +15,12 @@ import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.data.Pilar
 import com.example.mpi.data.Subpilar
 import com.example.mpi.data.Acao
-import com.example.mpi.data.Calendario // Import adicionado, necessário para PilarRepository
-import com.example.mpi.repository.AcaoRepository // Import adicionado
-import com.example.mpi.repository.PilarRepository // Import adicionado
-import com.example.mpi.repository.SubpilarRepository // Import adicionado
+import com.example.mpi.data.Atividade
+import com.example.mpi.data.Calendario
+import com.example.mpi.repository.AcaoRepository
+import com.example.mpi.repository.PilarRepository
+import com.example.mpi.repository.SubpilarRepository
+import com.example.mpi.repository.AtividadeRepository
 
 class AcaoActivity : AppCompatActivity() {
 
@@ -32,6 +35,7 @@ class AcaoActivity : AppCompatActivity() {
     private lateinit var pilarRepository: PilarRepository
     private lateinit var subpilarRepository: SubpilarRepository
     private lateinit var acaoRepository: AcaoRepository
+    private lateinit var atividadeRepository: AtividadeRepository
 
     private var pilares: List<Pilar> = emptyList()
     private var subpilares: List<Subpilar> = emptyList()
@@ -41,6 +45,7 @@ class AcaoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityAcaoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -58,12 +63,14 @@ class AcaoActivity : AppCompatActivity() {
         // Inicializando os repositórios
         pilarRepository = PilarRepository.getInstance(this)
         subpilarRepository = SubpilarRepository.getInstance(this)
-        acaoRepository = AcaoRepository.getInstance(this) // Garante a inicialização
+        acaoRepository = AcaoRepository.getInstance(this)
+        atividadeRepository = AtividadeRepository.getInstance(this)
 
         binding.recyclerViewAcoes.layoutManager = LinearLayoutManager(this)
         acaoAdapter = AcaoAdapter(listaAcoes,
             onEditarClicked = { acao -> editarAcao(acao) },
-            onExcluirClicked = { acao -> excluirAcao(acao) })
+            onExcluirClicked = { acao -> excluirAcao(acao) },
+            this)
         binding.recyclerViewAcoes.adapter = acaoAdapter
 
         if (tipoUsuario.uppercase() == USUARIO_GESTOR) {
@@ -181,17 +188,40 @@ class AcaoActivity : AppCompatActivity() {
     }
 
     private fun excluirAcao(acao: Acao) {
-        val db = dbHelper.writableDatabase
-        val whereClause = "${DatabaseHelper.COLUMN_ACAO_ID} = ?"
-        val whereArgs = arrayOf(acao.id.toString())
-        val deletedRows = db.delete(DatabaseHelper.TABLE_ACAO, whereClause, whereArgs)
-        db.close()
-        if (deletedRows > 0) {
-            listaAcoes.remove(acao)
-            acaoAdapter.notifyDataSetChanged()
-            Toast.makeText(this, "Ação '${acao.nome}' excluída com sucesso!", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Erro ao excluir a ação.", Toast.LENGTH_SHORT).show()
+        if(validarExclusaoAcao(acao) == true){
+            val db = dbHelper.writableDatabase
+            val whereClause = "${DatabaseHelper.COLUMN_ACAO_ID} = ?"
+            val whereArgs = arrayOf(acao.id.toString())
+            val deletedRows = db.delete(DatabaseHelper.TABLE_ACAO, whereClause, whereArgs)
+            db.close()
+            if (deletedRows > 0) {
+                listaAcoes.remove(acao)
+                acaoAdapter.notifyDataSetChanged()
+                Toast.makeText(this, "Ação '${acao.nome}' excluída com sucesso!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Erro ao excluir a ação.", Toast.LENGTH_SHORT).show()
+            }
+        }else{
+            Toast.makeText(this, "Erro! Existem atividades existentes vinculadas a ação.", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    fun validarExclusaoAcao(acao: Acao) : Boolean{
+        val todasAtividades = atividadeRepository.obterTodasAtividades()
+        var temAtividadeAssociada = false
+
+        for(atividade in todasAtividades){
+            if(atividade.idAcao == acao.id){
+                temAtividadeAssociada = true
+                break
+            }
+        }
+
+        if(temAtividadeAssociada == true){
+            return false
+        }else{
+            return true
         }
     }
 }
