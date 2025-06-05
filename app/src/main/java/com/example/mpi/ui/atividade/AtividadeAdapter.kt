@@ -3,14 +3,19 @@ package com.example.mpi.ui.atividade
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mpi.databinding.FragmentAtividadeItemBinding // Mantive o nome do binding
+import com.example.mpi.databinding.FragmentAtividadeItemBinding
 import com.example.mpi.data.Atividade
+import com.example.mpi.repository.UsuarioRepository
+import android.content.Context
 
 class AtividadeAdapter(
     private val listaAtividades: List<Atividade>,
     private val onEditarClicked: (Atividade) -> Unit,
-    private val onExcluirClicked: (Atividade) -> Unit
+    private val onExcluirClicked: (Atividade) -> Unit,
+    private val context: Context
 ) : RecyclerView.Adapter<AtividadeAdapter.AtividadeViewHolder>() {
+
+    private val usuarioRepository: UsuarioRepository = UsuarioRepository.getInstance(context)
 
     inner class AtividadeViewHolder(binding: FragmentAtividadeItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val tvNome = binding.tvNomeAtividadeItem
@@ -26,7 +31,7 @@ class AtividadeAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AtividadeViewHolder {
-        val binding = FragmentAtividadeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false) // Mantive o nome do binding
+        val binding = FragmentAtividadeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AtividadeViewHolder(binding)
     }
 
@@ -36,9 +41,10 @@ class AtividadeAdapter(
         holder.tvDescricao.text = atividade.descricao
         holder.tvDataInicio.text = "Início: ${atividade.dataInicio}"
         holder.tvDataTermino.text = "Término: ${atividade.dataTermino}"
-        holder.tvResponsavel.text = "Responsável: ${atividade.responsavel}"
-        holder.tvAprovado.text = if (atividade.aprovado) "Aprovada" else "Não Aprovada" // Correção da condição
-        holder.tvFinalizada.text = if (atividade.finalizado) "Finalizada" else "Não Finalizada" // Correção da condição
+        val nomeResponsavel = usuarioRepository.obterNomeUsuarioPorId(atividade.responsavel)
+        holder.tvResponsavel.text = "Responsável: ${nomeResponsavel ?: "Desconhecido"}"
+        holder.tvAprovado.text = if (atividade.aprovado) "Aprovada" else "Não Aprovada"
+        holder.tvFinalizada.text = if (atividade.finalizado) "Finalizada" else "Não Finalizada"
         holder.tvOrcamento.text = "Orçamento: ${String.format("%.2f", atividade.orcamento)}"
 
         holder.btnEditar.setOnClickListener {

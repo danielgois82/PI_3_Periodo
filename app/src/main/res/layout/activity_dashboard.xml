@@ -34,9 +34,9 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="2dp"
         android:backgroundTint="@color/blue"
-        android:text="Status das Ações" />
+        android:text="Status do andamento das Ações" />
 
     <Button
         android:textSize="20dp"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="2dp"
         android:backgroundTint="@color/blue"
         android:text="Progresso por Pilar" />
 
@@ -56,8 +56,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="2dp"
         android:backgroundTint="@color/blue"
-        android:text="Prazos criticos" />
+        android:text="Prazos críticos das Atividades" />
 
 </LinearLayout>

@@ -51,6 +51,7 @@ class Opcao1Activity : AppCompatActivity() {
             extra.putExtra("idUsuario", idUsuario)
             extra.putExtra("nomeUsuario", nomeUsuario)
             extra.putExtra("tipoUsuario", tipoUsuario)
+            finish()
             startActivity(extra)
         }
 
@@ -102,7 +103,7 @@ class Opcao1Activity : AppCompatActivity() {
 
         dataVals.add(PieEntry(qtdeFinalizado.toFloat(), "Finalizado"))
         dataVals.add(PieEntry(qtdeEmAndamento.toFloat(), "Em andamento"))
-        dataVals.add(PieEntry(qtdeAtrasado.toFloat(), "Atrasado"))
+        dataVals.add(PieEntry(qtdeAtrasado.toFloat(), "Em atraso"))
 
         return dataVals
     }

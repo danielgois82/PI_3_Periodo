@@ -21,12 +21,12 @@
         android:src="@drawable/arrow_back" />
 
     <TextView
-        android:id="@+id/textview_statusAtividades"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:fontFamily="@font/inter18pt_extra_bold"
-        android:text="Status das Ações"
+        android:textAlignment="center"
+        android:text="Status do andamento das Ações"
         android:textSize="32sp" />
 
     <com.github.mikephil.charting.charts.PieChart

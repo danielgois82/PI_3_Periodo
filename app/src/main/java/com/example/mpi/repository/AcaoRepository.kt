@@ -1,9 +1,15 @@
 package com.example.mpi.repository
 
+import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import com.example.mpi.data.Acao
+import com.example.mpi.data.Atividade
 import com.example.mpi.data.DatabaseHelper
+import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_ACAO_ID
+import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_ACAO_IS_APROVADO
+import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_ACAO_IS_FINALIZADO
+import com.example.mpi.data.DatabaseHelper.Companion.TABLE_ACAO
 import com.example.mpi.data.Pilar
 import com.example.mpi.data.Subpilar
 import com.example.mpi.repository.SubpilarRepository
@@ -12,7 +18,7 @@ class AcaoRepository(context: Context) {
 
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
     private val subpilarRepository: SubpilarRepository = SubpilarRepository.getInstance(context)
-
+    private val atividadeRepository: AtividadeRepository = AtividadeRepository.getInstance(context)
 
     companion object {
         private lateinit var instance: AcaoRepository
@@ -231,13 +237,136 @@ class AcaoRepository(context: Context) {
     fun obterQuantidadeAcoesAtrasadas(): Int {
         val db = dataBase.readableDatabase
         var quantidadeAcoesAtrasadas = 0
-        val cursor = db.rawQuery("SELECT COUNT(*) AS ATRARASA FROM ${DatabaseHelper.TABLE_ACAO} WHERE date(substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 7, 4) || '-' || substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 4, 2) || '-' || substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 1, 2)) < date('now') AND ${DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO} = 0", null)
+        val cursor = db.rawQuery("SELECT COUNT(*) AS ATRASADA FROM ${DatabaseHelper.TABLE_ACAO} WHERE date(substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 7, 4) || '-' || substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 4, 2) || '-' || substr(${DatabaseHelper.COLUMN_ACAO_DATA_TERMINO}, 1, 2)) < date('now') AND ${DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO} = 0", null)
 
         if (cursor.moveToNext()) {
-            quantidadeAcoesAtrasadas = cursor.getInt(cursor.getColumnIndexOrThrow("ATRARASA"))
+            quantidadeAcoesAtrasadas = cursor.getInt(cursor.getColumnIndexOrThrow("ATRASADA"))
         }
 
         cursor.close()
         return quantidadeAcoesAtrasadas
     }
+
+    fun obterPercentualTotalAcao(acao: Acao) : Double {
+        val listaAtividade = atividadeRepository.obterTodasAtividades(acao)
+        var divisor = 0
+        var somaPercentualAtividade = 0.0
+        for (atividade in listaAtividade) {
+            somaPercentualAtividade += atividadeRepository.obterPercentualTotalAtividade(atividade)
+            divisor++
+        }
+        val percentualTotalAcao = somaPercentualAtividade / divisor
+
+        return percentualTotalAcao
+    }
+
+    fun obterPercentualMes(atividades: List<Atividade>, mes: Int): Double {
+        val percentualTotal: Double
+        var somaPercentual = 0.0
+        var qtdAtividades = 0
+        for (atividade in atividades) {
+            val percentualMes = atividadeRepository.obterPercentualMes(atividade, mes)
+            somaPercentual += percentualMes
+            qtdAtividades++
+        }
+        percentualTotal = somaPercentual / qtdAtividades
+
+        return percentualTotal
+    }
+
+    fun obterOrcamentoAcao(atividades: List<Atividade>): Double {
+        var orcamentoTotal = 0.0
+        for (atividade in atividades) {
+            orcamentoTotal += atividade.orcamento
+        }
+
+        return orcamentoTotal
+    }
+
+    //FUNÇÃO PARA APROVAÇÃO DAS AÇÕES
+    fun aprovarAcao(idAcao: Int) {
+        val db = dataBase.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ACAO_IS_APROVADO, 1)
+        }
+        db.update(TABLE_ACAO, values, "$COLUMN_ACAO_ID = ?", arrayOf(idAcao.toString()))
+        db.close()
+    }
+
+    fun obterAcoesNaoAprovadas(): List<Acao> {
+        val db = dataBase.readableDatabase
+        val acoes: MutableList<Acao> = arrayListOf()
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${DatabaseHelper.TABLE_ACAO} WHERE ${DatabaseHelper.COLUMN_ACAO_IS_APROVADO} = 0",
+            null
+        )
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
+            val nome = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_NOME))
+            val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DESCRICAO))
+            val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_INICIO))
+            val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_TERMINO))
+            val responsavel = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_RESPONSAVEL))
+            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_APROVADO)) != 0
+            val finalizado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO)) != 0
+            val idPilar = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
+            val idSubpilar = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
+            val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_USUARIO))
+
+            val acao = Acao(id, nome, descricao, dataInicio, dataTermino, responsavel, aprovado, finalizado, idPilar, idSubpilar, idUsuario)
+            acoes.add(acao)
+        }
+        cursor.close()
+        return acoes
+    }
+
+
+    // FUNÇÃO PARA FINALIZAR AÇÃO
+
+    fun finalizarAcao(idAcao: Int) {
+        val db = dataBase.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ACAO_IS_FINALIZADO, 1)
+        }
+        db.update(TABLE_ACAO, values, "$COLUMN_ACAO_ID = ?", arrayOf(idAcao.toString()))
+        db.close()
+    }
+
+    fun obterAcoesNaoFinalizadas(): List<Acao> {
+        val db = dataBase.readableDatabase
+        val acoes: MutableList<Acao> = arrayListOf()
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${DatabaseHelper.TABLE_ACAO} WHERE ${DatabaseHelper.COLUMN_ACAO_IS_APROVADO} = 1 AND ${DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO} = 0",
+            null
+        )
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID))
+            val nome = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_NOME))
+            val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DESCRICAO))
+            val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_INICIO))
+            val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_DATA_TERMINO))
+            val responsavel = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_RESPONSAVEL))
+            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_APROVADO)) != 0
+            val finalizado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_IS_FINALIZADO)) != 0
+            val idPilar = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_PILAR))
+            val idSubpilar = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_SUBPILAR))
+            val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACAO_ID_USUARIO))
+
+            val acao = Acao(id, nome, descricao, dataInicio, dataTermino, responsavel, aprovado, finalizado, idPilar, idSubpilar, idUsuario)
+
+            if(obterPercentualTotalAcao(acao) == 100.0){
+                acoes.add(acao)
+            }else{
+                continue
+            }
+        }
+        cursor.close()
+        return acoes
+    }
+
+
+
+
 }

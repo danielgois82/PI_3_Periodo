@@ -34,11 +34,10 @@ class SubpilarRepository (context: Context) {
             val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DESCRICAO))
             val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DATA_INICIO))
             val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DATA_TERMINO))
-            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_IS_APROVADO)) != 0
             val idPilar = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_PILAR))
             val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_USUARIO))
 
-            val subpilar = Subpilar(id, nome, descricao, dataInicio, dataTermino, aprovado, idPilar, idUsuario)
+            val subpilar = Subpilar(id, nome, descricao, dataInicio, dataTermino, idPilar, idUsuario)
             subpilares.add(subpilar)
         }
         cursor.close()
@@ -57,11 +56,10 @@ class SubpilarRepository (context: Context) {
             val descricao = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DESCRICAO))
             val dataInicio = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DATA_INICIO))
             val dataTermino = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_DATA_TERMINO))
-            val aprovado = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_IS_APROVADO)) != 0
             val idPilar = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_PILAR))
             val idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID_USUARIO))
 
-            val subpilar = Subpilar(id, nome, descricao, dataInicio, dataTermino, aprovado, idPilar, idUsuario)
+            val subpilar = Subpilar(id, nome, descricao, dataInicio, dataTermino, idPilar, idUsuario)
             subpilares.add(subpilar)
         }
 
@@ -70,5 +68,7 @@ class SubpilarRepository (context: Context) {
 
         return subpilares
     }
+
+
 
 }

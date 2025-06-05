@@ -22,19 +22,19 @@
             tools:text="Nome do Pilar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes" />
-
-        <TextView
-            android:id="@+id/tvDescricaoPilarItem"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/inria_sans_regular"
-            tools:text="Descrição detalhada do pilar."
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvNomePilarItem"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes" />
+            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes"
+            app:layout_constraintHorizontal_bias="0.0" /> <TextView
+        android:id="@+id/tvDescricaoPilarItem"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/inria_sans_regular"
+        tools:text="Descrição detalhada do pilar."
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNomePilarItem"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes"
+        app:layout_constraintHorizontal_bias="0.0" />
 
         <TextView
             android:id="@+id/tvDataInicioPilarItem"
@@ -46,7 +46,8 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvDescricaoPilarItem"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes" />
+            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <TextView
             android:id="@+id/tvDataTerminoPilarItem"
@@ -58,7 +59,8 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvDataInicioPilarItem"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes" />
+            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <TextView
             android:id="@+id/tvPercentualPilarItem"
@@ -70,32 +72,32 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvDataTerminoPilarItem"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes" />
+            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <TextView
-            android:id="@+id/tvAprovadoPilarItem"
+            android:id="@+id/tvOrcamentoPilarItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/inria_sans_regular"
-            tools:text="Aprovado"
-            android:textSize="14sp"
+            tools:text="Orçamento: R$ 1,89" android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvPercentualPilarItem"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes" />
+            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <TextView
-            android:id="@+id/tvIdUsuarioPilarItem"
-            android:layout_width="0dp"
+            android:id="@+id/tvIdUsuarioPilarItem" android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/inria_sans_regular"
-            tools:text="ID Usuário: 2"
-            android:textSize="14sp"
+            tools:text="Responsável: Nome do Usuário" android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvAprovadoPilarItem"
+            app:layout_constraintTop_toBottomOf="@+id/tvOrcamentoPilarItem"
             app:layout_constraintEnd_toStartOf="@+id/linearLayoutAcoes"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <LinearLayout
             android:id="@+id/linearLayoutAcoes"

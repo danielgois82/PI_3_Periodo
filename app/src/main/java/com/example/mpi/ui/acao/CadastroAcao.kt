@@ -6,8 +6,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mpi.data.DatabaseHelper
+import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_USUARIO_ID_TIPOUSUARIO
 import com.example.mpi.databinding.ActivityCadastroAcaoBinding
 import com.example.mpi.data.Pilar
 import com.example.mpi.data.Subpilar
@@ -33,6 +35,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityCadastroAcaoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -159,7 +162,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
             while (moveToNext()) {
                 val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PILAR_NOME))
-                listaPilaresObjetos.add(Pilar(id, nome, "", "", "", false, 0.0, 0, 0))
+                listaPilaresObjetos.add(Pilar(id, nome, "", "", "", 0.0, 0, 0))
                 listaPilaresNomes.add(nome)
             }
         }
@@ -172,17 +175,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
 
     private fun carregarUsuariosNoSpinner() {
         val db = dbHelper.readableDatabase
-        val projection = arrayOf(DatabaseHelper.COLUMN_USUARIO_ID, DatabaseHelper.COLUMN_USUARIO_NOME)
-        val cursor = db.query(
-            DatabaseHelper.TABLE_USUARIO,
-            projection,
-            null,
-            null,
-            null,
-            null,
-            DatabaseHelper.COLUMN_USUARIO_NOME
-        )
-
+        val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_USUARIO} WHERE ${DatabaseHelper.COLUMN_USUARIO_ID_TIPOUSUARIO} != 3", null)
         listaUsuariosNomes = mutableListOf()
         listaUsuariosObjetos = mutableListOf()
         listaUsuariosNomes.add("Selecione o Responsável")
@@ -228,7 +221,7 @@ class CadastroAcaoActivity : AppCompatActivity() {
             while (moveToNext()) {
                 val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_ID))
                 val nome = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBPILAR_NOME))
-                listaSubpilaresObjetos.add(Subpilar(id, nome, "", "", "", false, 0, 0))
+                listaSubpilaresObjetos.add(Subpilar(id, nome, "", "", "",  0, 0))
                 listaSubpilaresNomes.add(nome)
             }
         }

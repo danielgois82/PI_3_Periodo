@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mpi.databinding.ActivityEditarAtividadeBinding
 import com.example.mpi.data.DatabaseHelper
@@ -15,6 +16,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import android.util.Log
 
 class EditarAtividadeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditarAtividadeBinding
@@ -33,6 +35,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityEditarAtividadeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -46,8 +49,6 @@ class EditarAtividadeActivity : AppCompatActivity() {
         responsavelAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerResponsavelEditarAtividade.adapter = responsavelAdapter
 
-        carregarAcoes()
-        carregarResponsaveis()
 
         val extras = intent.extras
         if (extras != null) {
@@ -56,11 +57,13 @@ class EditarAtividadeActivity : AppCompatActivity() {
             val descricao = extras.getString("atividade_descricao")
             val dataInicio = extras.getString("atividade_data_inicio")
             val dataTermino = extras.getString("atividade_data_termino")
-            val idResponsavel = extras.getInt("atividade_id_responsavel")
             val aprovado = extras.getBoolean("atividade_aprovado")
             val finalizada = extras.getBoolean("atividade_finalizada")
             val orcamento = extras.getDouble("atividade_orcamento", 0.0)
-            val idAcao = extras.getInt("atividade_id_acao")
+
+            // Atribua os IDs selecionados AQUI para que estejam disponíveis antes de carregar os spinners
+            idResponsavelSelecionado = extras.getInt("atividade_id_responsavel", -1)
+            idAcaoSelecionada = extras.getInt("atividade_id_acao", -1)
 
             binding.etEditarNomeAtividade.setText(nome)
             binding.etEditarDescricaoAtividade.setText(descricao)
@@ -72,23 +75,13 @@ class EditarAtividadeActivity : AppCompatActivity() {
             binding.tvExibirAprovado.text = if (aprovado) "Sim" else "Não"
             binding.tvExibirFinalizada.text = if (finalizada) "Sim" else "Não"
             binding.etEditarOrcamentoAtividade.setText(if (orcamento != 0.0) String.format("%.2f", orcamento) else "")
-
-            if (idAcao != -1L.toInt()) {
-                idAcaoSelecionada = idAcao
-                val posicaoAcao = listaAcoesObjetos.indexOfFirst { it.id == idAcao }
-                if (posicaoAcao != -1) {
-                    binding.spinnerAcaoEditarAtividade.setSelection(posicaoAcao + 1)
-                }
-            }
-
-            if (idResponsavel != -1L.toInt()) {
-                idResponsavelSelecionado = idResponsavel
-                val posicaoResponsavel = listaResponsaveisObjetos.indexOfFirst { it.id == idResponsavel }
-                if (posicaoResponsavel != -1) {
-                    binding.spinnerResponsavelEditarAtividade.setSelection(posicaoResponsavel + 1)
-                }
-            }
         }
+        Log.d("EditarAtividade", "ID Responsável antes de carregarResponsaveis: $idResponsavelSelecionado")
+
+        carregarAcoes()
+        carregarResponsaveis()
+
+        Log.d("EditarAtividade", "ID Responsável depois de carregarResponsaveis: $idResponsavelSelecionado")
 
         binding.spinnerAcaoEditarAtividade.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -154,10 +147,10 @@ class EditarAtividadeActivity : AppCompatActivity() {
         acaoAdapter?.addAll(listaAcoesNomes)
         acaoAdapter?.notifyDataSetChanged()
 
-        if (idAcaoSelecionada != -1L.toInt()) {
-            val posicao = listaAcoesObjetos.indexOfFirst { it.id == idAcaoSelecionada } + 1
-            if (posicao > 0 && posicao < listaAcoesNomes.size) {
-                binding.spinnerAcaoEditarAtividade.setSelection(posicao)
+        if (idAcaoSelecionada != -1) {
+            val posicao = listaAcoesObjetos.indexOfFirst { it.id == idAcaoSelecionada }
+            if (posicao != -1) {
+                binding.spinnerAcaoEditarAtividade.setSelection(posicao + 1)
             }
         }
     }
@@ -165,20 +158,8 @@ class EditarAtividadeActivity : AppCompatActivity() {
     private fun carregarResponsaveis() {
         listaResponsaveisObjetos.clear()
         val db = dbHelper.readableDatabase
-        val projection = arrayOf(
-            DatabaseHelper.COLUMN_USUARIO_ID,
-            DatabaseHelper.COLUMN_USUARIO_NOME
-        )
+        val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_USUARIO} WHERE ${DatabaseHelper.COLUMN_USUARIO_ID_TIPOUSUARIO} != 3", null)
 
-        val cursor = db.query(
-            DatabaseHelper.TABLE_USUARIO,
-            projection,
-            null,
-            null,
-            null,
-            null,
-            DatabaseHelper.COLUMN_USUARIO_NOME
-        )
 
         listaResponsaveisNomes.clear()
         listaResponsaveisNomes.add("Selecione o Responsável")
@@ -197,10 +178,10 @@ class EditarAtividadeActivity : AppCompatActivity() {
         responsavelAdapter?.addAll(listaResponsaveisNomes)
         responsavelAdapter?.notifyDataSetChanged()
 
-        if (idResponsavelSelecionado != -1L.toInt()) {
-            val posicao = listaResponsaveisObjetos.indexOfFirst { it.id == idResponsavelSelecionado } + 1
-            if (posicao > 0 && posicao < listaResponsaveisNomes.size) {
-                binding.spinnerResponsavelEditarAtividade.setSelection(posicao)
+        if (idResponsavelSelecionado != -1) {
+            val posicao = listaResponsaveisObjetos.indexOfFirst { it.id == idResponsavelSelecionado }
+            if (posicao != -1) {
+                binding.spinnerResponsavelEditarAtividade.setSelection(posicao + 1)
             }
         }
     }
@@ -215,7 +196,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
         val aprovado = if (binding.tvExibirAprovado.text.toString() == "Sim") 1 else 0
         val finalizada = if (binding.tvExibirFinalizada.text.toString() == "Sim") 1 else 0
 
-        if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || idResponsavelSelecionado == -1L.toInt()) {
+        if (nome.isEmpty() || descricao.isEmpty() || dataInicio.isEmpty() || dataTermino.isEmpty() || idResponsavelSelecionado == -1) {
             Toast.makeText(this, "Preencha todos os campos obrigatórios e selecione um responsável!", Toast.LENGTH_SHORT).show()
             return
         }
@@ -225,7 +206,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
             return
         }
 
-        if (idAcaoSelecionada == -1L.toInt()) {
+        if (idAcaoSelecionada == -1) {
             Toast.makeText(this, "Selecione uma Ação!", Toast.LENGTH_SHORT).show()
             return
         }
@@ -284,7 +265,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         sdf.isLenient = false
 
-        if (idAcaoSelecionada != -1L.toInt()) {
+        if (idAcaoSelecionada != -1) {
             val db = dbHelper.readableDatabase
             try {
                 val cursorAcao = db.query(
@@ -384,7 +365,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         sdf.isLenient = false
 
-        if (idAcaoSelecionada != -1L.toInt()) {
+        if (idAcaoSelecionada != -1) {
             val db = dbHelper.readableDatabase
             try {
                 val cursorAcao = db.query(
@@ -467,5 +448,4 @@ class EditarAtividadeActivity : AppCompatActivity() {
             null
         }
     }
-
 }

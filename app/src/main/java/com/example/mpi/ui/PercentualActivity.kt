@@ -84,7 +84,8 @@ class PercentualActivity : AppCompatActivity() {
 
         var atividadeSelecionada: Atividade? = null
 
-        val listaPilar = pilarRepository.obterTodosPilares(Calendario(1, 2025))
+        val idCal = calendarioRepository.obterIdCalendarioPorAno(2025)
+        val listaPilar = pilarRepository.obterTodosPilares(Calendario(idCal, 2025))
 
         if (listaPilar.isEmpty()) {
             Toast.makeText(this, "Não existem atividades cadastradas no sistema", Toast.LENGTH_LONG).show()
@@ -155,6 +156,11 @@ class PercentualActivity : AppCompatActivity() {
                         binding.spinnerAcao.visibility = View.INVISIBLE
 
                         binding.spinnerAcao.adapter = adapterVazio
+
+                        binding.textviewAtividade.visibility = View.INVISIBLE
+                        binding.spinnerAtividade.visibility = View.INVISIBLE
+
+                        binding.spinnerAtividade.adapter = adapterVazio
                     }
                 }
             }

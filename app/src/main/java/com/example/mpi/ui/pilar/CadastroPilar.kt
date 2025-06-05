@@ -118,7 +118,6 @@ class cadastroPilar : AppCompatActivity() {
                 put(DatabaseHelper.COLUMN_PILAR_DATA_INICIO, dataInicioFormatada)
                 put(DatabaseHelper.COLUMN_PILAR_DATA_TERMINO, dataTerminoFormatada)
                 put(DatabaseHelper.COLUMN_PILAR_PERCENTUAL, 0.0)
-                put(DatabaseHelper.COLUMN_PILAR_IS_APROVADO, 0)
                 put(DatabaseHelper.COLUMN_PILAR_ID_CALENDARIO, idCalendario)
                 put(DatabaseHelper.COLUMN_PILAR_ID_USUARIO, idUsuarioRecebido)
             }

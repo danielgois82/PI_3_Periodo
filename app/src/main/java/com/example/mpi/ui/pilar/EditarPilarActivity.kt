@@ -23,7 +23,7 @@ class EditarPilarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         binding = ActivityEditarPilarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -37,7 +37,6 @@ class EditarPilarActivity : AppCompatActivity() {
             val descricao = extras.getString("pilar_descricao")
             val dataInicio = extras.getString("pilar_data_inicio")
             val dataTermino = extras.getString("pilar_data_termino")
-            val aprovado = extras.getBoolean("pilar_aprovado")
             val percentual = extras.getDouble("pilar_percentual")
             val idCalendario = extras.getInt("pilar_id_calendario") // Recupera o ID do Calendário
 
@@ -46,8 +45,6 @@ class EditarPilarActivity : AppCompatActivity() {
             binding.etEditarDescricaoPilar.setText(descricao)
             binding.etEditarDataInicio.setText(dataInicio)
             binding.etEditarDataTermino.setText(dataTermino)
-            binding.tvExibirPercentual.text = String.format("%.2f%%", percentual * 100)
-            binding.tvExibirAprovado.text = if (aprovado) "Sim" else "Não"
         }
 
         binding.btnSalvarEdicao.setOnClickListener {

@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,7 +21,8 @@ import com.example.mpi.ui.atividade.AtividadeActivity
 import com.example.mpi.ui.dashboard.DashboardActivity
 import com.example.mpi.ui.pilar.PilarActivity
 import com.example.mpi.ui.subpilar.SubpilarActivity
-import com.example.mpi.ui.AprovacaoActivity
+import com.example.mpi.ui.aprovacao.AprovacaoActivity
+import com.example.mpi.ui.finalizacao.FinalizacaoActivity
 import com.example.mpi.ui.relatorio.RelatorioActivity
 import kotlin.system.exitProcess
 
@@ -42,6 +44,13 @@ class MenuActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Aqui você bloqueia o botão voltar (sem nenhuma ação)
+            }
+        })
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -78,10 +87,12 @@ class MenuActivity : AppCompatActivity() {
         if (tipoUsuario.uppercase() == USUARIO_ANALISTA) {
             openAprovacao.visibility = View.GONE
             openFinalizacao.visibility = View.GONE
+            openRelatorio.visibility = View.GONE
             openDashboard.visibility = View.GONE
         }
 
         if (tipoUsuario.uppercase() == USUARIO_COORDENADOR) {
+            openRelatorio.visibility = View.GONE
             openDashboard.visibility = View.GONE
         }
 

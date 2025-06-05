@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import com.example.mpi.data.Atividade
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mpi.data.DatabaseHelper
@@ -35,6 +36,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityCadastroAtividadeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -93,8 +95,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
 
     private fun carregarResponsaveisNoSpinner() {
         val db = dbHelper.readableDatabase
-        val projection = arrayOf(DatabaseHelper.COLUMN_USUARIO_ID, DatabaseHelper.COLUMN_USUARIO_NOME)
-        val cursor = db.query(DatabaseHelper.TABLE_USUARIO, projection, null, null, null, null, DatabaseHelper.COLUMN_USUARIO_NOME)
+        val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_USUARIO} WHERE ${DatabaseHelper.COLUMN_USUARIO_ID_TIPOUSUARIO} != 3", null)
 
         listaResponsaveisNomes.clear()
         listaResponsaveisObjetos.clear()
@@ -117,12 +118,10 @@ class CadastroAtividadeActivity : AppCompatActivity() {
 
     private fun carregarAcoesNoSpinner() {
         val db = dbHelper.readableDatabase
-        val projection = arrayOf(DatabaseHelper.COLUMN_ACAO_ID, DatabaseHelper.COLUMN_ACAO_NOME)
-        val cursor = db.query(DatabaseHelper.TABLE_ACAO, projection, null, null, null, null, DatabaseHelper.COLUMN_ACAO_NOME)
-
+        val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_ACAO}", null)
         listaAcoesNomes.clear()
         listaAcoesObjetos.clear()
-        listaAcoesNomes.add("Selecione a Ação") // Adiciona a opção padrão
+        listaAcoesNomes.add("Selecione a Ação")
 
         with(cursor) {
             while (moveToNext()) {

@@ -1,66 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:paddingBottom="56dp"
+    tools:context=".ui.finalizacao.FinalizacaoActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+    <androidx.constraintlayout.widget.Guideline
 
-        <ImageButton
-            android:id="@+id/botaoVoltar"
-            android:layout_width="61dp"
-            android:layout_height="67dp"
-            android:background="@null"
-            android:contentDescription="@string/voltar"
-            android:src="@drawable/arrow_back" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text="Finalização"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <!-- Filtro -->
-    <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/statusBarGuideline"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        app:layout_constraintGuide_begin="24dp" />
+
+    <ImageView
+        android:id="@+id/btnVoltar"
+        android:layout_width="65dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusBarGuideline" />
+
+    <TextView
+
+        android:id="@+id/textViewListaItemTitulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:gravity="center_vertical">
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/inter18pt_extra_bold"
+        android:gravity="center"
+        android:text="Finalização"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnVoltar" />
 
-        <Spinner
-            android:id="@+id/spinnerTipo"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:entries="@array/tipos_aprovacao" />
 
-        <Button
-            android:id="@+id/btnBuscar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#055196"
-            android:text="Buscar"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
+    <Spinner
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp">
+        android:id="@+id/spinnerItem"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewListaItemTitulo"
+        tools:ignore="SpeakableTextPresentCheck" />
 
-        <LinearLayout
-            android:id="@+id/containerCards"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
-</LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSubpilares"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerItem" tools:listitem="@layout/" />
+</androidx.constraintlayout.widget.ConstraintLayout>
