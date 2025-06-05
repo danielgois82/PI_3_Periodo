@@ -75,7 +75,7 @@
         android:fontFamily="@font/inter18pt_extra_bold"
         android:textAlignment="center"
         android:layout_marginTop="16dp"
-        android:text="Aguarde, o PDF será aberto automaticamente."
+        android:text="Após clicar no botão acima, o PDF será aberto automaticamente."
         android:textSize="24sp" />
 
 </LinearLayout>
