@@ -56,11 +56,11 @@ class FinalizacaoMistaAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_ACAO -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_aprovacao_acao, parent, false)
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_finalizacao_acao, parent, false)
                 AcaoViewHolder(view)
             }
             TYPE_ATIVIDADE -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_aprovacao_atividade, parent, false)
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_finalizacao_atividade, parent, false)
                 AtividadeViewHolder(view)
             }
             else -> throw IllegalArgumentException("Tipo de view desconhecido: $viewType")
