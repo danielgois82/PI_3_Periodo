@@ -68,7 +68,7 @@ Com o emulador rodando, selecione-o no menu suspenso de dispositivos no Android 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Estrutura de pastas e pacotes
-
+```
 ├── app/
 │   ├── src/
 │   │   ├── main/
@@ -169,6 +169,8 @@ Com o emulador rodando, selecione-o no menu suspenso de dispositivos no Android 
 │           └── (testes relacionados)
 ├── build.gradle.kts (app)          <-- Arquivo de configuração do módulo "app": define SDKs, dependências, etc.
 └── build.gradle.kts (project)      <-- Arquivo de configuração do projeto: define repositórios, plugins globais.
+```
+.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Principais bibliotecas e Frameworks utilizados.
