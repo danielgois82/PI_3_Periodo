@@ -10,6 +10,21 @@ import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_ATIVIDADE_IS_APROVAD
 import com.example.mpi.data.DatabaseHelper.Companion.COLUMN_ATIVIDADE_IS_FINALIZADO
 import com.example.mpi.data.DatabaseHelper.Companion.TABLE_ATIVIDADE
 
+/**
+ * Repositório para gerenciar operações de dados relacionadas às [Atividade]s no sistema.
+ *
+ * Esta classe é responsável por interagir com a tabela `atividade` no banco de dados SQLite
+ * (via [DatabaseHelper]), fornecendo métodos para buscar atividades por diferentes critérios,
+ * calcular seu progresso, e gerenciar seus status de aprovação e finalização.
+ * Ela também colabora com o [PercentualAtividadeRepository] para obter e manipular
+ * os percentuais mensais de cada atividade.
+ *
+ * Adota o padrão **Singleton** para garantir que apenas uma instância deste repositório
+ * exista em toda a aplicação, otimizando o gerenciamento da conexão com o banco de dados.
+ *
+ * @property dataBase Uma instância de [DatabaseHelper] para acessar o banco de dados.
+ * @property percentualAtividadeRepository Uma instância de [PercentualAtividadeRepository] para operações relacionadas aos percentuais mensais das atividades.
+ */
 class AtividadeRepository (context: Context) {
 
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
@@ -18,6 +33,13 @@ class AtividadeRepository (context: Context) {
     companion object {
         private lateinit var instance: AtividadeRepository
 
+        /**
+         * Retorna a única instância de [AtividadeRepository] (Singleton).
+         * Se a instância ainda não foi inicializada, ela é criada de forma segura para threads.
+         *
+         * @param context O [Context] da aplicação.
+         * @return A instância de [AtividadeRepository].
+         */
         fun getInstance(context: Context): AtividadeRepository {
             synchronized(this) {
                 if (!::instance.isInitialized) {
@@ -28,6 +50,14 @@ class AtividadeRepository (context: Context) {
         }
     }
 
+    /**
+     * Obtém uma lista contendo todas as [Atividade]s existentes no banco de dados, sem nenhum filtro.
+     *
+     * Este método é útil para operações que requerem a listagem completa de todas as atividades
+     * cadastradas no sistema.
+     *
+     * @return Uma [List] de objetos [Atividade] representando todas as atividades disponíveis.
+     */
     fun obterTodasAtividades(): List<Atividade>{
         val db = dataBase.readableDatabase
         val atividades: MutableList<Atividade> = arrayListOf()
@@ -57,7 +87,12 @@ class AtividadeRepository (context: Context) {
         return atividades
     }
 
-
+    /**
+     * Obtém uma lista de todas as [Atividade]s diretamente associadas a uma [Acao] específica.
+     *
+     * @param acao O objeto [Acao] cujas atividades serão buscadas.
+     * @return Uma [MutableList] de objetos [Atividade] que pertencem diretamente à ação especificada.
+     */
     fun obterTodasAtividades(acao: Acao) : MutableList<Atividade> {
 
         val db = dataBase.readableDatabase
@@ -89,7 +124,14 @@ class AtividadeRepository (context: Context) {
         return atividades
     }
 
-    //Criando método para a funcionalidade de notificação para obter as atividades que não foram finaliadas
+    /**
+     * Obtém uma lista de [Atividade]s que não foram finalizadas e são atribuídas a um usuário específico.
+     *
+     * Este método é comumente usado para funcionalidades de notificação ou listagem de pendências.
+     *
+     * @param idUsuario O ID do usuário para o qual as atividades não finalizadas serão buscadas.
+     * @return Uma [List] de objetos [Atividade] que ainda não foram concluídas por esse usuário.
+     */
     fun obterAtividadesNaoFinalizadasPorUsuario(idUsuario: Int): List<Atividade> {
         val db = dataBase.readableDatabase
         val atividades: MutableList<Atividade> = arrayListOf()
@@ -124,6 +166,16 @@ class AtividadeRepository (context: Context) {
         return atividades
     }
 
+    /**
+     * Calcula o percentual total de conclusão de uma [Atividade], somando os percentuais de cada mês.
+     *
+     * Assume que a soma dos 12 percentuais mensais (que variam de 0 a 100) resulta no percentual total de conclusão.
+     * Por exemplo, se cada mês for 100%, o total seria 1200%. Se você quiser a média ou algo diferente,
+     * a lógica aqui precisará ser ajustada.
+     *
+     * @param atividade O objeto [Atividade] para o qual o percentual total será calculado.
+     * @return O percentual total da atividade como um [Double].
+     */
     fun obterPercentualTotalAtividade(atividade: Atividade) : Double {
         val listaPercentualAtividade = percentualAtividadeRepository.obterTodosPercentuais(atividade)
         var somaPercentualAtividade = 0.0
@@ -134,6 +186,11 @@ class AtividadeRepository (context: Context) {
         return somaPercentualAtividade
     }
 
+    /**
+     * Obtém a quantidade de [Atividade]s que têm sua data de término em até 30 dias a partir da data atual.
+     *
+     * @return O número inteiro de atividades que terminam em 30 dias ou menos (e mais de 15 dias).
+     */
     fun obterQuantidadeAtividades30DiasOuMenos() : Int {
         val db = dataBase.readableDatabase
 
@@ -150,6 +207,11 @@ class AtividadeRepository (context: Context) {
         return total
     }
 
+    /**
+     * Obtém a quantidade de [Atividade]s que têm sua data de término em até 15 dias a partir da data atual.
+     *
+     * @return O número inteiro de atividades que terminam em 15 dias ou menos (e mais de 7 dias).
+     */
     fun obterQuantidadeAtividades15DiasOuMenos() : Int {
         val db = dataBase.readableDatabase
 
@@ -166,6 +228,11 @@ class AtividadeRepository (context: Context) {
         return total
     }
 
+    /**
+     * Obtém a quantidade de [Atividade]s que têm sua data de término em até 7 dias a partir da data atual.
+     *
+     * @return O número inteiro de atividades que terminam em 7 dias ou menos (incluindo hoje).
+     */
     fun obterQuantidadeAtividades7DiasOuMenos() : Int {
         val db = dataBase.readableDatabase
 
@@ -182,6 +249,11 @@ class AtividadeRepository (context: Context) {
         return total
     }
 
+    /**
+     * Obtém a quantidade de [Atividade]s que estão atrasadas (com data de término passada).
+     *
+     * @return O número inteiro de atividades atrasadas.
+     */
     fun obterQuantidadeAtividadesAtrasadas() : Int {
         val db = dataBase.readableDatabase
 
@@ -198,6 +270,13 @@ class AtividadeRepository (context: Context) {
         return total
     }
 
+    /**
+     * Obtém o percentual de conclusão de uma [Atividade] para um mês específico.
+     *
+     * @param atividade O objeto [Atividade] para o qual o percentual do mês será obtido.
+     * @param mes O número do mês (1 a 12) para o qual o percentual será buscado.
+     * @return O percentual de progresso da atividade para o mês especificado como um [Double]. Retorna 0.0 se não for encontrado.
+     */
     fun obterPercentualMes(atividade: Atividade, mes: Int): Double {
         val db = dataBase.readableDatabase
 
@@ -214,8 +293,12 @@ class AtividadeRepository (context: Context) {
         return percentual
     }
 
-    //FUNÇÃO PARA APROVAÇÃO DAS ATIVIDADES
-
+    /**
+     * Marca uma [Atividade] específica como aprovada no banco de dados.
+     *
+     * @param id O ID da atividade a ser marcada como aprovada.
+     * @return `true` se a atualização foi bem-sucedida, `false` caso contrário.
+     */
     fun aprovarAtividade(id: Int): Boolean {
         val db = dataBase.writableDatabase
         val values = ContentValues().apply {
@@ -226,6 +309,12 @@ class AtividadeRepository (context: Context) {
         return result > 0
     }
 
+    /**
+     * Obtém uma lista de todas as [Atividade]s que ainda não foram aprovadas,
+     * mas cuja [Acao] associada já foi aprovada.
+     *
+     * @return Uma [List] de objetos [Atividade] que aguardam aprovação.
+     */
     fun obterAtividadesNaoAprovadas(): List<Atividade> {
         val db = dataBase.readableDatabase
         val atividades: MutableList<Atividade> = arrayListOf()
@@ -260,8 +349,12 @@ class AtividadeRepository (context: Context) {
         return atividades
     }
 
-    // FUNÇÃO PARA FINALIZAÇÃO DE ATIVIDADES
-
+    /**
+     * Marca uma [Atividade] específica como finalizada no banco de dados.
+     *
+     * @param id O ID da atividade a ser marcada como finalizada.
+     * @return `true` se a atualização foi bem-sucedida, `false` caso contrário.
+     */
     fun finalizarAtividade(id: Int): Boolean {
         val db = dataBase.writableDatabase
         val values = ContentValues().apply {
@@ -272,6 +365,12 @@ class AtividadeRepository (context: Context) {
         return result > 0
     }
 
+    /**
+     * Obtém uma lista de todas as [Atividade]s que estão aprovadas, mas ainda não foram finalizadas,
+     * e cujo percentual total de atividades é 100%.
+     *
+     * @return Uma [List] de objetos [Atividade] que estão prontas para serem marcadas como finalizadas manualmente (se aplicável).
+     */
     fun obterAtividadesNaoFinalizadas() :List<Atividade>{
         val db = dataBase.readableDatabase
         val atividades: MutableList<Atividade> = arrayListOf()

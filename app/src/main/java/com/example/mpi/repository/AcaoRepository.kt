@@ -14,6 +14,22 @@ import com.example.mpi.data.Pilar
 import com.example.mpi.data.Subpilar
 import com.example.mpi.repository.SubpilarRepository
 
+/**
+ * Repositório para gerenciar operações de dados relacionadas às [Acao]s no sistema.
+ *
+ * Esta classe é responsável por interagir com a tabela `acao` no banco de dados SQLite
+ * (via [DatabaseHelper]), fornecendo métodos para buscar ações por diferentes critérios,
+ * calcular seu progresso e orçamento, e gerenciar seus status de aprovação e finalização.
+ * Ela também coordena com outros repositórios como [SubpilarRepository] e [AtividadeRepository]
+ * para obter dados hierárquicos e calcular métricas complexas.
+ *
+ * Adota o padrão **Singleton** para garantir que apenas uma instância deste repositório
+ * exista em toda a aplicação, otimizando o gerenciamento da conexão com o banco de dados.
+ *
+ * @property dataBase Uma instância de [DatabaseHelper] para acessar o banco de dados.
+ * @property subpilarRepository Uma instância de [SubpilarRepository] para operações relacionadas a subpilares.
+ * @property atividadeRepository Uma instância de [AtividadeRepository] para operações relacionadas a atividades.
+ */
 class AcaoRepository(context: Context) {
 
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
@@ -23,6 +39,13 @@ class AcaoRepository(context: Context) {
     companion object {
         private lateinit var instance: AcaoRepository
 
+        /**
+         * Retorna a única instância de [AcaoRepository] (Singleton).
+         * Se a instância ainda não foi inicializada, ela é criada de forma segura para threads.
+         *
+         * @param context O [Context] da aplicação.
+         * @return A instância de [AcaoRepository].
+         */
         fun getInstance(context: Context): AcaoRepository {
             synchronized(this) {
                 if (!::instance.isInitialized) {
@@ -33,6 +56,12 @@ class AcaoRepository(context: Context) {
         }
     }
 
+    /**
+     * Obtém uma lista de todas as [Acao]s diretamente associadas a um [Pilar] específico.
+     *
+     * @param pilar O objeto [Pilar] cujas ações serão buscadas.
+     * @return Uma [MutableList] de objetos [Acao] que pertencem diretamente ao pilar especificado.
+     */
     fun obterTodasAcoes(pilar: Pilar): MutableList<Acao> {
         val db = dataBase.readableDatabase
 
@@ -59,6 +88,12 @@ class AcaoRepository(context: Context) {
         return acoes
     }
 
+    /**
+     * Obtém uma lista de todas as [Acao]s diretamente associadas a um [Subpilar] específico.
+     *
+     * @param subpilar O objeto [Subpilar] cujas ações serão buscadas.
+     * @return Uma [MutableList] de objetos [Acao] que pertencem diretamente ao subpilar especificado.
+     */
     fun obterTodasAcoes(subpilar: Subpilar): MutableList<Acao> {
         val db = dataBase.readableDatabase
       
@@ -84,8 +119,15 @@ class AcaoRepository(context: Context) {
         cursor.close()
         return acoes
     }
-    
-    // FUnção para consultar ações sem filtro para a listagem de ação em AcaoActivity
+
+    /**
+     * Obtém uma lista contendo todas as [Acao]s existentes no banco de dados, sem nenhum filtro.
+     *
+     * Este método é útil para operações que requerem a listagem completa de todas as ações
+     * cadastradas no sistema.
+     *
+     * @return Uma [List] de objetos [Acao] representando todas as ações disponíveis.
+     */
     fun obterTodasAcoes(): List<Acao> {
         val db = dataBase.readableDatabase
         val acoes: MutableList<Acao> = arrayListOf()
@@ -111,7 +153,15 @@ class AcaoRepository(context: Context) {
         return acoes
     }
 
-    // Funções exclusivas para FILTRAGEM em AtividadeActivity
+    /**
+     * Obtém uma lista de todas as [Acao]s que pertencem a um [Pilar] específico,
+     * incluindo aquelas que estão sob Subpilares desse Pilar.
+     *
+     * Este método consolida ações diretamente ligadas ao pilar e ações de seus subpilares.
+     *
+     * @param pilar O objeto [Pilar] para o qual as ações serão filtradas.
+     * @return Uma [List] de objetos [Acao] associadas ao pilar.
+     */
     fun obterAcoesPorPilar(pilar: Pilar): List<Acao> {
         val db = dataBase.readableDatabase
         val acoesDoPilar: MutableList<Acao> = arrayListOf()
@@ -150,7 +200,12 @@ class AcaoRepository(context: Context) {
     }
 
 
-    // Funções exclusivas para FILTRAGEM em AtividadeActivity
+    /**
+     * Obtém uma lista de todas as [Acao]s diretamente associadas a um [Subpilar] específico.
+     *
+     * @param subpilar O objeto [Subpilar] para o qual as ações serão filtradas.
+     * @return Uma [List] de objetos [Acao] associadas ao subpilar.
+     */
     fun obterAcoesPorSubpilar(subpilar: Subpilar): List<Acao> {
         val db = dataBase.readableDatabase
         val acoes: MutableList<Acao> = arrayListOf()
@@ -178,6 +233,12 @@ class AcaoRepository(context: Context) {
         return acoes
     }
 
+    /**
+     * Obtém uma lista de todas as [Acao]s que não foram finalizadas e são atribuídas a um usuário específico.
+     *
+     * @param idUsuario O ID do usuário para o qual as ações não finalizadas serão buscadas.
+     * @return Uma [List] de objetos [Acao] que ainda não foram concluídas por esse usuário.
+     */
     fun obterAcoesNaoFinalizadasPorUsuario(idUsuario: Int): List<Acao> {
         val db = dataBase.readableDatabase
         val acoes: MutableList<Acao> = arrayListOf()
@@ -208,6 +269,11 @@ class AcaoRepository(context: Context) {
         return acoes
     }
 
+    /**
+     * Obtém a quantidade total de [Acao]s que foram marcadas como finalizadas.
+     *
+     * @return O número inteiro de ações finalizadas.
+     */
     fun obterQuantidadeAcoesFinalizadas(): Int {
         val db = dataBase.readableDatabase
         var quantidadeAcoesFinalizadas = 0
@@ -221,6 +287,11 @@ class AcaoRepository(context: Context) {
         return quantidadeAcoesFinalizadas
     }
 
+    /**
+     * Obtém a quantidade total de [Acao]s que estão em andamento (não finalizadas e com data de término futura).
+     *
+     * @return O número inteiro de ações em andamento.
+     */
     fun obterQuantidadeAcoesEmAndamento(): Int {
         val db = dataBase.readableDatabase
         var quantidadeAcoesEmAndamento = 0
@@ -234,6 +305,11 @@ class AcaoRepository(context: Context) {
         return quantidadeAcoesEmAndamento
     }
 
+    /**
+     * Obtém a quantidade total de [Acao]s que estão atrasadas (não finalizadas e com data de término passada).
+     *
+     * @return O número inteiro de ações atrasadas.
+     */
     fun obterQuantidadeAcoesAtrasadas(): Int {
         val db = dataBase.readableDatabase
         var quantidadeAcoesAtrasadas = 0
@@ -247,6 +323,12 @@ class AcaoRepository(context: Context) {
         return quantidadeAcoesAtrasadas
     }
 
+    /**
+     * Calcula o percentual total de conclusão de uma [Acao], baseado na média dos percentuais totais de suas [Atividade]s.
+     *
+     * @param acao O objeto [Acao] para o qual o percentual total será calculado.
+     * @return O percentual total da ação como um [Double]. Retorna 0.0 se não houver atividades associadas.
+     */
     fun obterPercentualTotalAcao(acao: Acao) : Double {
         val listaAtividade = atividadeRepository.obterTodasAtividades(acao)
         var divisor = 0
@@ -260,6 +342,13 @@ class AcaoRepository(context: Context) {
         return percentualTotalAcao
     }
 
+    /**
+     * Calcula o percentual médio de conclusão de um grupo de [Atividade]s para um mês específico.
+     *
+     * @param atividades Uma [List] de objetos [Atividade] para as quais o percentual do mês será calculado.
+     * @param mes O número do mês (1 a 12) para o qual o percentual será obtido.
+     * @return O percentual médio das atividades para o mês especificado como um [Double]. Retorna 0.0 se não houver atividades.
+     */
     fun obterPercentualMes(atividades: List<Atividade>, mes: Int): Double {
         val percentualTotal: Double
         var somaPercentual = 0.0
@@ -274,6 +363,12 @@ class AcaoRepository(context: Context) {
         return percentualTotal
     }
 
+    /**
+     * Calcula o orçamento total de um grupo de [Atividade]s, somando o orçamento de cada atividade.
+     *
+     * @param atividades Uma [List] de objetos [Atividade] para as quais o orçamento será somado.
+     * @return O orçamento total das atividades como um [Double].
+     */
     fun obterOrcamentoAcao(atividades: List<Atividade>): Double {
         var orcamentoTotal = 0.0
         for (atividade in atividades) {
@@ -283,7 +378,11 @@ class AcaoRepository(context: Context) {
         return orcamentoTotal
     }
 
-    //FUNÇÃO PARA APROVAÇÃO DAS AÇÕES
+    /**
+     * Marca uma [Acao] específica como aprovada no banco de dados.
+     *
+     * @param idAcao O ID da ação a ser marcada como aprovada.
+     */
     fun aprovarAcao(idAcao: Int) {
         val db = dataBase.writableDatabase
         val values = ContentValues().apply {
@@ -293,6 +392,11 @@ class AcaoRepository(context: Context) {
         db.close()
     }
 
+    /**
+     * Obtém uma lista de todas as [Acao]s que ainda não foram aprovadas.
+     *
+     * @return Uma [List] de objetos [Acao] que aguardam aprovação.
+     */
     fun obterAcoesNaoAprovadas(): List<Acao> {
         val db = dataBase.readableDatabase
         val acoes: MutableList<Acao> = arrayListOf()
@@ -321,9 +425,11 @@ class AcaoRepository(context: Context) {
         return acoes
     }
 
-
-    // FUNÇÃO PARA FINALIZAR AÇÃO
-
+    /**
+     * Marca uma [Acao] específica como finalizada no banco de dados.
+     *
+     * @param idAcao O ID da ação a ser marcada como finalizada.
+     */
     fun finalizarAcao(idAcao: Int) {
         val db = dataBase.writableDatabase
         val values = ContentValues().apply {
@@ -333,6 +439,12 @@ class AcaoRepository(context: Context) {
         db.close()
     }
 
+    /**
+     * Obtém uma lista de todas as [Acao]s que estão aprovadas, mas ainda não foram finalizadas,
+     * e cujo percentual total de atividades é 100%.
+     *
+     * @return Uma [List] de objetos [Acao] que estão prontas para serem marcadas como finalizadas manualmente (se aplicável).
+     */
     fun obterAcoesNaoFinalizadas(): List<Acao> {
         val db = dataBase.readableDatabase
         val acoes: MutableList<Acao> = arrayListOf()

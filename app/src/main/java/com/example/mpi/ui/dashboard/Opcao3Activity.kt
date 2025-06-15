@@ -19,6 +19,14 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 
+/**
+ * [Opcao3Activity] é uma Activity de dashboard que exibe um gráfico de barras horizontais
+ * representando a quantidade de atividades com prazos próximos ou vencidos.
+ *
+ * Esta tela recupera a contagem de atividades que faltam 30, 15, 7 dias ou menos para o vencimento,
+ * além das atividades já vencidas. Os dados são visualizados em um gráfico de barras
+ * usando a biblioteca MPAndroidChart, com rótulos e formatação específicos para os prazos.
+ */
 class Opcao3Activity : AppCompatActivity() {
     private lateinit var binding: ActivityOpcao3Binding
 
@@ -28,6 +36,16 @@ class Opcao3Activity : AppCompatActivity() {
     val USUARIO_COORDENADOR = "COORDENADOR"
     val USUARIO_GESTOR = "GESTOR"
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa a interface do usuário, ajusta o preenchimento da janela
+     * para o modo edge-to-edge, recupera as informações do usuário da Intent,
+     * configura o listener para o botão de voltar ao dashboard e gera o gráfico.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -59,6 +77,14 @@ class Opcao3Activity : AppCompatActivity() {
         gerarHorizontalChart()
     }
 
+    /**
+     * Gera e configura um gráfico de barras horizontais (Horizontal Bar Chart)
+     * exibindo a quantidade de atividades com base em seus prazos.
+     *
+     * O método recupera a contagem de atividades por categoria de prazo (30, 15, 7 dias ou menos,
+     * e vencidas), cria as entradas para o gráfico, configura o dataset, os dados do gráfico
+     * e personaliza a aparência do gráfico, incluindo eixos e a formatação dos valores.
+     */
     private fun gerarHorizontalChart() {
 // Lista de entradas para o gráfico de barras
         val barEntries = ArrayList<BarEntry>()

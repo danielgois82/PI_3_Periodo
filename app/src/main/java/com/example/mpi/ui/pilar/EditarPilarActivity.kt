@@ -14,6 +14,14 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+/**
+ * [EditarPilarActivity] é uma Activity responsável por permitir a edição de um pilar existente.
+ *
+ * Esta Activity carrega os detalhes de um pilar a partir da Intent, exibe-os em campos de edição
+ * e permite que o usuário modifique o nome, descrição e as datas de início e término.
+ * Ela realiza validações de data e atualiza o pilar no banco de dados,
+ * garantindo a consistência com o registro de calendário existente.
+ */
 class EditarPilarActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditarPilarBinding
@@ -21,6 +29,16 @@ class EditarPilarActivity : AppCompatActivity() {
     private var pilarId: Int = -1
     private lateinit var calendarioRepository: CalendarioRepository
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa o binding, o DatabaseHelper, o CalendarioRepository.
+     * Recupera os dados do pilar a ser editado da Intent, preenche os campos
+     * da UI e configura os listeners para os botões de salvar e voltar.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,6 +74,14 @@ class EditarPilarActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Salva as edições do pilar no banco de dados.
+     *
+     * Coleta os dados dos campos de entrada, realiza validações nas datas,
+     * e verifica a consistência do ano da data de início com o calendário existente.
+     * Se os dados forem válidos, atualiza o registro do pilar no banco de dados.
+     * Exibe um Toast informando o resultado da operação e finaliza a Activity.
+     */
     private fun salvarEdicaoPilar() {
         val nome = binding.etEditarNomePilar.text.toString()
         val descricao = binding.etEditarDescricaoPilar.text.toString()
@@ -214,7 +240,15 @@ class EditarPilarActivity : AppCompatActivity() {
         }
     }
 
-    // Validação da data(valida os valores inseridos e retorna a data com o tipo Text
+    /**
+     * Valida e formata uma string de data para o formato "dd/MM/yyyy".
+     *
+     * Verifica se a data está no formato correto (dd/MM/yyyy), se os valores de dia, mês e ano
+     * são válidos dentro de um intervalo razoável (anos entre 2025 e 2100).
+     *
+     * @param data A string da data a ser validada (ex: "01/01/2025").
+     * @return A string da data formatada se for válida, ou `null` caso contrário.
+     */
     private fun validarEFormatarDataInicial(data: String): String? {
         if (data.isNullOrEmpty()) {
             return null
@@ -253,6 +287,18 @@ class EditarPilarActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Valida e formata uma string de data de término, garantindo que seja posterior
+     * ou igual à data de início e esteja no formato correto "dd/MM/yyyy".
+     *
+     * Verifica o formato, a validade dos valores e a relação entre as datas de início e término.
+     * Exibe um Toast se o ano de término for diferente do ano de início, ou se a data de término
+     * for anterior à data de início.
+     *
+     * @param dataTerminoStr A string da data de término a ser validada (ex: "31/12/2025").
+     * @param dataInicioStr A string da data de início para comparação (ex: "01/01/2025").
+     * @return A string da data de término formatada se for válida, ou `null` caso contrário.
+     */
     private fun validarEFormatarDataFinal(dataTerminoStr: String, dataInicioStr: String): String? {
         if (dataTerminoStr.isNullOrEmpty()) {
             return null

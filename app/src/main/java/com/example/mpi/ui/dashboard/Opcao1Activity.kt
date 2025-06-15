@@ -18,6 +18,14 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.components.Description
 import com.example.mpi.repository.AcaoRepository
 
+/**
+ * [Opcao1Activity] é uma Activity de dashboard que exibe um gráfico de pizza (Pie Chart)
+ * representando o status das Ações do programa de integridade.
+ *
+ * Esta tela recupera a contagem de ações finalizadas, em andamento e atrasadas do
+ * banco de dados e as visualiza em um gráfico de pizza usando a biblioteca MPAndroidChart.
+ * As porcentagens e a legenda são exibidas para facilitar a compreensão do status geral das ações.
+ */
 class Opcao1Activity : AppCompatActivity() {
     private lateinit var binding: ActivityOpcao1Binding
 
@@ -29,6 +37,16 @@ class Opcao1Activity : AppCompatActivity() {
 
     lateinit var pieChart: PieChart
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa a interface do usuário, ajusta o preenchimento da janela
+     * para o modo edge-to-edge, recupera as informações do usuário da Intent,
+     * configura o listener para o botão de voltar ao dashboard e gera o gráfico de pizza.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -59,6 +77,14 @@ class Opcao1Activity : AppCompatActivity() {
 
     }
 
+    /**
+     * Gera e configura um gráfico de pizza (Pie Chart) exibindo a distribuição
+     * das ações por status (Finalizado, Em Andamento, Em Atraso).
+     *
+     * O método coleta os dados de status das ações, cria o dataset do gráfico,
+     * define as cores, tamanhos de texto, configurações de percentual e
+     * personaliza a descrição e a legenda do gráfico.
+     */
     private fun gerarPieChart() {
         pieChart = findViewById(R.id.pieChart)
 
@@ -94,6 +120,13 @@ class Opcao1Activity : AppCompatActivity() {
         pieChart.invalidate()
     }
 
+    /**
+     * Coleta os dados de status das ações (finalizadas, em andamento, atrasadas)
+     * do [AcaoRepository] e os formata como [PieEntry] para o gráfico de pizza.
+     *
+     * @return Um [ArrayList] de [PieEntry] contendo as contagens e os rótulos
+     * para cada categoria de status da ação.
+     */
     private fun dadosDoPieChart(): ArrayList<PieEntry> {
         val qtdeFinalizado = acaoRepository.obterQuantidadeAcoesFinalizadas()
         val qtdeEmAndamento = acaoRepository.obterQuantidadeAcoesEmAndamento()

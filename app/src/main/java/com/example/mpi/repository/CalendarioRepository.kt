@@ -5,6 +5,18 @@ import com.example.mpi.data.Calendario
 import com.example.mpi.data.DatabaseHelper
 import android.content.ContentValues
 
+/**
+ * Repositório para gerenciar operações de dados relacionadas aos objetos [Calendario] no sistema.
+ *
+ * Esta classe atua como uma ponte entre a lógica de negócio do aplicativo e a tabela `calendario`
+ * no banco de dados SQLite, que é acessada por meio do [DatabaseHelper]. Ela oferece métodos para
+ * recuperar calendários existentes, obter seus IDs e inserir novos.
+ *
+ * Adota o padrão Singleton para garantir que apenas uma instância deste repositório esteja
+ * ativa em toda a aplicação, otimizando o gerenciamento da conexão com o banco de dados.
+ *
+ * @property dataBase Uma instância de [DatabaseHelper] para interagir com o banco de dados.
+ */
 class CalendarioRepository (context: Context) {
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
 
@@ -14,6 +26,13 @@ class CalendarioRepository (context: Context) {
     companion object {
         private lateinit var instance: CalendarioRepository
 
+        /**
+         * Retorna a única instância de [CalendarioRepository] (Singleton).
+         * Se a instância ainda não foi inicializada, ela é criada de forma segura para threads.
+         *
+         * @param context O [Context] da aplicação.
+         * @return A instância de [CalendarioRepository].
+         */
         fun getInstance(context: Context): CalendarioRepository {
             synchronized(this) {
                 if (!::instance.isInitialized) {
@@ -24,6 +43,11 @@ class CalendarioRepository (context: Context) {
         }
     }
 
+    /**
+     * Obtém uma lista contendo todos os calendários armazenados no banco de dados.
+     *
+     * @return Uma [MutableList] de objetos [Calendario] representando todos os calendários disponíveis.
+     */
     fun obterTodosCalendarios(): MutableList<Calendario> {
         val db = dataBase.readableDatabase
 
@@ -44,6 +68,12 @@ class CalendarioRepository (context: Context) {
         return calendarios
     }
 
+    /**
+     * Busca o ID de um calendário específico a partir do seu ano.
+     *
+     * @param ano O ano do calendário cujo ID está sendo procurado.
+     * @return O ID inteiro do calendário se encontrado, ou -1 se nenhum calendário for encontrado para o ano especificado.
+     */
     fun obterIdCalendarioPorAno(ano: Int): Int {
         val db = dataBase.readableDatabase
         var calendarioId: Int = -1
@@ -66,6 +96,12 @@ class CalendarioRepository (context: Context) {
         return calendarioId
     }
 
+    /**
+     * Insere um novo calendário no banco de dados com base no ano fornecido.
+     *
+     * @param ano O ano para o qual o novo calendário será criado.
+     * @return O ID da nova linha inserida no banco de dados. Se a inserção falhar, retorna -1.
+     */
     fun inserirCalendario(ano: Int): Int {
         val db = dataBase.writableDatabase
         val values = ContentValues().apply {
@@ -76,6 +112,11 @@ class CalendarioRepository (context: Context) {
         return newRowId.toInt()
     }
 
+    /**
+     * Conta o número total de Pilares existentes no banco de dados.
+     *
+     * @return O número total de registros na tabela de Pilares.
+     */
     fun contarPilares(): Int {
         val db = dataBase.readableDatabase
         var count = 0

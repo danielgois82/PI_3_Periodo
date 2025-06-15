@@ -19,6 +19,15 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+/**
+ * [cadastroSubpilar] é uma Activity responsável pelo cadastro de novos subpilares no sistema.
+ *
+ * Esta Activity permite que o usuário insira informações como nome, descrição,
+ * data de início e data de término para um novo subpilar. É necessário selecionar
+ * um "Pilar Pai" ao qual o subpilar estará associado.
+ * Realiza validações de entrada, incluindo a consistência das datas do subpilar
+ * em relação às datas do pilar pai, e interage com o banco de dados para persistir os dados.
+ */
 class cadastroSubpilar : AppCompatActivity() {
     private lateinit var binding: ActivityCadastroSubpilarBinding
     private lateinit var dbHelper: DatabaseHelper
@@ -27,6 +36,19 @@ class cadastroSubpilar : AppCompatActivity() {
     private var idPilarSelecionado: Int = -1
     private var idUsuarioRecebido: Int = -1
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa o binding, o DatabaseHelper.
+     * Recupera o ID do usuário logado da Intent.
+     * Carrega os pilares no spinner e configura seu listener.
+     * Configura o listener para o botão de confirmação de cadastro,
+     * realizando validações de dados e persistência no banco de dados.
+     * Configura o listener para o botão de voltar.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -118,6 +140,12 @@ class cadastroSubpilar : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carrega a lista de pilares do banco de dados e popula o spinner de pilares.
+     *
+     * Adiciona uma opção de "hint" ("Selecione o Pilar associado") no início do spinner.
+     * Mapeia os nomes dos pilares para exibição e armazena os objetos Pilar para referências de ID.
+     */
     private fun carregarPilaresNoSpinner() {
         val db = dbHelper.readableDatabase
         val projection = arrayOf(
@@ -154,7 +182,17 @@ class cadastroSubpilar : AppCompatActivity() {
         binding.spinnerPilares.adapter = adapter
     }
 
-    // Validação da data(valida os valores inseridos e retorna a data com o tipo Text
+    /**
+     * Valida e formata a data de início de um subpilar.
+     *
+     * Verifica o formato da data (dd/MM/yyyy), a validade dos valores (dia, mês, ano)
+     * e, crucialmente, se a data de início do subpilar está dentro do período
+     * (entre a data de início e término) do pilar pai selecionado.
+     * Também valida se o ano do subpilar é o mesmo do pilar pai.
+     *
+     * @param dataSubpilarStr A string da data de início do subpilar a ser validada (ex: "05/03/2025").
+     * @return A string da data formatada se for válida, ou `null` caso contrário.
+     */
     private fun validarEFormatarDataInicial(dataSubpilarStr: String): String? {
         if (dataSubpilarStr.isNullOrEmpty()) {
             return null
@@ -261,6 +299,18 @@ class cadastroSubpilar : AppCompatActivity() {
         }
     }
 
+    /**
+     * Valida e formata a data de término de um subpilar.
+     *
+     * Verifica o formato da data (dd/MM/yyyy), a validade dos valores,
+     * se a data de término do subpilar não é anterior à sua data de início,
+     * se o ano da data de término do subpilar é o mesmo do pilar pai
+     * e se a data de término do subpilar não é posterior à data de término do pilar pai.
+     *
+     * @param dataTerminoStr A string da data de término do subpilar a ser validada (ex: "15/07/2025").
+     * @param dataInicioStr A string da data de início do subpilar (para comparação interna).
+     * @return A string da data formatada se for válida, ou `null` caso contrário.
+     */
     private fun validarEFormatarDataFinal(dataTerminoStr: String, dataInicioStr: String): String? {
         if (dataTerminoStr.isNullOrEmpty()) {
             return null

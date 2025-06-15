@@ -27,6 +27,14 @@ import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
 import java.io.OutputStream
 
+/**
+ * [RelatorioOKRActivity] é a Activity responsável por gerar e exibir um relatório em PDF
+ * sobre os números de OKR (Objetivos e Resultados-Chave) do programa de integridade.
+ *
+ * Este relatório apresenta o andamento mensal de cada [Pilar] do programa e o andamento total mensal
+ * de todos os pilares para um ano específico (atualmente fixado em 2025). O PDF gerado
+ * é salvo na pasta de Downloads do dispositivo e pode ser aberto automaticamente.
+ */
 class RelatorioOKRActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRelatorioOkractivityBinding
 
@@ -39,6 +47,16 @@ class RelatorioOKRActivity : AppCompatActivity() {
 
     private var pdfUri: Uri? = null
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa a interface do usuário usando View Binding, ajusta o preenchimento da janela
+     * para o modo edge-to-edge, recupera as informações do usuário da Intent, e configura
+     * os listeners de clique para o botão de voltar e o botão de gerar PDF.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -75,6 +93,14 @@ class RelatorioOKRActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Gera um arquivo PDF contendo o relatório de OKR.
+     *
+     * O PDF inclui um cabeçalho, uma tabela com o andamento mensal de cada pilar
+     * e o andamento total mensal do programa. O arquivo é salvo na pasta de Downloads
+     * do dispositivo com o nome "MPI - Relatório OKR.pdf". Se um arquivo com o mesmo
+     * nome já existir, ele é deletado antes de um novo ser criado.
+     */
     private fun gerarPDFRelatorioOKR() {
         try {
             val fileName = "MPI - Relatório OKR.pdf"
@@ -215,6 +241,12 @@ class RelatorioOKRActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Abre o arquivo PDF gerado usando um Intent.
+     *
+     * Tenta abrir o PDF com um visualizador de PDF padrão do sistema.
+     * Se não houver um aplicativo para lidar com o Intent, a exceção é capturada.
+     */
     private fun abrirPdfGerado() {
         pdfUri?.let { uri ->
             val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -230,6 +262,12 @@ class RelatorioOKRActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Deleta um arquivo PDF existente na pasta de Downloads do dispositivo
+     * com o nome especificado.
+     *
+     * @param nomeArquivo O nome do arquivo PDF a ser deletado.
+     */
     private fun deletarPdfSeExistir(nomeArquivo: String) {
         val resolver = contentResolver
         val uriDownloads = MediaStore.Downloads.EXTERNAL_CONTENT_URI

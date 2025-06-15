@@ -15,12 +15,30 @@ import com.example.mpi.databinding.ActivityNotificacaoBinding
 import com.example.mpi.repository.NotificacaoRepository
 import com.example.mpi.ui.notificacao.NotificacaoAdapter
 
+/**
+ * [NotificacaoActivity] é a Activity responsável por exibir a lista de notificações
+ * para o usuário logado.
+ *
+ * Esta tela recupera e exibe notificações não lidas, permitindo que o usuário as marque
+ * como visualizadas. Ela utiliza um [RecyclerView] para listar as notificações
+ * e interage com o [NotificacaoRepository] para gerenciar o status das notificações.
+ */
 class NotificacaoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNotificacaoBinding
     private lateinit var notificacaoRepository: NotificacaoRepository
     private lateinit var notificacaoAdapter: NotificacaoAdapter
     private var idUsuarioLogado: Int = 999999
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa a interface do usuário, configura o [NotificacaoRepository],
+     * recupera as informações do usuário da Intent, configura o [RecyclerView]
+     * com o [NotificacaoAdapter] e seus listeners, e carrega as notificações.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -64,6 +82,9 @@ class NotificacaoActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carrega as notificações não lidas do usuário logado e atualiza o adaptador do [RecyclerView].
+     */
     private fun carregarNotificacoes() {
         val notificacoesNaoLidas = notificacaoRepository.obterNotificacoesNaoLidasPorUsuario(idUsuarioLogado)
         notificacaoAdapter.atualizarNotificacoes(notificacoesNaoLidas)

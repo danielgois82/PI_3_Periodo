@@ -21,6 +21,13 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+/**
+ * [CadastroAtividadeActivity] é uma Activity para cadastrar novas atividades no sistema.
+ *
+ * Permite que o usuário insira detalhes como nome, descrição, datas, responsável,
+ * orçamento e ação relacionada para uma nova atividade.
+ * Valida as entradas do usuário e interage com o banco de dados para salvar a nova atividade.
+ */
 class CadastroAtividadeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCadastroAtividadeBinding
@@ -34,6 +41,16 @@ class CadastroAtividadeActivity : AppCompatActivity() {
     private var idAcaoSelecionada: Int = -1
     private var idUsuarioRecebido: Int = -1
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa o binding, o DatabaseHelper, o repositório, carrega os dados para os spinners
+     * de responsáveis e ações. Recupera o ID do usuário logado e configura os listeners
+     * para os spinners e botões de confirmação e voltar.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,6 +73,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         }
 
 
+        // Configura o listener para o spinner de responsáveis.
         binding.spinnerResponsaveis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (position > 0) {
@@ -70,6 +88,7 @@ class CadastroAtividadeActivity : AppCompatActivity() {
             }
         }
 
+        // Configura o listener para o spinner de ações.
         binding.spinnerAcoes.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (position > 0) {
@@ -93,6 +112,11 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carrega a lista de responsáveis do banco de dados e preenche o spinner de responsáveis.
+     * Exclui usuários do tipo Gestor da lista.
+     * Inclui a opção "Selecione o Responsável" como primeiro item.
+     */
     private fun carregarResponsaveisNoSpinner() {
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_USUARIO} WHERE ${DatabaseHelper.COLUMN_USUARIO_ID_TIPOUSUARIO} != 3", null)
@@ -116,6 +140,10 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         binding.spinnerResponsaveis.adapter = adapter
     }
 
+    /**
+     * Carrega a lista de ações do banco de dados e preenche o spinner de ações.
+     * Inclui a opção "Selecione a Ação" como primeiro item.
+     */
     private fun carregarAcoesNoSpinner() {
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_ACAO}", null)
@@ -138,6 +166,13 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         binding.spinnerAcoes.adapter = adapter
     }
 
+    /**
+     * Cadastra uma nova atividade no banco de dados.
+     *
+     * Coleta os dados dos campos de entrada, valida-os e, se forem válidos,
+     * insere a nova atividade no banco de dados.
+     * Exibe um Toast informando o resultado da operação e finaliza a Activity.
+     */
     private fun cadastrarAtividade() {
         val nome = binding.etNomeAtividade.text.toString().trim()
         val descricao = binding.etDescricaoAtividade.text.toString().trim()
@@ -205,7 +240,16 @@ class CadastroAtividadeActivity : AppCompatActivity() {
 
     }
 
-
+    /**
+     * Valida e formata a data de início da atividade.
+     *
+     * Verifica se a data está no formato correto (dd/MM/yyyy), se é válida e se está dentro
+     * do período da ação selecionada.
+     *
+     * @param dataAtividadeStr A data de início da atividade em formato String.
+     * @param idAcaoSelecionada O ID da ação selecionada.
+     * @return A data formatada como String ou null se a data for inválida.
+     */
     private fun validarEFormatarDataInicio(dataAtividadeStr: String, idAcaoSelecionada: Int): String? {
         if (dataAtividadeStr.isNullOrEmpty()) {
             return null
@@ -291,6 +335,17 @@ class CadastroAtividadeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Valida e formata a data de término da atividade.
+     *
+     * Verifica se a data está no formato correto (dd/MM/yyyy), se é válida, se é posterior
+     * à data de início da atividade e se está dentro do período da ação selecionada.
+     *
+     * @param dataTerminoAtividadeStr A data de término da atividade em formato String.
+     * @param dataInicioAtividadeStr A data de início da atividade em formato String.
+     * @param idAcaoSelecionada O ID da ação selecionada.
+     * @return A data formatada como String ou null se a data for inválida.
+     */
     private fun validarEFormatarDataTermino(dataTerminoAtividadeStr: String, dataInicioAtividadeStr: String, idAcaoSelecionada: Int): String? {
         if (dataTerminoAtividadeStr.isNullOrEmpty()) {
             return null
