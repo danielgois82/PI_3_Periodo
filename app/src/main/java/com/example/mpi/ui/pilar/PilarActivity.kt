@@ -13,7 +13,13 @@ import androidx.activity.enableEdgeToEdge
 import com.example.mpi.data.Pilar
 import com.example.mpi.repository.PilarRepository
 
-
+/**
+ * [PilarActivity] é a tela principal para gerenciamento de pilares no aplicativo.
+ *
+ * Esta Activity exibe uma lista de pilares em um `RecyclerView`, permite adicionar novos pilares,
+ * editar pilares existentes e excluí-los. Ela também carrega informações do usuário logado
+ * para fins de log e para passar para outras Activities.
+ */
 class PilarActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPilarBinding
@@ -22,6 +28,17 @@ class PilarActivity : AppCompatActivity() {
     private lateinit var pilarRepository: PilarRepository
     private val listaPilares = mutableListOf<Pilar>()
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa o binding, o DatabaseHelper, o PilarRepository.
+     * Recupera informações do usuário logado da Intent, configura o `RecyclerView`
+     * com o [PilarAdapter] e define os listeners para os botões de adicionar e voltar.
+     * Carrega a lista de pilares inicialmente.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -59,11 +76,24 @@ class PilarActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Chamado quando a Activity é retomada após estar em um estado pausado.
+     *
+     * Garante que a lista de pilares seja recarregada e atualizada sempre que a Activity
+     * volta ao primeiro plano (por exemplo, após o retorno de uma Activity de cadastro ou edição).
+     */
     override fun onResume() {
         super.onResume()
         carregarPilares()
     }
 
+    /**
+     * Carrega a lista de pilares do banco de dados e atualiza o `RecyclerView`.
+     *
+     * Limpa a lista existente de pilares, consulta o banco de dados para obter
+     * todos os registros de pilares, os adiciona à lista e notifica o adaptador
+     * para que o `RecyclerView` seja atualizado.
+     */
     private fun carregarPilares() {
         listaPilares.clear()
         val db = dbHelper.readableDatabase
@@ -120,6 +150,14 @@ class PilarActivity : AppCompatActivity() {
         pilarAdapter.notifyDataSetChanged()
     }
 
+    /**
+     * Abre a [EditarPilarActivity] para permitir a edição de um [Pilar] específico.
+     *
+     * Passa todos os detalhes do pilar como extras na Intent para a Activity de edição.
+     * Exibe um Toast simples confirmando a ação.
+     *
+     * @param pilar O objeto [Pilar] a ser editado.
+     */
     private fun editarPilar(pilar: Pilar) {
             val intent = Intent(this, EditarPilarActivity::class.java)
             intent.putExtra("pilar_id", pilar.id)
@@ -134,6 +172,16 @@ class PilarActivity : AppCompatActivity() {
             android.widget.Toast.makeText(this, "Editar: ${pilar.nome}", android.widget.Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Exclui um [Pilar] do banco de dados.
+     *
+     * Antes de excluir, valida se o pilar pode ser excluído (ou seja, se não tem subpilares
+     * ou ações vinculadas). Se a exclusão for bem-sucedida, remove o pilar da lista,
+     * notifica o adaptador e, se for o último pilar, também exclui o registro correspondente
+     * na tabela de calendário. Exibe um Toast com o resultado da operação.
+     *
+     * @param pilar O objeto [Pilar] a ser excluído.
+     */
     private fun excluirPilar(pilar: Pilar) {
         if(pilarRepository.validarExclusaoPilar(pilar) == true){
             val db = dbHelper.writableDatabase

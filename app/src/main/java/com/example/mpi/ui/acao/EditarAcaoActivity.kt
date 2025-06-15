@@ -19,7 +19,16 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-
+/**
+ * [EditarAcaoActivity] é a Activity responsável por permitir a edição de uma [Acao] existente
+ * no sistema.
+ *
+ * Esta tela carrega os dados de uma ação específica pelo seu ID e permite ao usuário
+ * modificar seu nome, descrição, datas de início e término, o responsável, e o vínculo
+ * (Pilar ou Subpilar). Realiza validações rigorosas das datas, garantindo que estejam
+ * no formato correto e dentro dos períodos permitidos pelo Pilar ou Subpilar pai.
+ * Após a edição, as alterações são persistidas no banco de dados.
+ */
 class EditarAcaoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditarAcaoBinding
     private lateinit var dbHelper: DatabaseHelper
@@ -36,6 +45,17 @@ class EditarAcaoActivity : AppCompatActivity() {
     private var acaoAprovada: Int = 0
     private var acaoFinalizada: Int = 0
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa a interface do usuário, configura o [DatabaseHelper],
+     * recupera o ID da ação a ser editada da Intent, carrega os dados existentes da ação,
+     * popula os Spinners de usuários e de vínculo (Pilar/Subpilar) e
+     * configura os listeners para os elementos de UI.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -65,6 +85,9 @@ class EditarAcaoActivity : AppCompatActivity() {
 
         // Listener para o Spinner de Responsável
         binding.spinnerResponsavelEditar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            /**
+             * Chamado quando um item do Spinner de Responsável é selecionado.
+             */
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (position > 0) {
                     idResponsavelSelecionado = listaUsuariosObjetos[position - 1].id
@@ -73,6 +96,9 @@ class EditarAcaoActivity : AppCompatActivity() {
                 }
             }
 
+            /**
+             * Chamado quando nada é selecionado no Spinner de Responsável.
+             */
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 idResponsavelSelecionado = -1
             }
@@ -93,6 +119,9 @@ class EditarAcaoActivity : AppCompatActivity() {
 
         // Listener para o Spinner de Vínculo
         binding.spinnerVinculoEditar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            /**
+             * Chamado quando um item do Spinner de Vínculo é selecionado.
+             */
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (position > 0) {
                     if (tipoVinculo == "pilar") {
@@ -104,7 +133,9 @@ class EditarAcaoActivity : AppCompatActivity() {
                     idVinculoSelecionado = -1
                 }
             }
-
+            /**
+             * Chamado quando nada é selecionado no Spinner de Vínculo.
+             */
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 idVinculoSelecionado = -1
             }
@@ -119,6 +150,13 @@ class EditarAcaoActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carrega os dados da [Acao] do banco de dados com base no `acaoId` e preenche os campos
+     * da interface de usuário.
+     *
+     * Este método também determina o tipo de vínculo (Pilar ou Subpilar) e seleciona
+     * o RadioButton e o item correto no Spinner de vínculo.
+     */
     private fun carregarDadosAcao() {
         val db = dbHelper.readableDatabase
         val projection = arrayOf(
@@ -181,6 +219,10 @@ class EditarAcaoActivity : AppCompatActivity() {
         db.close()
     }
 
+    /**
+     * Carrega a lista de [Pilar]es do banco de dados e popula o Spinner de vínculo.
+     * Também tenta pré-selecionar o Pilar já vinculado à ação, se aplicável.
+     */
     private fun carregarPilaresNoSpinner() {
         val db = dbHelper.readableDatabase
         val projection = arrayOf(DatabaseHelper.COLUMN_PILAR_ID, DatabaseHelper.COLUMN_PILAR_NOME)
@@ -212,6 +254,10 @@ class EditarAcaoActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carrega a lista de [Usuario]s (exceto Gestores) do banco de dados e popula o Spinner de responsáveis.
+     * Também tenta pré-selecionar o Responsável já atribuído à ação.
+     */
     private fun carregarUsuariosNoSpinner() {
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_USUARIO} WHERE ${DatabaseHelper.COLUMN_USUARIO_ID_TIPOUSUARIO} != 3", null)
@@ -256,6 +302,10 @@ class EditarAcaoActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carrega a lista de [Subpilar]es do banco de dados e popula o Spinner de vínculo.
+     * Também tenta pré-selecionar o Subpilar já vinculado à ação, se aplicável.
+     */
     private fun carregarSubpilaresNoSpinner() {
         val db = dbHelper.readableDatabase
         val projection = arrayOf(DatabaseHelper.COLUMN_SUBPILAR_ID, DatabaseHelper.COLUMN_SUBPILAR_NOME)
@@ -288,6 +338,13 @@ class EditarAcaoActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Salva as edições da [Acao] no banco de dados.
+     *
+     * Este método recupera os dados dos campos da interface, realiza validações,
+     * e então atualiza o registro da ação no banco de dados.
+     * Exibe mensagens de sucesso ou erro e retorna à Activity anterior após a operação.
+     */
     private fun salvarEdicaoAcao() {
         val nome = binding.etEditarNomeAcao.text.toString()
         val descricao = binding.etEditarDescricaoAcao.text.toString()
@@ -342,6 +399,17 @@ class EditarAcaoActivity : AppCompatActivity() {
             Toast.makeText(this, "Erro ao atualizar ação", Toast.LENGTH_SHORT).show()
         }
     }
+
+    /**
+     * Valida e formata a data de início da Ação, garantindo que esteja no formato "dd/MM/yyyy"
+     * e que esteja dentro do período válido do Pilar ou Subpilar pai.
+     * Também verifica se o ano da ação é o mesmo do Pilar/Subpilar.
+     *
+     * @param dataAcaoStr A string da data de início da Ação a ser validada.
+     * @param tipoVinculo O tipo de vínculo ("pilar" ou "subpilar").
+     * @param idVinculoSelecionado O ID do Pilar ou Subpilar selecionado.
+     * @return A data formatada como String se for válida, caso contrário, `null`.
+     */
     private fun validarEFormatarDataInicial(dataAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Int): String? {
         if (dataAcaoStr.isNullOrEmpty()) {
             return null
@@ -468,7 +536,18 @@ class EditarAcaoActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Valida e formata a data de término da Ação, garantindo que esteja no formato "dd/MM/yyyy",
+     * que não seja anterior à data de início da própria Ação,
+     * que esteja dentro do período válido do Pilar ou Subpilar pai,
+     * e que o ano seja o mesmo da data de início da Ação.
+     *
+     * @param dataTerminoAcaoStr A string da data de término da Ação a ser validada.
+     * @param dataInicioAcaoStr A string da data de início da Ação para comparação.
+     * @param tipoVinculo O tipo de vínculo ("pilar" ou "subpilar").
+     * @param idVinculoSelecionado O ID do Pilar ou Subpilar selecionado.
+     * @return A data formatada como String se for válida, caso contrário, `null`.
+     */
     private fun validarEFormatarDataFinal(dataTerminoAcaoStr: String, dataInicioAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Int): String? {
         if (dataTerminoAcaoStr.isNullOrEmpty()) {
             return null

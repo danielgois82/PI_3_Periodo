@@ -19,6 +19,15 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+/**
+ * [CadastroAcaoActivity] é a Activity responsável por permitir o cadastro de novas [Acao]s
+ * no sistema.
+ *
+ * Esta tela coleta informações como nome, descrição, datas de início e término,
+ * responsável e o vínculo (Pilar ou Subpilar) da ação.
+ * Realiza validações de dados, incluindo a conformidade das datas da ação com as
+ * datas do Pilar ou Subpilar vinculado, e persiste a nova ação no banco de dados.
+ */
 class CadastroAcaoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCadastroAcaoBinding
     private lateinit var dbHelper: DatabaseHelper
@@ -33,6 +42,16 @@ class CadastroAcaoActivity : AppCompatActivity() {
     private var idResponsavelSelecionado: Int = -1
     private var idUsuarioRecebido: Int = -1
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa a interface do usuário, configura o [DatabaseHelper],
+     * carrega a lista de usuários para o spinner de responsáveis,
+     * e configura os listeners para o RadioGroup de vínculo e os botões de ação.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -70,6 +89,9 @@ class CadastroAcaoActivity : AppCompatActivity() {
 
 
         binding.spinnerVinculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            /**
+             * Chamado quando um item do Spinner de vínculo é selecionado.
+             */
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (position > 0) {
                     if (tipoVinculo == "pilar") {
@@ -82,6 +104,9 @@ class CadastroAcaoActivity : AppCompatActivity() {
                 }
             }
 
+            /**
+             * Chamado quando nada é selecionado no Spinner de vínculo.
+             */
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 idVinculoSelecionado = -1
             }
@@ -149,6 +174,10 @@ class CadastroAcaoActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carrega a lista de [Pilar]es do banco de dados e popula o Spinner de vínculo.
+     * Adiciona um item padrão "Selecione o Pilar" no início.
+     */
     private fun carregarPilaresNoSpinner() {
         val db = dbHelper.readableDatabase
         val projection = arrayOf(DatabaseHelper.COLUMN_PILAR_ID, DatabaseHelper.COLUMN_PILAR_NOME)
@@ -173,6 +202,10 @@ class CadastroAcaoActivity : AppCompatActivity() {
         binding.spinnerVinculo.adapter = adapter
     }
 
+    /**
+     * Carrega a lista de [Usuario]s (exceto Gestores) do banco de dados e popula o Spinner de responsáveis.
+     * Adiciona um item padrão "Selecione o Responsável" no início.
+     */
     private fun carregarUsuariosNoSpinner() {
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_USUARIO} WHERE ${DatabaseHelper.COLUMN_USUARIO_ID_TIPOUSUARIO} != 3", null)
@@ -208,6 +241,11 @@ class CadastroAcaoActivity : AppCompatActivity() {
             }
         }
     }
+
+    /**
+     * Carrega a lista de [Subpilar]es do banco de dados e popula o Spinner de vínculo.
+     * Adiciona um item padrão "Selecione o Subpilar" no início.
+     */
     private fun carregarSubpilaresNoSpinner() {
         val db = dbHelper.readableDatabase
         val projection = arrayOf(DatabaseHelper.COLUMN_SUBPILAR_ID, DatabaseHelper.COLUMN_SUBPILAR_NOME)
@@ -231,6 +269,17 @@ class CadastroAcaoActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaSubpilaresNomes)
         binding.spinnerVinculo.adapter = adapter
     }
+
+    /**
+     * Valida e formata a data de início da Ação, garantindo que esteja no formato "dd/MM/yyyy"
+     * e que esteja dentro do período válido do Pilar ou Subpilar pai.
+     * Também verifica se o ano da ação é o mesmo do Pilar/Subpilar.
+     *
+     * @param dataAcaoStr A string da data de início da Ação a ser validada.
+     * @param tipoVinculo O tipo de vínculo ("pilar" ou "subpilar").
+     * @param idVinculoSelecionado O ID do Pilar ou Subpilar selecionado.
+     * @return A data formatada como String se for válida, caso contrário, `null`.
+     */
     private fun validarEFormatarDataInicial(dataAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Int): String? {
         if (dataAcaoStr.isNullOrEmpty()) {
             return null
@@ -358,6 +407,18 @@ class CadastroAcaoActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Valida e formata a data de término da Ação, garantindo que esteja no formato "dd/MM/yyyy",
+     * que não seja anterior à data de início da própria Ação,
+     * que esteja dentro do período válido do Pilar ou Subpilar pai,
+     * e que o ano seja o mesmo da data de início da Ação.
+     *
+     * @param dataTerminoAcaoStr A string da data de término da Ação a ser validada.
+     * @param dataInicioAcaoStr A string da data de início da Ação para comparação.
+     * @param tipoVinculo O tipo de vínculo ("pilar" ou "subpilar").
+     * @param idVinculoSelecionado O ID do Pilar ou Subpilar selecionado.
+     * @return A data formatada como String se for válida, caso contrário, `null`.
+     */
     private fun validarEFormatarDataFinal(dataTerminoAcaoStr: String, dataInicioAcaoStr: String, tipoVinculo: String, idVinculoSelecionado: Int): String? {
         if (dataTerminoAcaoStr.isNullOrEmpty()) {
             return null

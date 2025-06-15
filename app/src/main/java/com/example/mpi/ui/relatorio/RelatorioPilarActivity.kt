@@ -33,6 +33,14 @@ import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
 import java.io.OutputStream
 
+/**
+ * [RelatorioPilarActivity] é a Activity responsável por gerar e exibir um relatório em PDF
+ * sobre o status de Pilares dentro do programa de integridade.
+ *
+ * Este relatório detalha cada pilar, suas ações associadas e as atividades dentro de cada ação,
+ * incluindo seus respectivos status de aprovação e finalização. O PDF gerado
+ * é salvo na pasta de Downloads do dispositivo e pode ser aberto automaticamente.
+ */
 class RelatorioPilarActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRelatorioPilarBinding
 
@@ -49,6 +57,16 @@ class RelatorioPilarActivity : AppCompatActivity() {
 
     private var pdfUri: Uri? = null
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa a interface do usuário usando View Binding, ajusta o preenchimento da janela
+     * para o modo edge-to-edge, recupera as informações do usuário da Intent, e configura
+     * os listeners de clique para o botão de voltar e o botão de gerar PDF.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -87,12 +105,26 @@ class RelatorioPilarActivity : AppCompatActivity() {
         }
 
         binding.spinnerPilar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            /**
+             * Chamado quando um item no spinner é selecionado.
+             *
+             * @param parent O AdapterView onde a seleção ocorreu.
+             * @param view A view dentro do AdapterView que foi clicada.
+             * @param position A posição da view no adaptador.
+             * @param id O ID da linha do item selecionado.
+             */
             override fun onItemSelected(
                 parent: AdapterView<*>, view: View, position: Int, id: Long
             ) {
                 pilarSelecionado = parent.getItemAtPosition(position) as Pilar
             }
 
+            /**
+             * Chamado quando nada é selecionado no spinner.
+             * Atualmente, este método não faz nada.
+             *
+             * @param parent O AdapterView onde a seleção ocorreu.
+             */
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 // Nada selecionado
             }
@@ -117,6 +149,16 @@ class RelatorioPilarActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Gera um arquivo PDF contendo o relatório detalhado de um Pilar específico.
+     *
+     * O PDF inclui informações sobre o pilar selecionado, suas ações e atividades,
+     * juntamente com seus status de aprovação e finalização. O arquivo é salvo
+     * na pasta de Downloads do dispositivo com o nome "MPI - Relatório Pilar [Nome do Pilar].pdf".
+     * Se um arquivo com o mesmo nome já existir, ele é deletado antes de um novo ser criado.
+     *
+     * @param pilar O [Pilar] para o qual o relatório deve ser gerado.
+     */
     private fun gerarPDFRelatorioPilar(pilar: Pilar) {
         try {
             val fileName = "MPI - Relatório Pilar ${pilar.nome}.pdf"
@@ -538,6 +580,12 @@ class RelatorioPilarActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Abre o arquivo PDF gerado usando um Intent.
+     *
+     * Tenta abrir o PDF com um visualizador de PDF padrão do sistema.
+     * Se não houver um aplicativo para lidar com o Intent, a exceção é capturada.
+     */
     private fun abrirPdfGerado() {
         pdfUri?.let { uri ->
             val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -553,6 +601,12 @@ class RelatorioPilarActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Deleta um arquivo PDF existente na pasta de Downloads do dispositivo
+     * com o nome especificado.
+     *
+     * @param nomeArquivo O nome do arquivo PDF a ser deletado.
+     */
     private fun deletarPdfSeExistir(nomeArquivo: String) {
         val resolver = contentResolver
         val uriDownloads = MediaStore.Downloads.EXTERNAL_CONTENT_URI

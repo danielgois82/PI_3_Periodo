@@ -5,10 +5,39 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
+/**
+ * Auxiliar para gerenciamento do banco de dados SQLite local da aplicação.
+ *
+ * Esta classe estende [SQLiteOpenHelper] e é responsável por:
+ * 1. **Criar o esquema do banco de dados** na primeira instalação do aplicativo.
+ * Isso inclui a definição de todas as tabelas e suas colunas, além das chaves estrangeiras.
+ * 2. **Realizar a atualização do banco de dados** quando a versão do esquema muda,
+ * garantindo que o banco de dados seja compatível com a versão mais recente do aplicativo.
+ * 3. **Popular o banco de dados com dados iniciais** para 'TipoUsuario' e 'Usuario'
+ * na criação inicial do DB.
+ *
+ * Ele gerencia o acesso ao banco de dados SQLite, servindo como a base para os repositórios
+ * de dados que interagem com as tabelas.
+ *
+ * @property context O contexto da aplicação necessário para abrir ou criar o banco de dados.
+ */
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
+    /**
+     * Chamado quando o banco de dados é criado pela primeira vez.
+     *
+     * Este método executa todas as instruções SQL para criar as tabelas do esquema
+     * do banco de dados e popula as tabelas iniciais com dados padrão.
+     *
+     * @param db O objeto [SQLiteDatabase] do banco de dados.
+     */
     override fun onCreate(db: SQLiteDatabase) {
+        // Definição das instruções SQL para criação de cada tabela.
+        // As tabelas incluem: Calendario, TipoUsuario, Usuario, Notificacao,
+        // Pilar, Subpilar, Acao, PercentualAcao, Atividade e PercentualAtividade.
+
+
         val createCalendarioTable = """
             CREATE TABLE $TABLE_CALENDARIO (
                 $COLUMN_CALENDARIO_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -144,10 +173,23 @@ class DatabaseHelper(context: Context) :
         db.execSQL(createAtividadeTable)
         db.execSQL(createPercentualAtividadeTable)
 
+        //Seeding: Inserção de dados iniciais
         inserirTipoUsuario(db, obterTipoUsuario())
         inserirUsuarios(db, obterUsuarios())
     }
 
+    /**
+     * Chamado quando o banco de dados precisa ser atualizado.
+     *
+     * Este método é invocado quando a versão do banco de dados (DATABASE_VERSION) no código
+     * é maior que a versão do banco de dados no dispositivo. Ele é responsável por migrar
+     * ou recriar o esquema do banco de dados para a nova versão.
+     *
+     *
+     * @param db O objeto [SQLiteDatabase] do banco de dados.
+     * @param oldVersion A versão antiga do banco de dados.
+     * @param newVersion A nova versão do banco de dados.
+     */
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_PERCENTUAL_ATIVIDADE")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_ATIVIDADE")
@@ -251,14 +293,15 @@ class DatabaseHelper(context: Context) :
     }
 
 
-
-
-
-
-
-
-
-
+    /**
+     * Insere os tipos de usuário predefinidos na tabela 'tipoUsuario'.
+     *
+     * Este método é chamado uma única vez durante a criação inicial do banco de dados
+     * para popular a tabela com cargos como "Analista", "Coordenador" e "Gestor".
+     *
+     * @param db O objeto [SQLiteDatabase] para realizar a inserção.
+     * @param tipoUsuario Uma lista de objetos [TipoUsuario] a serem inseridos.
+     */
     private fun inserirTipoUsuario(db: SQLiteDatabase, tipoUsuario: List<TipoUsuario>) {
         for (tipo in tipoUsuario) {
             val values = ContentValues().apply {
@@ -268,6 +311,15 @@ class DatabaseHelper(context: Context) :
         }
     }
 
+    /**
+     * Insere os usuários iniciais na tabela 'usuario'.
+     *
+     * Este método é chamado uma única vez durante a criação inicial do banco de dados
+     * para popular a tabela com usuários de exemplo associados aos tipos de usuário.
+     *
+     * @param db O objeto [SQLiteDatabase] para realizar a inserção.
+     * @param usuarios Uma lista de objetos [Usuario] a serem inseridos.
+     */
     private fun inserirUsuarios(db: SQLiteDatabase, usuarios: List<Usuario>) {
         for (usuario in usuarios) {
             val values = ContentValues().apply {
@@ -280,12 +332,20 @@ class DatabaseHelper(context: Context) :
         }
     }
 
+    /**
+     * Retorna uma lista predefinida de tipos de usuário para inserção inicial no banco de dados.
+     * @return Uma [List] de objetos [TipoUsuario].
+     */
     private fun obterTipoUsuario(): List<TipoUsuario> = listOf(
         TipoUsuario(1, "Analista"),
         TipoUsuario(2, "Coordenador"),
         TipoUsuario(3, "Gestor")
     )
 
+    /**
+     * Retorna uma lista predefinida de usuários para inserção inicial no banco de dados.
+     * @return Uma [List] de objetos [Usuario].
+     */
     private fun obterUsuarios(): List<Usuario> = listOf(
         Usuario(1, "Analista José", "jose@jose.com", "jose123", 1),
         Usuario(2, "Analista João", "joao@joao.com", "joao123", 1),

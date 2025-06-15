@@ -10,12 +10,32 @@ import com.example.mpi.R
 import com.example.mpi.data.Atividade
 import com.example.mpi.repository.UsuarioRepository
 
+/**
+ * [AprovacaoAtividadeAdapter] é um adaptador para `RecyclerView` que exibe uma lista de [Atividade]s
+ * pendentes de aprovação.
+ *
+ * Cada item da lista apresenta os detalhes de uma atividade, como título, descrição, datas,
+ * orçamento, responsável e criador. Ele também inclui um botão para aprovar a atividade,
+ * que aciona um callback definido.
+ *
+ * @property atividades A lista de [Atividade]s a serem exibidas.
+ * @property onAprovarAtividadeClick Um lambda que será invocado quando o botão de aprovar uma atividade for clicado,
+ * passando a [Atividade] correspondente.
+ * @property usuarioRepository Uma instância de [UsuarioRepository] para obter os nomes dos usuários
+ * responsáveis e criadores.
+ */
 class AprovacaoAtividadeAdapter(
     private var atividades: List<Atividade>,
     private val onAprovarAtividadeClick: (Atividade) -> Unit,
     private val usuarioRepository: UsuarioRepository
 ) : RecyclerView.Adapter<AprovacaoAtividadeAdapter.AtividadeViewHolder>() {
 
+    /**
+     * [AtividadeViewHolder] é uma classe interna `ViewHolder` que mantém as referências
+     * dos componentes de UI de cada item da lista.
+     *
+     * @param view A `View` raiz do layout do item (`item_aprovacao_atividade.xml`).
+     */
     class AtividadeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvAtividadeTitulo: TextView = view.findViewById(R.id.tvAtividadeTitulo)
         val tvAtividadeDescricao: TextView = view.findViewById(R.id.tvAtividadeDescricao)
@@ -27,11 +47,30 @@ class AprovacaoAtividadeAdapter(
         val btnAprovarAtividade: Button = view.findViewById(R.id.btnAprovarAtividade)
     }
 
+    /**
+     * Chamado quando o `RecyclerView` precisa de um novo `ViewHolder` do tipo dado
+     * para representar um item.
+     *
+     * @param parent O `ViewGroup` ao qual a nova `View` será anexada depois de ser vinculada
+     * a uma posição do adaptador.
+     * @param viewType O tipo de view da nova `View`.
+     * @return Um novo `AtividadeViewHolder` que contém a `View` para cada item da lista.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AtividadeViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_aprovacao_atividade, parent, false)
         return AtividadeViewHolder(view)
     }
 
+    /**
+     * Chamado pelo `RecyclerView` para exibir os dados na posição especificada.
+     *
+     * Este método atualiza o conteúdo do `ViewHolder.itemView` para refletir o item
+     * na posição dada. Também configura o `OnClickListener` para o botão de aprovação.
+     *
+     * @param holder O `AtividadeViewHolder` que deve ser atualizado para representar o conteúdo
+     * do item na posição dada na lista de dados.
+     * @param position A posição do item dentro do conjunto de dados do adaptador.
+     */
     override fun onBindViewHolder(holder: AtividadeViewHolder, position: Int) {
         val atividade = atividades[position]
         holder.tvAtividadeTitulo.text = "Atividade: ${atividade.nome}"
@@ -53,8 +92,19 @@ class AprovacaoAtividadeAdapter(
         }
     }
 
+    /**
+     * Retorna o número total de itens no conjunto de dados mantido pelo adaptador.
+     *
+     * @return O número total de atividades na lista.
+     */
     override fun getItemCount(): Int = atividades.size
 
+    /**
+     * Atualiza a lista de atividades exibidas pelo adaptador e notifica o `RecyclerView`
+     * sobre a mudança para que a UI seja redesenhada.
+     *
+     * @param novasAtividades A nova lista de [Atividade]s para ser exibida.
+     */
     fun atualizarAtividades(novasAtividades: List<Atividade>) {
         this.atividades = novasAtividades
         notifyDataSetChanged()

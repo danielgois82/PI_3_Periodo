@@ -30,6 +30,18 @@ import com.example.mpi.repository.PilarRepository
 import com.example.mpi.repository.SubpilarRepository
 import com.example.mpi.repository.UsuarioRepository
 
+/**
+ * A [PercentualActivity] é uma tela que permite ao usuário visualizar e,
+ * dependendo do seu tipo de perfil, gerenciar os percentuais de progresso
+ * mensais de uma atividade específica.
+ *
+ * Esta Activity apresenta um fluxo de seleção em cascata (Pilar -> Subpilar -> Ação -> Atividade)
+ * para que o usuário possa pinpoint a atividade desejada. Após a seleção,
+ * são exibidos os percentuais de conclusão para cada mês do ano.
+ * Usuários com o perfil de "Gestor" têm acesso apenas para leitura, enquanto
+ * outros perfis podem editar os percentuais, respeitando a regra de que
+ * a soma total não pode exceder 100%.
+ */
 class PercentualActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPercentualBinding
 
@@ -45,6 +57,19 @@ class PercentualActivity : AppCompatActivity() {
     val usuarioRepository = UsuarioRepository(this)
     val percentualAtividadeRepository = PercentualAtividadeRepository(this)
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Este método inicializa a interface do usuário, habilita o modo edge-to-edge,
+     * recupera as informações do usuário logado da Intent, configura a visibilidade
+     * inicial dos componentes da UI e popula os spinners de seleção de Pilar,
+     * Subpilar, Ação e Atividade. Também define os listeners para as interações
+     * do usuário, como seleção de itens nos spinners, cliques nos percentuais
+     * e botões de ação.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -99,6 +124,13 @@ class PercentualActivity : AppCompatActivity() {
             binding.spinnerPilar.adapter = adapterPilar
         }
 
+        /**
+         * Listener para a seleção de itens no spinner de Pilar.
+         *
+         * Ao selecionar um pilar, limpa os spinners subsequentes e tenta
+         * preencher o spinner de Subpilar. Se não houver subpilares,
+         * preenche diretamente o spinner de Ação associado ao pilar selecionado.
+         */
         binding.spinnerPilar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>, view: View, position: Int, id: Long
@@ -170,6 +202,12 @@ class PercentualActivity : AppCompatActivity() {
             }
         }
 
+        /**
+         * Listener para a seleção de itens no spinner de Subpilar.
+         *
+         * Ao selecionar um subpilar, limpa os spinners subsequentes e tenta
+         * preencher o spinner de Ação associado ao subpilar selecionado.
+         */
         binding.spinnerSubpilar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>, view: View, position: Int, id: Long
@@ -214,6 +252,12 @@ class PercentualActivity : AppCompatActivity() {
             }
         }
 
+        /**
+         * Listener para a seleção de itens no spinner de Ação.
+         *
+         * Ao selecionar uma ação, limpa os spinners subsequentes e tenta
+         * preencher o spinner de Atividade associado à ação selecionada.
+         */
         binding.spinnerAcao.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>, view: View, position: Int, id: Long
@@ -257,6 +301,12 @@ class PercentualActivity : AppCompatActivity() {
             }
         }
 
+        /**
+         * Listener para a seleção de itens no spinner de Atividade.
+         *
+         * Ao selecionar uma atividade, armazena o objeto da atividade selecionada
+         * e torna o botão "Pesquisar" visível.
+         */
         binding.spinnerAtividade.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>, view: View, position: Int, id: Long
@@ -378,6 +428,15 @@ class PercentualActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Define a exibição dos percentuais para o modo somente leitura.
+     *
+     * Desabilita a clicabilidade de todos os TextViews de percentuais mensais e
+     * esconde o botão "Salvar Alterações". Também define um texto de observação
+     * indicando o motivo dos campos serem somente leitura.
+     *
+     * @param texto A mensagem a ser exibida como observação.
+     */
     private fun percentualApenasLeitura(texto: String) {
         binding.textviewPercentualAtivJan.isClickable = false
         binding.textviewPercentualAtivFev.isClickable = false
@@ -397,6 +456,12 @@ class PercentualActivity : AppCompatActivity() {
         binding.textviewObs.text = texto
     }
 
+    /**
+     * Carrega os dados de percentual mensal para a [Atividade] fornecida e os exibe
+     * nos respectivos TextViews.
+     *
+     * @param atividade O objeto [Atividade] para o qual carregar os percentuais.
+     */
     private fun carregarDados(atividade: Atividade) {
 
         val percentuais = percentualAtividadeRepository.obterTodosPercentuais(atividade)
@@ -442,6 +507,14 @@ class PercentualActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Exibe um [AlertDialog] para permitir que o usuário atualize o percentual para um mês específico.
+     *
+     * Inclui validação de entrada para garantir que o valor inserido seja um número
+     * e esteja dentro do intervalo válido de 0 a 100.
+     *
+     * @param inputTextView O [TextView] (representando o percentual de um mês) cujo valor será atualizado.
+     */
     private fun atualizarPercentual(inputTextView: TextView) {
         val editText = EditText(this)
         editText.hint = "Digite apenas o valor sem o '%'"
@@ -485,6 +558,12 @@ class PercentualActivity : AppCompatActivity() {
             .show()
     }
 
+    /**
+     * Valida se a string [input] fornecida pode ser convertida para um [Double].
+     *
+     * @param input A string a ser validada.
+     * @return `true` se a entrada for um número válido, `false` caso contrário.
+     */
     private fun validarEditTextComoNumero(input: String): Boolean {
         if (input.toDoubleOrNull() == null) {
             return false
@@ -493,6 +572,13 @@ class PercentualActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Valida se a string [input] fornecida (que deve ser um número válido) está dentro
+     * do intervalo de 0 a 100 (inclusive).
+     *
+     * @param input A string que representa um número a ser validado.
+     * @return `true` se o número estiver entre 0 e 100, `false` caso contrário.
+     */
     private fun validarFaixaDeValoresValidos(input: String): Boolean {
         val inputNumber = input.toDouble()
         if (inputNumber < 0 || inputNumber > 100) {
@@ -502,6 +588,15 @@ class PercentualActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Salva os percentuais mensais atualizados para a [Atividade] fornecida no banco de dados.
+     *
+     * Primeiro, calcula a soma de todos os percentuais mensais. Se a soma exceder 100%,
+     * exibe uma mensagem de toast e não salva as alterações. Caso contrário, atualiza
+     * o percentual de cada mês no banco de dados e exibe uma mensagem de sucesso.
+     *
+     * @param atividade O objeto [Atividade] para o qual salvar os percentuais atualizados.
+     */
     private fun salvarAlteracoes(atividade: Atividade) {
         val percentuais = percentualAtividadeRepository.obterTodosPercentuais(atividade)
 

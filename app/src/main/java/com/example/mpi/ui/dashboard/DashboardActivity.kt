@@ -12,6 +12,18 @@ import com.example.mpi.R
 import com.example.mpi.databinding.ActivityDashboardBinding
 import com.example.mpi.ui.MenuActivity
 
+/**
+ * [DashboardActivity] é a Activity principal responsável por exibir o painel de controle
+ * do aplicativo.
+ *
+ * Esta tela serve como um hub para navegar para diferentes opções de visualização de dados
+ * do dashboard (Opção 1, Opção 2, Opção 3). Ela carrega informações do usuário
+ * (ID, nome, tipo) da Intent e as passa para as próximas Activities.
+ *
+ * Define constantes para os tipos de usuário ([USUARIO_ANALISTA], [USUARIO_COORDENADOR], [USUARIO_GESTOR]),
+ * embora não as utilize diretamente nesta Activity para controle de visibilidade,
+ * elas podem ser usadas em sub-dashboards.
+ */
 class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
 
@@ -19,6 +31,17 @@ class DashboardActivity : AppCompatActivity() {
     val USUARIO_COORDENADOR = "COORDENADOR"
     val USUARIO_GESTOR = "GESTOR"
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa a interface do usuário usando View Binding, ajusta o preenchimento da janela
+     * para o modo edge-to-edge, recupera as informações do usuário da Intent, e configura
+     * os listeners de clique para os botões de navegação para as opções do dashboard e
+     * o botão de voltar ao menu principal.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

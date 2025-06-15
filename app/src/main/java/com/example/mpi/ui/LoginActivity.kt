@@ -11,6 +11,14 @@ import com.example.mpi.databinding.ActivityLoginBinding
 import com.example.mpi.repository.TipoUsuarioRepository
 import com.example.mpi.repository.UsuarioRepository
 
+/**
+ * [LoginActivity] é a Activity responsável por gerenciar o processo de autenticação
+ * do usuário no aplicativo.
+ *
+ * Esta tela permite que os usuários insiram suas credenciais (e-mail e senha)
+ * para acessar as funcionalidades do sistema. Após a validação bem-sucedida,
+ * redireciona o usuário para a [MenuActivity], passando suas informações (ID, nome, tipo de usuário).
+ */
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
 
@@ -18,6 +26,15 @@ class LoginActivity : AppCompatActivity() {
     var nomeUsuario = ""
     var tipoUsuario = ""
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa a interface do usuário usando View Binding e configura o listener
+     * para o botão de "Entrar", que aciona o processo de validação do usuário.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -40,6 +57,16 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Valida as credenciais do usuário (e-mail e senha) consultando o banco de dados.
+     *
+     * Se um usuário com as credenciais fornecidas for encontrado, as informações do usuário
+     * (ID, nome e tipo de usuário/cargo) são armazenadas nas variáveis da Activity.
+     *
+     * @param username O e-mail do usuário.
+     * @param password A senha do usuário.
+     * @return `true` se as credenciais forem válidas e o usuário for encontrado, `false` caso contrário.
+     */
     private fun validateUser(username: String, password: String): Boolean {
         val usuarioRepository = UsuarioRepository(this)
         val usuario: Usuario? = usuarioRepository.obterUsuarioPorEmailESenha(username, password)

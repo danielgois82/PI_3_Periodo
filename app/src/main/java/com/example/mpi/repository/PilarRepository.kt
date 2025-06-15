@@ -8,6 +8,23 @@ import com.example.mpi.data.Pilar
 import com.example.mpi.repository.AcaoRepository
 import com.example.mpi.repository.SubpilarRepository
 
+
+/**
+ * Repositório para gerenciar operações de dados relacionadas aos Pilares no sistema.
+ *
+ * Esta classe é responsável por interagir com a tabela `pilar` no banco de dados SQLite
+ * (via [DatabaseHelper]), fornecendo métodos para buscar pilares, calcular seu progresso,
+ * e validar sua exclusão. Ela também coordena com outros repositórios (como [AcaoRepository]
+ * e [SubpilarRepository]) para obter dados hierárquicos e calcular métricas.
+ *
+ * Adota o padrão Singleton para garantir que apenas uma instância deste repositório
+ * exista em toda a aplicação, otimizando o gerenciamento da conexão com o banco de dados.
+ *
+ * @property dataBase Uma instância de [DatabaseHelper] para acessar o banco de dados.
+ * @property atividadeRepository Uma instância de [AtividadeRepository] para operações relacionadas a atividades.
+ * @property acaoRepository Uma instância de [AcaoRepository] para operações relacionadas a ações.
+ * @property subpilarRepository Uma instância de [SubpilarRepository] para operações relacionadas a subpilares.
+ */
 class PilarRepository (context: Context) {
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
     private val atividadeRepository: AtividadeRepository = AtividadeRepository.getInstance(context)
@@ -18,6 +35,13 @@ class PilarRepository (context: Context) {
     companion object {
         private lateinit var instance: PilarRepository
 
+        /**
+         * Retorna a única instância de [PilarRepository] (Singleton).
+         * Se a instância ainda não foi inicializada, ela é criada de forma segura para threads.
+         *
+         * @param context O [Context] da aplicação.
+         * @return A instância de [PilarRepository].
+         */
         fun getInstance(context: Context): PilarRepository {
             synchronized(this) {
                 if (!::instance.isInitialized) {
@@ -28,6 +52,12 @@ class PilarRepository (context: Context) {
         }
     }
 
+    /**
+     * Obtém uma lista de todos os [Pilar]es associados a um [Calendario] específico.
+     *
+     * @param calendario O objeto [Calendario] cujos pilares serão buscados.
+     * @return Uma [MutableList] de objetos [Pilar] pertencentes ao calendário especificado.
+     */
     fun obterTodosPilares(calendario: Calendario): MutableList<Pilar> {
         val db = dataBase.readableDatabase
 
@@ -73,6 +103,13 @@ class PilarRepository (context: Context) {
         return pilares
     }
 
+    /**
+     * Obtém um [Pilar] específico com base no seu ID e no [Calendario] ao qual pertence.
+     *
+     * @param calendario O objeto [Calendario] para filtrar a busca do pilar.
+     * @param idPilar O ID único do pilar a ser buscado.
+     * @return O objeto [Pilar] se encontrado, ou `null` caso contrário.
+     */
     fun obterPilarPorId(calendario: Calendario, idPilar: Int): Pilar? {
         val db = dataBase.readableDatabase
 
@@ -117,6 +154,16 @@ class PilarRepository (context: Context) {
         return pilar
     }
 
+    /**
+     * Calcula o progresso total de um [Pilar], considerando o percentual de conclusão de suas Ações
+     * (diretamente ou via Subpilares).
+     *
+     * Se o Pilar contiver Subpilares, o progresso é calculado pela média dos progressos dos Subpilares.
+     * Se não houver Subpilares, o progresso é calculado pela média dos progressos das Ações diretamente ligadas ao Pilar.
+     *
+     * @param pilar O objeto [Pilar] para o qual o progresso será calculado.
+     * @return O percentual de progresso total do pilar como um [Double] (entre 0.0 e 1.0).
+     */
     fun obterProgressoPilar(pilar: Pilar): Double {
         var percentualTotalPilar = 0.0
 
@@ -153,6 +200,17 @@ class PilarRepository (context: Context) {
         return percentualTotalPilar
     }
 
+    /**
+     * Calcula o percentual de progresso de um [Pilar] para um mês específico.
+     *
+     * Se o Pilar contiver Subpilares, o percentual do mês é calculado pela média dos percentuais
+     * mensais dos Subpilares. Se não houver Subpilares, é a média dos percentuais mensais
+     * das Ações diretamente ligadas ao Pilar.
+     *
+     * @param pilar O objeto Pilar para o qual o percentual do mês será calculado.
+     * @param mes O número do mês (1 a 12) para o qual o percentual será obtido.
+     * @return O percentual de progresso do pilar para o mês especificado como um [Double].
+     */
     fun obterPercentualMes(pilar: Pilar, mes: Int): Double {
         var percentualMesPilar = 0.0
 
@@ -191,6 +249,13 @@ class PilarRepository (context: Context) {
         return percentualMesPilar
     }
 
+    /**
+     * Valida se um Pilar pode ser excluído do sistema.
+     * Um pilar não pode ser excluído se tiver subpilares ou ações associadas a ele.
+     *
+     * @param pilar O objeto [Pilar] a ser validado para exclusão.
+     * @return `true` se o pilar pode ser excluído (não tem subpilares ou ações associadas), `false` caso contrário.
+     */
     fun validarExclusaoPilar(pilar: Pilar): Boolean {
         val todosSubpilares = subpilarRepository.obterTodosSubpilares()
         val todasAcoes = acaoRepository.obterTodasAcoes()
@@ -218,6 +283,13 @@ class PilarRepository (context: Context) {
 
     }
 
+    /**
+     * Calcula o orçamento total de um [Pilar], somando os orçamentos de todas as [Atividade]s
+     * a ele vinculadas (diretamente através de Ações ou indiretamente via Subpilares e Ações).
+     *
+     * @param pilar O objeto [Pilar] para o qual o orçamento total será calculado.
+     * @return O orçamento total do pilar como um [Double].
+     */
     fun obterOrcamentoTotalPilar(pilar: Pilar): Double {
         val db = dataBase.readableDatabase
         var orcamentoTotal = 0.0
