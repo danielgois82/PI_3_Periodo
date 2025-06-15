@@ -3,7 +3,7 @@
 ## Visão Geral do Projeto
 
 ### Descrição 
-Este é um projeto para disposivitos móveis para ser usado na plataforma Android e o objetivo é a gestão administrativa de um programa de integridade que contém pilares, subpilares, ações e atividades com seus respectivos usuários que usarão o sistema.
+Este é um projeto para dispositivos móveis para ser usado na plataforma Android e o objetivo é a gestão administrativa de um programa de integridade que contém pilares, subpilares, ações e atividades com seus respectivos usuários que usarão o sistema.
 
 
 ### Funcionalidades Principais 
@@ -13,7 +13,7 @@ Este é um projeto para disposivitos móveis para ser usado na plataforma Androi
 * Geração de alertas: O sistema notifica os usuários sobre datas críticas de cada atividade ou ação, sempre que faltam 30, 15 e 7 dias ou quando o prazo já foi passado.
 * Geração de relatórios: O sistema permite a geração de relatórios finais consolidados por pilar, prazo e responsável.
 * Exportação de relatórios: O sistema permite que os relatórios sejam exportados em formato PDF. 
-* Geração de Dashboard: O sistema permite ao usuário visualizar o painel com métricas relaciondas ao progresso dos pialres e pendências relaciondas as ações.
+* Geração de Dashboard: O sistema permite ao usuário visualizar o painel com métricas relacionadas ao progresso dos pilares e pendências relacionadas as ações.
 
 
 
@@ -28,7 +28,9 @@ O aplicativo foi desenvolvido para analistas, coordenadores e gestores envolvido
 
 ### Requisitos
 
-Versão mínima de SDK: 29
+Android Studio SDK mínima: 29, SDK alvo: 34 
+
+JVM alvo: Versão 11 
 
 ### Dependências
 
@@ -186,6 +188,9 @@ Com o emulador rodando, selecione-o no menu suspenso de dispositivos no Android 
 ## Fluxos de navegação
 
 Os fluxos de nagevação estão melhor e visualmente descritivos no link a seguir: https://senacpernambuco-my.sharepoint.com/:w:/g/personal/daniel_gois_edu_pe_senac_br/EXhlGOquqdVFm-N3lCdUBg0BFWBMVn4fFM309sdA4Qmi0A?e=Xn1SBc
+
+.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Tecnologias utilizadas:
 
