@@ -71,6 +71,8 @@ Clique em Finish. Seu emulador aparecerá na lista.
 Clique no botão de "Play" (triângulo verde) ao lado do nome do seu emulador no Device Manager para iniciá-lo.
 
 Com o emulador rodando, selecione-o no menu suspenso de dispositivos no Android Studio e clique no botão "Run 'app'".
+
+.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Estrutura de pastas e pacotes
