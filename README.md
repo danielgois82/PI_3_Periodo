@@ -16,8 +16,11 @@ Este é um projeto para disposivitos móveis para ser usado na plataforma Androi
 * Geração de Dashboard: O sistema permite ao usuário visualizar o painel com métricas relaciondas ao progresso dos pialres e pendências relaciondas as ações.
 
 
+
 ### Público-alvo
-O aplicativo foi desenvolvido para analistas, coordenadores e gestores envolvidos no contexto de Complaince da Fecomércio-PE. 
+
+O aplicativo foi desenvolvido para analistas, coordenadores e gestores envolvidos no contexto de Complaince da Fecomércio-PE.
+.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Configurando o ambiente de desenvolvimento
