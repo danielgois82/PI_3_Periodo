@@ -20,6 +20,7 @@ Este é um projeto para disposivitos móveis para ser usado na plataforma Androi
 ### Público-alvo
 
 O aplicativo foi desenvolvido para analistas, coordenadores e gestores envolvidos no contexto de Complaince da Fecomércio-PE.
+
 .
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
