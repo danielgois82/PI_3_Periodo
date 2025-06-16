@@ -5,6 +5,17 @@ import com.example.mpi.data.DatabaseHelper
 import com.example.mpi.data.Pilar
 import com.example.mpi.data.Subpilar
 
+/**
+ * Repositório para gerenciar operações de dados relacionadas aos subpilares no sistema.
+ *
+ * Esta classe é responsável por interagir com a tabela `subpilar` no banco de dados SQLite
+ * (acessada via [DatabaseHelper]), fornecendo métodos para buscar subpilares.
+ *
+ * Adota o padrão **Singleton** para garantir que apenas uma instância deste repositório
+ * exista em toda a aplicação, otimizando o gerenciamento da conexão com o banco de dados.
+ *
+ * @property dataBase Uma instância de [DatabaseHelper] para acessar o banco de dados.
+ */
 class SubpilarRepository (context: Context) {
 
     private var dataBase: DatabaseHelper = DatabaseHelper(context)
@@ -12,6 +23,13 @@ class SubpilarRepository (context: Context) {
     companion object {
         private lateinit var instance: SubpilarRepository
 
+        /**
+         * Retorna a única instância de [SubpilarRepository] (Singleton).
+         * Se a instância ainda não foi inicializada, ela é criada de forma segura para threads.
+         *
+         * @param context O [Context] da aplicação.
+         * @return A instância de [SubpilarRepository].
+         */
         fun getInstance(context: Context): SubpilarRepository {
             synchronized(this) {
                 if (!::instance.isInitialized) {
@@ -22,7 +40,14 @@ class SubpilarRepository (context: Context) {
         }
     }
 
-    //Método para obter todos os subpilares existente, sem filtro
+    /**
+     * Obtém uma lista contendo todos os subpilares existentes no banco de dados, sem nenhum filtro.
+     *
+     * Este método é útil para operações que requerem a listagem completa de todos os subpilares
+     * cadastrados, independentemente do [Pilar] ao qual pertencem.
+     *
+     * @return Uma [List] de objetos [Subpilar] representando todos os subpilares disponíveis.
+     */
     fun obterTodosSubpilares(): List<Subpilar> {
         val db = dataBase.readableDatabase
         val subpilares: MutableList<Subpilar> = arrayListOf()
@@ -44,6 +69,14 @@ class SubpilarRepository (context: Context) {
         return subpilares
     }
 
+    /**
+     * Obtém uma lista de todos os Subpilares que estão associados a um Pilar específico.
+     *
+     * Este método é utilizado para listar os subpilares que são filhos diretos de um determinado pilar.
+     *
+     * @param pilar O objeto [Pilar] cujos subpilares serão buscados.
+     * @return Uma [MutableList] de objetos [Subpilar] pertencentes ao pilar especificado.
+     */
     fun obterTodosSubpilares(pilar: Pilar): MutableList<Subpilar> {
         val db = dataBase.readableDatabase
 
@@ -68,7 +101,6 @@ class SubpilarRepository (context: Context) {
 
         return subpilares
     }
-
 
 
 }

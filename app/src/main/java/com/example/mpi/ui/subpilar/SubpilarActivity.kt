@@ -18,6 +18,14 @@ import com.example.mpi.repository.PilarRepository
 import com.example.mpi.repository.SubpilarRepository
 import com.example.mpi.repository.AcaoRepository
 
+/**
+ * [SubpilarActivity] é a tela principal para o gerenciamento de subpilares no aplicativo.
+ *
+ * Esta Activity exibe uma lista de subpilares em um `RecyclerView`, permitindo
+ * filtrar subpilares por pilar pai, adicionar novos subpilares, editar e excluí-los.
+ * Ela também carrega informações do usuário logado e interage com os repositórios
+ * de Pilar, Subpilar e Ação para gerenciar os dados.
+ */
 class SubpilarActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySubpilarBinding
     private lateinit var dbHelper: DatabaseHelper
@@ -30,6 +38,17 @@ class SubpilarActivity : AppCompatActivity() {
     private var pilares: List<Pilar> = emptyList()
     private var selectedPilar: Pilar? = null
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa o binding, o DatabaseHelper e os repositórios.
+     * Recupera informações do usuário logado da Intent.
+     * Configura o `RecyclerView` com o [SubpilarAdapter].
+     * Inicializa e carrega o spinner de pilares e define os listeners para os botões.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -74,11 +93,25 @@ class SubpilarActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Chamado quando a Activity é retomada após estar em um estado pausado.
+     *
+     * Garante que a lista de subpilares seja recarregada e atualizada sempre que a Activity
+     * volta ao primeiro plano (por exemplo, após o retorno de uma Activity de cadastro ou edição),
+     * aplicando os filtros atuais.
+     */
     override fun onResume() {
         super.onResume()
         aplicarFiltros()
     }
 
+    /**
+     * Configura o listener para o spinner de seleção de pilares.
+     *
+     * Quando um item é selecionado no spinner, atualiza a variável `selectedPilar`
+     * e chama `aplicarFiltros()` para recarregar a lista de subpilares com base
+     * na nova seleção.
+     */
     private fun setupSpinner() {
         binding.spinnerPilar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -91,7 +124,12 @@ class SubpilarActivity : AppCompatActivity() {
         }
     }
 
-    // Carregando os Pilares para o Spinner de Pilares
+    /**
+     * Carrega a lista de todos os pilares do repositório e popula o spinner.
+     *
+     * Adiciona uma opção "Todos os Pilares" no início do spinner para permitir
+     * visualizar todos os subpilares sem filtro.
+     */
     private fun carregarPilaresParaSpinner() {
         val calendarioPadrao = Calendario(1, 2025)
         pilares = pilarRepository.obterTodosPilares(calendarioPadrao)
@@ -104,7 +142,13 @@ class SubpilarActivity : AppCompatActivity() {
         binding.spinnerPilar.adapter = adapter
     }
 
-    // Método para aplicar os filtros e carregar os subpilares na lista
+    /**
+     * Aplica os filtros selecionados no spinner e recarrega a lista de subpilares.
+     *
+     * Se um pilar específico estiver selecionado, carrega apenas os subpilares
+     * associados a ele. Caso contrário, carrega todos os subpilares.
+     * Atualiza o `RecyclerView` com a nova lista.
+     */
     private fun aplicarFiltros() {
         listaSubpilares.clear()
 
@@ -117,6 +161,13 @@ class SubpilarActivity : AppCompatActivity() {
         subpilarAdapter.notifyDataSetChanged()
     }
 
+    /**
+     * Abre a [EditarSubpilarActivity] para permitir a edição de um [Subpilar] específico.
+     *
+     * Passa todos os detalhes do subpilar como extras na Intent para a Activity de edição.
+     *
+     * @param subpilar O objeto [Subpilar] a ser editado.
+     */
     private fun editarSubpilar(subpilar: Subpilar) {
         val intent = Intent(this, EditarSubpilarActivity::class.java)
         intent.putExtra("subpilar_id", subpilar.id)
@@ -129,6 +180,15 @@ class SubpilarActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    /**
+     * Exclui um [Subpilar] do banco de dados.
+     *
+     * Antes de excluir, valida se o subpilar pode ser excluído (ou seja, se não tem ações vinculadas).
+     * Se a exclusão for bem-sucedida, remove o subpilar da lista e notifica o adaptador.
+     * Exibe um Toast com o resultado da operação.
+     *
+     * @param subpilar O objeto [Subpilar] a ser excluído.
+     */
     private fun excluirSubpilar(subpilar: Subpilar) {
         if(validarExclusaoSubpilar(subpilar) == true){
             val db = dbHelper.writableDatabase
@@ -148,7 +208,15 @@ class SubpilarActivity : AppCompatActivity() {
         }
     }
 
-    //Validar exclusão do subpilar
+    /**
+     * Valida se um [Subpilar] pode ser excluído.
+     *
+     * Retorna `true` se o subpilar não tiver nenhuma [Acao] associada,
+     * e `false` caso contrário.
+     *
+     * @param subpilar O [Subpilar] a ser validado para exclusão.
+     * @return `true` se o subpilar pode ser excluído, `false` caso contrário.
+     */
     fun validarExclusaoSubpilar(subpilar: Subpilar) : Boolean{
         val todasAcoes = acaoRepository.obterTodasAcoes()
         var temAcaoAssociada = false

@@ -23,6 +23,20 @@ import com.example.mpi.repository.SubpilarRepository
 import com.example.mpi.repository.PercentualAtividadeRepository
 import com.example.mpi.repository.UsuarioRepository
 
+/**
+ * [AtividadeActivity] é a tela principal para visualização e gerenciamento de atividades no aplicativo.
+ *
+ * Esta Activity permite aos usuários:
+ * - Visualizar uma lista de atividades.
+ * - Filtrar atividades por Pilar, Subpilar e Ação através de spinners em cascata.
+ * - Cadastrar novas atividades (exceto para usuários com perfil de Gestor).
+ * - Editar atividades existentes.
+ * - Excluir atividades existentes.
+ *
+ * A visibilidade de certas funcionalidades, como o botão de cadastro,
+ * é controlada pelo tipo de perfil do usuário logado.
+ */
+
 class AtividadeActivity : AppCompatActivity() {
 
     val USUARIO_ANALISTA = "ANALISTA"
@@ -47,6 +61,17 @@ class AtividadeActivity : AppCompatActivity() {
     private var selectedSubpilar: Subpilar? = null
     private var selectedAcao: Acao? = null
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa o binding, o DatabaseHelper, os repositórios, configura o RecyclerView
+     * com o [AtividadeAdapter] e seus callbacks para edição/exclusão.
+     * Também recupera informações do usuário logado e ajusta a UI com base no tipo de usuário.
+     * Configura os listeners para os spinners de filtro e o botão de cadastro.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -97,11 +122,24 @@ class AtividadeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Chamado quando a Activity é retomada (após um `onPause` ou quando retorna
+     * para o primeiro plano).
+     *
+     * Este método é usado para garantir que a lista de atividades seja atualizada
+     * sempre que o usuário retornar a esta tela, aplicando os filtros selecionados.
+     */
     override fun onResume() {
         super.onResume()
         aplicarFiltros()
     }
 
+    /**
+     * Configura os listeners para os spinners de Pilar, Subpilar e Ação.
+     *
+     * Estes listeners gerenciam a lógica de filtros em cascata, atualizando
+     * os spinners subsequentes e a lista de atividades exibida.
+     */
     private fun setupSpinners() {
         binding.spinnerPilar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -137,6 +175,10 @@ class AtividadeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carrega a lista de pilares do repositório e preenche o spinner de Pilares.
+     * Inclui a opção "Todos os Pilares" como primeiro item.
+     */
     private fun carregarPilaresParaSpinner() {
         val calendarioPadrao = Calendario(1, 2025)
         pilares = pilarRepository.obterTodosPilares(calendarioPadrao)
@@ -149,6 +191,13 @@ class AtividadeActivity : AppCompatActivity() {
         binding.spinnerPilar.adapter = adapter
     }
 
+    /**
+     * Carrega a lista de subpilares com base no [pilar] selecionado e preenche o spinner de Subpilares.
+     * Inclui a opção "Todos os Subpilares" como primeiro item.
+     * Redefine a seleção dos spinners de Subpilar e Ação para o primeiro item (Todos).
+     *
+     * @param pilar O [Pilar] selecionado; se for nulo, a lista de subpilares será vazia.
+     */
     private fun carregarSubpilaresParaSpinner(pilar: Pilar?) {
         subpilares = if (pilar != null) {
             subpilarRepository.obterTodosSubpilares(pilar)
@@ -167,6 +216,15 @@ class AtividadeActivity : AppCompatActivity() {
         binding.spinnerAcao.setSelection(0)
     }
 
+    /**
+     * Carrega a lista de ações com base no [pilar] e/ou [subpilar] selecionados
+     * e preenche o spinner de Ações.
+     * Inclui a opção "Todas as Ações" como primeiro item.
+     * Redefine a seleção do spinner de Ação para o primeiro item (Todas).
+     *
+     * @param pilar O [Pilar] selecionado.
+     * @param subpilar O [Subpilar] selecionado; se não nulo, as ações serão filtradas por ele.
+     */
     private fun carregarAcoesParaSpinner(pilar: Pilar?, subpilar: Subpilar?) {
         acoes = when {
             subpilar != null -> acaoRepository.obterAcoesPorSubpilar(subpilar)
@@ -184,6 +242,13 @@ class AtividadeActivity : AppCompatActivity() {
         binding.spinnerAcao.setSelection(0)
     }
 
+    /**
+     * Aplica os filtros selecionados nos spinners para carregar e exibir as atividades correspondentes.
+     *
+     * Limpa a lista atual de atividades e consulta o banco de dados com base
+     * no pilar, subpilar ou ação selecionados.
+     * Atualiza o [atividadeAdapter] com os novos dados.
+     */
     private fun aplicarFiltros() {
         listaAtividades.clear()
         val db = dbHelper.readableDatabase
@@ -277,6 +342,14 @@ class AtividadeActivity : AppCompatActivity() {
         db.close()
         atividadeAdapter.notifyDataSetChanged()
     }
+
+    /**
+     * Inicia a [EditarAtividadeActivity] para permitir a edição da atividade selecionada.
+     *
+     * Passa todos os detalhes da [atividade] para a nova Activity via Intent extras.
+     *
+     * @param atividade A [Atividade] a ser editada.
+     */
     private fun editarAtividade(atividade: Atividade) {
         val intent = Intent(this, EditarAtividadeActivity::class.java)
         intent.putExtra("atividade_id", atividade.id)
@@ -293,6 +366,14 @@ class AtividadeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    /**
+     * Exclui uma [atividade] do banco de dados.
+     *
+     * Primeiro, remove os percentuais de atividade associados, depois a própria atividade.
+     * Atualiza o RecyclerView e exibe uma mensagem de Toast com o resultado da operação.
+     *
+     * @param atividade A [Atividade] a ser excluída.
+     */
     private fun excluirAtividade(atividade: Atividade) {
         percentualAtividadeRepository.removerPercentuaisAtividade(atividade)
         val db = dbHelper.writableDatabase

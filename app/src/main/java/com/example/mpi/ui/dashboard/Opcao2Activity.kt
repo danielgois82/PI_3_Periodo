@@ -23,6 +23,14 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 
+/**
+ * [Opcao2Activity] é uma Activity de dashboard que exibe um gráfico de barras horizontais
+ * representando o progresso dos Pilares do programa de integridade.
+ *
+ * Esta tela recupera os dados de progresso dos pilares do banco de dados e os visualiza
+ * em um gráfico usando a biblioteca MPAndroidChart. Também gera uma legenda dinâmica
+ * para os pilares abaixo do gráfico.
+ */
 class Opcao2Activity : AppCompatActivity() {
     private lateinit var binding: ActivityOpcao2Binding
 
@@ -33,6 +41,16 @@ class Opcao2Activity : AppCompatActivity() {
     val USUARIO_COORDENADOR = "COORDENADOR"
     val USUARIO_GESTOR = "GESTOR"
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa a interface do usuário, ajusta o preenchimento da janela
+     * para o modo edge-to-edge, recupera as informações do usuário da Intent,
+     * configura o listener para o botão de voltar ao dashboard e gera o gráfico.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -64,6 +82,14 @@ class Opcao2Activity : AppCompatActivity() {
         gerarHorizontalChart()
     }
 
+    /**
+     * Gera e configura um gráfico de barras horizontais (Horizontal Bar Chart)
+     * exibindo o progresso de cada pilar.
+     *
+     * O método recupera os dados dos pilares do repositório, cria as entradas para o gráfico,
+     * configura o dataset, os dados do gráfico e personaliza a aparência do gráfico,
+     * incluindo eixos e uma legenda dinâmica.
+     */
     private fun gerarHorizontalChart() {
         val idCal = calendarioRepository.obterIdCalendarioPorAno(2025)
         val todosPilares = pilarRepository.obterTodosPilares(Calendario(idCal, 2025))

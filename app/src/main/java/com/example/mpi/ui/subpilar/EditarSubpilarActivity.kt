@@ -17,6 +17,15 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+/**
+ * [EditarSubpilarActivity] é uma Activity que permite ao usuário editar
+ * os detalhes de um subpilar existente no sistema.
+ *
+ * Ela carrega os dados do subpilar a ser editado via Intent, preenche os campos
+ * de edição, permite a alteração do pilar pai associado, e realiza validações
+ * nas datas de início e término do subpilar em relação ao pilar pai.
+ * As alterações são salvas no banco de dados.
+ */
 class EditarSubpilarActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditarSubpilarBinding
@@ -27,6 +36,17 @@ class EditarSubpilarActivity : AppCompatActivity() {
     private var listaPilaresObjetosEditar = mutableListOf<Pilar>()
     private var novoIdPilarSelecionado: Int = -1
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa o binding e o DatabaseHelper.
+     * Recupera os detalhes do subpilar a ser editado da Intent e preenche os campos da UI.
+     * Carrega e configura o spinner de pilares, pré-selecionando o pilar pai atual.
+     * Define os listeners para os botões de salvar edição e voltar.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -86,6 +106,14 @@ class EditarSubpilarActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carrega a lista de pilares do banco de dados e popula o spinner de edição.
+     *
+     * Adiciona uma opção de "hint" no início e pré-seleciona o pilar pai
+     * atualmente associado ao subpilar que está sendo editado.
+     *
+     * @param idPilarSelecionado O ID do pilar pai que deve ser pré-selecionado no spinner.
+     */
     private fun carregarPilaresNoSpinnerEditar(idPilarSelecionado: Int) {
         val db = dbHelper.readableDatabase
         val projection = arrayOf(DatabaseHelper.COLUMN_PILAR_ID, DatabaseHelper.COLUMN_PILAR_NOME)
@@ -129,6 +157,13 @@ class EditarSubpilarActivity : AppCompatActivity() {
         novoIdPilarSelecionado = idPilarSelecionado // Inicializa com o pilar atual
     }
 
+    /**
+     * Salva as edições do subpilar no banco de dados.
+     *
+     * Coleta os dados dos campos de entrada, realiza validações nas datas
+     * em relação ao pilar pai, e atualiza o registro do subpilar no banco de dados.
+     * Exibe um Toast informando o resultado da operação e finaliza a Activity.
+     */
     private fun salvarEdicaoSubpilar() {
         val nome = binding.etEditarNomeSubpilar.text.toString()
         val descricao = binding.etEditarDescricaoSubpilar.text.toString()
@@ -201,7 +236,17 @@ class EditarSubpilarActivity : AppCompatActivity() {
         }
     }
 
-    // Validação da data(valida os valores inseridos e retorna a data com o tipo Text
+    /**
+     * Valida e formata a data de início de um subpilar.
+     *
+     * Verifica o formato da data (dd/MM/yyyy), a validade dos valores (dia, mês, ano)
+     * e, crucialmente, se a data de início do subpilar está dentro do período
+     * (entre a data de início e término) do pilar pai selecionado (ou o pilar atual se não houve mudança).
+     * Também valida se o ano do subpilar é o mesmo do pilar pai.
+     *
+     * @param dataSubpilarStr A string da data de início do subpilar a ser validada (ex: "05/03/2025").
+     * @return A string da data formatada se for válida, ou `null` caso contrário.
+     */
     private fun validarEFormatarDataInicial(dataSubpilarStr: String): String? {
         if (dataSubpilarStr.isNullOrEmpty()) {
             return null
@@ -308,6 +353,18 @@ class EditarSubpilarActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Valida e formata a data de término de um subpilar.
+     *
+     * Verifica o formato da data (dd/MM/yyyy), a validade dos valores,
+     * se a data de término do subpilar não é anterior à sua data de início,
+     * se o ano da data de término do subpilar é o mesmo da sua data de início,
+     * e se a data de término do subpilar não é posterior à data de término do pilar pai.
+     *
+     * @param dataTerminoStr A string da data de término do subpilar a ser validada (ex: "15/07/2025").
+     * @param dataInicioStr A string da data de início do subpilar (para comparação interna).
+     * @return A string da data formatada se for válida, ou `null` caso contrário.
+     */
     private fun validarEFormatarDataFinal(dataTerminoStr: String, dataInicioStr: String): String? {
         if (dataTerminoStr.isNullOrEmpty()) {
             return null

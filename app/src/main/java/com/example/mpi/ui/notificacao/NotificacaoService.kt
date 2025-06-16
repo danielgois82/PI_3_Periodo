@@ -13,6 +13,17 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+/**
+ * [NotificacaoService] é responsável por verificar prazos de Ações e Atividades
+ * e gerar notificações para o usuário quando esses prazos se aproximam ou vencem.
+ *
+ * Ele interage com os repositórios [AcaoRepository], [AtividadeRepository] e [NotificacaoRepository]
+ * para buscar dados e persistir as notificações geradas.
+ *
+ * Utiliza o padrão Singleton para garantir que apenas uma instância do serviço seja criada.
+ *
+ * @property context O contexto da aplicação, usado para inicializar os repositórios.
+ */
 class NotificacaoService(private val context: Context) {
 
     private val acaoRepository: AcaoRepository by lazy { AcaoRepository.getInstance(context) }
@@ -21,6 +32,10 @@ class NotificacaoService(private val context: Context) {
 
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
+    /**
+     * Objeto companheiro para implementar o padrão Singleton.
+     * Contém constantes para tipos de item e o método para obter a instância única de [NotificacaoService].
+     */
     companion object {
         const val TIPO_ITEM_ACAO = "ACAO"
         const val TIPO_ITEM_ATIVIDADE = "ATIVIDADE"
@@ -28,6 +43,14 @@ class NotificacaoService(private val context: Context) {
         @Volatile
         private var INSTANCE: NotificacaoService? = null
 
+        /**
+         * Retorna a instância única de [NotificacaoService].
+         *
+         * Se a instância ainda não existir, ela será criada de forma thread-safe.
+         *
+         * @param context O contexto da aplicação.
+         * @return A instância única de [NotificacaoService].
+         */
         fun getInstance(context: Context): NotificacaoService {
             return INSTANCE ?: synchronized(this) {
                 val instance = NotificacaoService(context)

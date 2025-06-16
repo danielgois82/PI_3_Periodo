@@ -18,6 +18,14 @@ import java.util.Calendar
 import java.util.Locale
 import android.util.Log
 
+/**
+ * [EditarAtividadeActivity] é uma Activity responsável por permitir a edição de uma atividade existente.
+ *
+ * Esta Activity exibe os detalhes de uma atividade carregada via Intent,
+ * permitindo que o usuário modifique campos como nome, descrição, datas, orçamento,
+ * responsável e a ação associada. Realiza validações nas datas e interage com o banco de dados
+ * para salvar as alterações.
+ */
 class EditarAtividadeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditarAtividadeBinding
     private lateinit var dbHelper: DatabaseHelper
@@ -33,6 +41,17 @@ class EditarAtividadeActivity : AppCompatActivity() {
     private var responsavelAdapter: ArrayAdapter<String>? = null
     private var idResponsavelSelecionado: Int = -1
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa o binding, o DatabaseHelper, os adaptadores dos spinners.
+     * Recupera os dados da atividade a ser editada da Intent, preenche os campos
+     * da UI e carrega os spinners de ações e responsáveis, pré-selecionando os valores existentes.
+     * Configura os listeners para os spinners e botões de salvar e voltar.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -83,6 +102,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
 
         Log.d("EditarAtividade", "ID Responsável depois de carregarResponsaveis: $idResponsavelSelecionado")
 
+        // Configura o listener para o spinner de ações.
         binding.spinnerAcaoEditarAtividade.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 idAcaoSelecionada = if (position > 0) listaAcoesObjetos[position - 1].id else -1
@@ -93,6 +113,7 @@ class EditarAtividadeActivity : AppCompatActivity() {
             }
         }
 
+        // Configura o listener para o spinner de responsáveis.
         binding.spinnerResponsavelEditarAtividade.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 idResponsavelSelecionado = if (position > 0) listaResponsaveisObjetos[position - 1].id else -1
@@ -112,6 +133,10 @@ class EditarAtividadeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carrega a lista de ações do banco de dados e preenche o spinner de ações.
+     * Pré-seleciona a ação previamente associada à atividade que está sendo editada.
+     */
     private fun carregarAcoes() {
         listaAcoesObjetos.clear()
         val db = dbHelper.readableDatabase
@@ -155,6 +180,11 @@ class EditarAtividadeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carrega a lista de responsáveis do banco de dados e preenche o spinner de responsáveis.
+     * Exclui usuários do tipo Gestor da lista e pré-seleciona o responsável
+     * previamente associado à atividade.
+     */
     private fun carregarResponsaveis() {
         listaResponsaveisObjetos.clear()
         val db = dbHelper.readableDatabase
@@ -186,6 +216,13 @@ class EditarAtividadeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Salva as edições da atividade no banco de dados.
+     *
+     * Coleta os dados dos campos de entrada, valida-os e, se forem válidos,
+     * atualiza a atividade no banco de dados.
+     * Exibe um Toast informando o resultado da operação e finaliza a Activity.
+     */
     private fun salvarEdicaoAtividade() {
         val nome = binding.etEditarNomeAtividade.text.toString().trim()
         val descricao = binding.etEditarDescricaoAtividade.text.toString().trim()
@@ -244,6 +281,16 @@ class EditarAtividadeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Valida e formata a data de início da atividade.
+     *
+     * Verifica se a data está no formato correto (dd/MM/yyyy), se é válida e se está dentro
+     * do período da ação selecionada. Exibe mensagens de Toast em caso de erro.
+     *
+     * @param dataAtividadeStr A data de início da atividade em formato String (ex: "01/01/2025").
+     * @param idAcaoSelecionada O ID da ação à qual a atividade está associada.
+     * @return A data formatada como String (dd/MM/yyyy) se for válida, ou null caso contrário.
+     */
     private fun validarEFormatarDataInicio(dataAtividadeStr: String, idAcaoSelecionada: Int): String? {
         if (dataAtividadeStr.isNullOrEmpty()) {
             return null
@@ -329,6 +376,18 @@ class EditarAtividadeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Valida e formata a data de término da atividade.
+     *
+     * Verifica se a data está no formato correto (dd/MM/yyyy), se é válida, se é posterior
+     * à data de início da atividade e se está dentro do período da ação selecionada.
+     * Exibe mensagens de Toast em caso de erro.
+     *
+     * @param dataTerminoAtividadeStr A data de término da atividade em formato String (ex: "31/12/2025").
+     * @param dataInicioAtividadeStr A data de início da atividade em formato String (usada para comparação).
+     * @param idAcaoSelecionada O ID da ação à qual a atividade está associada.
+     * @return A data formatada como String (dd/MM/yyyy) se for válida, ou null caso contrário.
+     */
     private fun validarEFormatarDataTermino(dataTerminoAtividadeStr: String, dataInicioAtividadeStr: String, idAcaoSelecionada: Int): String? {
         if (dataTerminoAtividadeStr.isNullOrEmpty()) {
             return null

@@ -26,7 +26,19 @@ import com.example.mpi.ui.finalizacao.FinalizacaoActivity
 import com.example.mpi.ui.relatorio.RelatorioActivity
 import kotlin.system.exitProcess
 
-
+/**
+ * [MenuActivity] é a tela principal de navegação do aplicativo, servindo como o ponto
+ * de entrada após o login bem-sucedido.
+ *
+ * Esta Activity exibe um menu de opções (botões) que direcionam o usuário para
+ * diferentes funcionalidades do sistema, como gerenciamento de Pilares, Subpilares,
+ * Ações, Atividades, aprovações, finalizações, dashboards, relatórios e notificações.
+ *
+ * A visibilidade de algumas opções de menu é controlada com base no tipo de usuário logado
+ * (Analista, Coordenador, Gestor).
+ *
+ * Também gerencia a exibição de um "badge" de notificação e o comportamento do botão voltar.
+ */
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
     private lateinit var notificacaoService: NotificacaoService
@@ -39,6 +51,17 @@ class MenuActivity : AppCompatActivity() {
 
     private var idUsuarioLogado: Int = 999999
 
+    /**
+     * Chamado quando a Activity é criada pela primeira vez.
+     *
+     * Inicializa a interface do usuário, bloqueia o comportamento padrão do botão voltar,
+     * recupera as informações do usuário logado da Intent, inicializa os serviços e repositórios
+     * de notificação, configura os listeners de clique para todos os botões do menu e
+     * ajusta a visibilidade dos botões com base no tipo de usuário.
+     *
+     * @param savedInstanceState Se não for nulo, esta Activity está sendo recriada
+     * a partir de um estado salvo anteriormente.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -193,12 +216,26 @@ class MenuActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Chamado quando a Activity é retomada (volta ao foco do usuário).
+     *
+     * Este método é sobrescrito para garantir que o contador de notificações seja
+     * atualizado sempre que o usuário retorna ao menu principal.
+     */
     override fun onResume() {
         super.onResume()
         // Quando a atividade volta para o foco, verificamos e atualizamos as notificações
         atualizarContadorNotificacoes()
     }
 
+    /**
+     * Atualiza o contador de notificações e a visibilidade do badge de notificação.
+     *
+     * Primeiro, invoca o [NotificacaoService] para verificar e gerar novas notificações
+     * com base no status atual das ações e atividades. Em seguida, consulta o
+     * [NotificacaoRepository] para obter o número de notificações não lidas e
+     * ajusta a visibilidade do [notificationBadge] de acordo.
+     */
     private fun atualizarContadorNotificacoes() {
         // Chamamos o serviço para gerar novas notificações baseadas nos itens
         notificacaoService.verificarEGerarNotificacoes(idUsuarioLogado)

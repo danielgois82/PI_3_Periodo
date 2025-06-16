@@ -13,15 +13,21 @@
     private const val ARG_PARAM2 = "param2"
 
     /**
-     * A simple [Fragment] subclass.
-     * Use the [NotificacaoItemFragment.newInstance] factory method to
-     * create an instance of this fragment.
+     * Um [Fragment] simples.
      */
     class NotificacaoItemFragment : Fragment() {
         // TODO: Rename and change types of parameters
         private var param1: String? = null
         private var param2: String? = null
 
+        /**
+         * Chamado para realizar a criação inicial de um fragment.
+         *
+         * Recupera os argumentos passados para o fragment, se houver.
+         *
+         * @param savedInstanceState Se não for nulo, este fragmento está sendo recriado
+         * a partir de um estado salvo.
+         */
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             arguments?.let {
@@ -30,6 +36,16 @@
             }
         }
 
+        /**
+         * Chamado para que o fragmento instancie sua hierarquia de visualização.
+         *
+         * Infla o layout `fragment_notificacao_item.xml` para este fragmento.
+         *
+         * @param inflater O objeto [LayoutInflater] que pode ser usado para inflar qualquer View no fragmento.
+         * @param container Se não for nulo, este é o pai ao qual a hierarquia de View do fragmento deve ser anexada.
+         * @param savedInstanceState Se não for nulo, este fragmento está sendo recriado a partir de um estado salvo.
+         * @return A [View] raiz do layout do fragmento.
+         */
         override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -38,14 +54,19 @@
             return inflater.inflate(R.layout.fragment_notificacao_item, container, false)
         }
 
+        /**
+         * Use este método de fábrica para criar uma nova instância de
+         * este fragmento usando os parâmetros fornecidos.
+         *
+         * @param param1 Parâmetro 1.
+         * @param param2 Parâmetro 2.
+         * @return Uma nova instância de fragment [NotificacaoItemFragment].
+         */
         companion object {
             /**
-             * Use this factory method to create a new instance of
-             * this fragment using the provided parameters.
-             *
-             * @param param1 Parameter 1.
-             * @param param2 Parameter 2.
-             * @return A new instance of fragment NotificacaoItemFragment.
+             * @param param1 Parametero 1.
+             * @param param2 Parametero 2.
+             * @return Uma nova instância de NotificacaoItemFragment.
              */
             // TODO: Rename and change types and number of parameters
             @JvmStatic
