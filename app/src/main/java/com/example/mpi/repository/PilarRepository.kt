@@ -177,7 +177,11 @@ class PilarRepository (context: Context) {
                 somaPercentualAcoes += acaoRepository.obterPercentualTotalAcao(acao)
                 qtdAcoes++
             }
-            percentualTotalPilar = somaPercentualAcoes / qtdAcoes
+            if (qtdAcoes != 0) {
+                percentualTotalPilar = somaPercentualAcoes / qtdAcoes
+            } else {
+                percentualTotalPilar = 0.0
+            }
         }
 
         if (listaSubpilar.isNotEmpty()) {
@@ -192,9 +196,13 @@ class PilarRepository (context: Context) {
                     somaPercentualAcoes += acaoRepository.obterPercentualTotalAcao(acao)
                     qtdAcoes++
                 }
-                percentualTotalSubpilar += somaPercentualAcoes / qtdAcoes
+                percentualTotalSubpilar += if (qtdAcoes != 0) {somaPercentualAcoes / qtdAcoes} else {0.0}
             }
-            percentualTotalPilar = percentualTotalSubpilar / qtdSubpilar
+            if (qtdSubpilar != 0) {
+                percentualTotalPilar = percentualTotalSubpilar / qtdSubpilar
+            } else {
+                percentualTotalPilar = 0.0
+            }
         }
 
         return percentualTotalPilar
@@ -225,7 +233,11 @@ class PilarRepository (context: Context) {
                 somaPercentualAcoes += acaoRepository.obterPercentualMes(listarAtividade, mes)
                 qtdAcoes++
             }
-            percentualMesPilar = somaPercentualAcoes / qtdAcoes
+            if (qtdAcoes != 0) {
+                percentualMesPilar = somaPercentualAcoes / qtdAcoes
+            } else {
+                percentualMesPilar = 0.0
+            }
         }
 
         if (listaSubpilar.isNotEmpty()) {
@@ -241,9 +253,13 @@ class PilarRepository (context: Context) {
                     somaPercentualAcoes += acaoRepository.obterPercentualMes(listarAtividade, mes)
                     qtdAcoes++
                 }
-                percentualTotalSubpilar += somaPercentualAcoes / qtdAcoes
+                percentualTotalSubpilar += if (qtdAcoes != 0) {somaPercentualAcoes / qtdAcoes} else {0.0}
             }
-            percentualMesPilar = percentualTotalSubpilar / qtdSubpilar
+            if (qtdSubpilar != 0) {
+                percentualMesPilar = percentualTotalSubpilar / qtdSubpilar
+            } else {
+                percentualMesPilar = 0.0
+            }
         }
 
         return percentualMesPilar

@@ -330,6 +330,7 @@ class AcaoRepository(context: Context) {
      * @return O percentual total da ação como um [Double]. Retorna 0.0 se não houver atividades associadas.
      */
     fun obterPercentualTotalAcao(acao: Acao) : Double {
+        val percentualTotalAcao: Double
         val listaAtividade = atividadeRepository.obterTodasAtividades(acao)
         var divisor = 0
         var somaPercentualAtividade = 0.0
@@ -337,7 +338,11 @@ class AcaoRepository(context: Context) {
             somaPercentualAtividade += atividadeRepository.obterPercentualTotalAtividade(atividade)
             divisor++
         }
-        val percentualTotalAcao = somaPercentualAtividade / divisor
+        if (divisor != 0) {
+            percentualTotalAcao = somaPercentualAtividade / divisor
+        } else {
+            percentualTotalAcao = 0.0
+        }
 
         return percentualTotalAcao
     }
@@ -358,7 +363,11 @@ class AcaoRepository(context: Context) {
             somaPercentual += percentualMes
             qtdAtividades++
         }
-        percentualTotal = somaPercentual / qtdAtividades
+        if (qtdAtividades != 0) {
+            percentualTotal = somaPercentual / qtdAtividades
+        } else {
+            percentualTotal = 0.0
+        }
 
         return percentualTotal
     }
